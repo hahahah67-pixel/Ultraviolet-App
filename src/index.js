@@ -9,6 +9,30 @@ import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 
 const app = express();
+
+// ===== Private beta gate =====
+const ENTRY_PATH = '/index.html';
+const ACCESS_COOKIE = 'beta_access';
+
+// Grant access only when /i ndex.html is visited
+app.get(ENTRY_PATH, (req, res) =>{
+  res.setHeader(
+    'Set-Cookie',
+    `${ACCESS_COOKIE}=true; Path=/; HttpOnly; SameSite=Strict`
+  );
+  res.redirect('/');
+});
+
+// Block everything else unless access cookie exists
+app.use((req, res, next) => {
+  if (req.headers.cookie?.includes(`${ACCESS_COOKIE}=true`)) {
+    return next();
+  }
+  return res.sendStatus(404);
+});
+// ===== End beta gate =====
+
+
 // Load our publicPath first and prioritize it over UV.
 app.use(express.static("./public"));
 // Load vendor files last.

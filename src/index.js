@@ -10,25 +10,26 @@ import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 
 const app = express();
 
-// ===== Private beta gate =====
-const ENTRY_PATH = '/index.html';
-const ACCESS_COOKIE = 'beta_access';
+// ===== Private beta gate (FIXED) =====
+const ENTRY_PATHS = ["/", "/index.html"];
+const ACCESS_COOKIE = "beta_access";
 
-// Grant access only when /i ndex.html is visited
-app.get(ENTRY_PATH, (req, res) =>{
-  res.setHeader(
-    'Set-Cookie',
-    `${ACCESS_COOKIE}=true; Path=/; HttpOnly; SameSite=Strict`
-  );
-  res.redirect('/');
-});
-
-// Block everything else unless access cookie exists
 app.use((req, res, next) => {
-  if (req.headers.cookie?.includes(`${ACCESS_COOKIE}=true`)) {
+  if (
+    ENTRY_PATHS.includes(req.path) ||
+    req.headers.cookie?.includes(`${ACCESS_COOKIE}=true`)
+  ) {
     return next();
   }
   return res.sendStatus(404);
+});
+
+app.get("/index.html", (req, res) => {
+  res.setHeader(
+    "Set-Cookie",
+    `${ACCESS_COOKIE}=true; Path=/; HttpOnly; SameSite=Strict`
+  );
+  res.sendFile(join(process.cwd(), "public/index.html"));
 });
 // ===== End beta gate =====
 

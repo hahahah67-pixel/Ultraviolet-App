@@ -1,133 +1,244 @@
-<!doctype html>
-<html>
-    <head>
-        <script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Cloak -->
+    <script>
         (function() {
             document.title = "Study.com | Free Online Courses, Lessons & Practice";
-
             const iconUrl = "https://study.com/favicon.ico";
             let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
             link.type = 'image/x-icon';
             link.rel = 'shortcut icon';
             link.href = iconUrl;
             document.getElementsByTagName('head')[0].appendChild(link);
-
-            const metaTags = [
-                { name: "description", content: "Take online courses on Study.com that are fun and effective. Help your kids with their biology and math homework." },
-                { name: "keywords", content: "education, flashcards, study, math help, biology, science lessons" },
-                { name: "theme-color", content: "#ffffff" },
-                { name: "googlebot", content: "index, follow" }
-            ];
-
-            metaTags.forEach(tag => {
-                let element = document.querySelector(`meta[name="${tag.name}"]`) || document.createElement('meta');
-                element.name = tag.name;
-                element.content = tag.content;
-                document.head.appendChild(element);
-            });
         })();
-        </script>
+    </script>
 
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
-        <link rel="stylesheet" href="index.css" />
-		
-		
+    <title>Fish Proxy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
-		<script src="baremux/index.js"></script>
-		<script src="uv/uv.bundle.js"></script>
-		<script src="uv/uv.config.js"></script>
+    <!-- UV CORE FILES (DO NOT REMOVE) -->
+    <script src="baremux/index.js" defer></script>
+    <script src="uv/uv.bundle.js" defer></script>
+    <script src="uv/uv.config.js" defer></script>
 
-		<script type="application/ld+json">
-			{
-				"@context": "https://schema.org",
-				"@type": "FAQPage",
-				"mainEntity": [
-					{
-						"@type": "Question",
-						"name": "What is Ultraviolet (Web Proxy)?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers and more!"
-						}
-					},
-					{
-						"@type": "Question",
-						"name": "How do I unblock sites using Ultraviolet?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Simply head to an official site featuring Ultraviolet such as Holy Unblocker or Incognito! You can also self-host Ultraviolet on your own web server for maximum privacy."
-						}
-					},
-					{
-						"@type": "Question",
-						"name": "What if Ultraviolet is blocked or not working?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Join the Titanium Network Discord at discord.gg/unblock!"
-						}
-					}
-				]
-			}
-		</script>
-	</head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
 
-	<body>
-		<div
-			title="Ultraviolet Logo"
-			class="flex-center logo-wrapper header-center"
-		>
-			<img class="logo" src="uv.png" alt="Ultraviolet" />
-			<h1>Ultraviolet | TN</h1>
-		</div>
-		<div class="flex-center desc left-margin">
-			<p>
-				Ultraviolet is highly sophisticated proxy used for evading internet
-				censorship.
-			</p>
-		</div>
+        body {
+            height: 100vh;
+            color: white;
+            overflow: hidden;
+            background: linear-gradient(180deg, #3c7be0 0%, #1a3a8a 100%);
+            position: relative;
+        }
 
-		<form id="uv-form" class="flex-center">
-			<input
-				id="uv-search-engine"
-				value="https://www.google.com/search?q=%s"
-				type="hidden"
-			/>
-			<input id="uv-address" type="text" placeholder="Search the web freely" />
-		</form>
-		<div class="desc left-margin">
-			<p id="uv-error"></p>
-			<pre id="uv-error-code"></pre>
-		</div>
-		<footer>
-			<div>
-				<a
-					title="The TitaniumNetwork GitHub organization"
-					href="https://github.com/titaniumnetwork-dev"
-					>TitaniumNetwork</a
-				>
-				<a title="The TitaniumNetwork Discord" href="https://discord.gg/unblock"
-					>Discord</a
-				>
-				<a
-					title="The TompHTTP GitHub organization"
-					href="https://github.com/tomphttp"
-					>TompHTTP</a
-				>
-				<a
-					title="The official deployment repository for Ultraviolet"
-					href="https://github.com/titaniumnetwork-dev/Ultraviolet-App"
-					>GitHub</a
-				>
-				<a title="License information" href="credits.html">Credits</a>
-			</div>
-			<div>
-				<span>Ultraviolet &copy; TN 2023</span>
-			</div>
-		</footer>
-		<iframe style="display: none" id="uv-frame"></iframe>
-		<script src="register-sw.js"></script>
-		<script src="search.js"></script>
-		<script src="index.js"></script>
-	</body>
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255,255,255,0.85);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(255,255,255,0.35);
+            animation: floatStar 35s linear infinite;
+        }
+
+        @keyframes floatStar {
+            0% { transform: translateX(0) translateY(0); opacity: 0.8; }
+            100% { transform: translateX(-120px) translateY(50px); opacity: 0.2; }
+        }
+
+        .page {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 2;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo h1 {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: 4px;
+        }
+
+        .fish {
+            position: relative;
+            width: 100px;
+            height: 60px;
+            background: #7fa6c9;
+            border-radius: 60% 50% 50% 60%;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%,100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .fish::before {
+            content: "";
+            position: absolute;
+            right: -28px;
+            top: 16px;
+            width: 30px;
+            height: 30px;
+            background: #7fa6c9;
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+        }
+
+        .fish::after {
+            content: "";
+            position: absolute;
+            left: 25px;
+            top: 20px;
+            width: 15px;
+            height: 15px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .fish-eye {
+            position: absolute;
+            left: 30px;
+            top: 25px;
+            width: 7px;
+            height: 7px;
+            background: black;
+            border-radius: 50%;
+        }
+
+        .fin-top {
+            position: absolute;
+            top: -18px;
+            left: 45px;
+            width: 26px;
+            height: 20px;
+            background: #6d93b4;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        .fin-bottom {
+            position: absolute;
+            bottom: -16px;
+            left: 50px;
+            width: 22px;
+            height: 18px;
+            background: #6d93b4;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+        }
+
+        #uv-form {
+            width: 420px;
+            margin-top: 35px;
+        }
+
+        .search-container {
+            width: 100%;
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 15px 55px 15px 20px;
+            background: #0d1a35;
+            border: 1px solid #1a2b4b;
+            border-radius: 30px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .search-container button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: none;
+            background: #5c8ed6;
+            cursor: pointer;
+        }
+
+        #uv-error {
+            margin-top: 10px;
+            color: #ff4d4d;
+            font-size: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="page">
+    <div class="logo">
+        <h1>FISH</h1>
+        <div class="fish">
+            <div class="fin-top"></div>
+            <div class="fin-bottom"></div>
+            <div class="fish-eye"></div>
+        </div>
+        <h1>PROXY</h1>
+    </div>
+
+    <!-- UV FORM (CRITICAL) -->
+    <form id="uv-form">
+        <input id="uv-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
+        <div class="search-container">
+            <input id="uv-address" type="text" placeholder="Search or enter URL">
+            <button type="submit"></button>
+        </div>
+        <p id="uv-error"></p>
+        <pre id="uv-error-code"></pre>
+    </form>
+</div>
+
+<!-- UI Stars -->
+<script>
+const starCount = 200;
+const stars = document.getElementById("stars");
+for (let i = 0; i < starCount; i++) {
+    const star = document.createElement("div");
+    star.classList.add("star");
+    star.style.top = Math.random() * 100 + "%";
+    star.style.left = Math.random() * 100 + "%";
+    stars.appendChild(star);
+}
+</script>
+
+<!-- UV SYSTEM FILES (DO NOT REMOVE) -->
+<script src="register-sw.js"></script>
+<script src="search.js"></script>
+<script src="index.js"></script>
+
+</body>
 </html>

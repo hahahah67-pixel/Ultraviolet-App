@@ -3,22 +3,23 @@ import { hostname } from "node:os";
 import { createServer } from "node:http";
 import express from "express";
 import wisp from "wisp-server-node";
+import cookieParser from "cookie-parser";
 
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 
 const app = express();
+app.use(cookieParser());
 
-// ===== Private beta gate (session-based, stronger) =====
-const ENTRY_PATHS = ["/", "/index.html"];
+
+// ===== Private beta gate (session-only) =====
+const ENTRY_PATHS = ["/index.html"];
 const ACCESS_COOKIE = "beta_access";
-const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
 
 // Gate middleware
 app.use((req, res, next) => {
-  const hasAccessCookie =
-    req.headers.cookie?.includes(`${ACCESS_COOKIE}=true`);
+  const hasAccessCookie = req.cookies?.[ACCESS_COOKIE] === "true";
 
   if (ENTRY_PATHS.includes(req.path) || hasAccessCookie) {
     return next();
@@ -32,11 +33,10 @@ app.get("/index.html", (req, res) => {
   res.cookie(ACCESS_COOKIE, "true", {
     httpOnly: true,
     sameSite: "strict",
-    path: "/",
-    maxAge: SESSION_TIMEOUT // remove this line if you ONLY want "delete when browser closes"
+    path: "/"
+    // session cookie only — deleted when browser closes
   });
 
-  // Hide /index.html from URL after entry
   res.redirect("/");
 });
 // ===== End beta gate =====

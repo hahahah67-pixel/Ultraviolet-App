@@ -10,28 +10,37 @@ import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 
 const app = express();
 
-// ===== Private beta gate (FIXED) =====
+// ===== Private beta gate (session-based, stronger) =====
 const ENTRY_PATHS = ["/", "/index.html"];
 const ACCESS_COOKIE = "beta_access";
+const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
 
+// Gate middleware
 app.use((req, res, next) => {
-  if (
-    ENTRY_PATHS.includes(req.path) ||
-    req.headers.cookie?.includes(`${ACCESS_COOKIE}=true`)
-  ) {
+  const hasAccessCookie =
+    req.headers.cookie?.includes(`${ACCESS_COOKIE}=true`);
+
+  if (ENTRY_PATHS.includes(req.path) || hasAccessCookie) {
     return next();
   }
+
   return res.sendStatus(404);
 });
 
+// Entry point — sets session cookie and redirects
 app.get("/index.html", (req, res) => {
-  res.setHeader(
-    "Set-Cookie",
-    `${ACCESS_COOKIE}=true; Path=/; HttpOnly; SameSite=Strict`
-  );
-  res.sendFile(join(process.cwd(), "public/index.html"));
+  res.cookie(ACCESS_COOKIE, "true", {
+    httpOnly: true,
+    sameSite: "strict",
+    path: "/",
+    maxAge: SESSION_TIMEOUT // remove this line if you ONLY want "delete when browser closes"
+  });
+
+  // Hide /index.html from URL after entry
+  res.redirect("/");
 });
 // ===== End beta gate =====
+
 
 
 // Load our publicPath first and prioritize it over UV.

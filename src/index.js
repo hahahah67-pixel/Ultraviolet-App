@@ -13,7 +13,7 @@ const app = express();
 app.use(cookieParser());
 
 
-// ===== Private beta gate (session-only) =====
+// ===== Private beta gate =====
 const ENTRY_PATHS = ["/index.html"];
 const ACCESS_COOKIE = "beta_access";
 

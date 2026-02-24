@@ -28,6 +28,30 @@ body {
     position: relative;
 }
 
+/* ===== CREDIT BUTTON (ADDED) ===== */
+.credit-btn {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 2px;
+    z-index: 9999;
+    transition: transform 0.25s ease, text-shadow 0.25s ease;
+}
+
+.credit-btn:hover {
+    transform: scale(1.18);
+    text-shadow: 0 0 14px rgba(255,255,255,0.85);
+}
+
+.credit-btn:active {
+    transform: scale(1.05);
+}
+/* ===== END CREDIT BUTTON ===== */
+
 /* Stars */
 .stars {
     position: absolute;
@@ -244,7 +268,7 @@ body {
 .bottom-left, .bottom-right {
     position: absolute;
     font-weight: 700;
-    font-size: 16px; /* slightly bigger */
+    font-size: 16px;
     opacity: 0.85;
     bottom: 12px;
 }
@@ -255,6 +279,10 @@ body {
 </head>
 
 <body>
+
+<!-- ===== CREDIT BUTTON (ADDED) ===== -->
+<a href="/credit.html" class="credit-btn">CREDIT</a>
+<!-- ===== END CREDIT BUTTON ===== -->
 
 <div class="stars" id="stars"></div>
 
@@ -294,7 +322,7 @@ body {
 
 <!-- Stars -->
 <script>
-const starCount = Math.floor(Math.random() * 101) + 300; // 300-400 stars
+const starCount = Math.floor(Math.random() * 101) + 300;
 const stars = document.getElementById("stars");
 for (let i = 0; i < starCount; i++) {
     const star = document.createElement("div");
@@ -327,7 +355,6 @@ quickLinks.forEach(site => {
 
     item.appendChild(icon);
 
-    // Go through UV proxy
     item.addEventListener("click", () => {
         document.getElementById("uv-address").value = site.url;
         document.getElementById("uv-form").requestSubmit();
@@ -345,11 +372,3 @@ quickLinks.forEach(site => {
 <iframe style="display: none; width: 100vw; height: 100vh; border: none; position: fixed; top: 0; left: 0; z-index: 999; background: white;" id="uv-frame"></iframe>
 </body>
 </html>
-
-          
-            
-
-       
-        
-     
-

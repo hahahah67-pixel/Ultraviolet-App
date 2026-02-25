@@ -280,9 +280,10 @@ body {
 
 <body>
 
-<!-- ===== CREDIT BUTTON (ADDED) ===== -->
+<!-- WRAPPER ADDED -->
+<div id="home-ui">
+
 <a href="/credit.html" class="credit-btn">CREDIT</a>
-<!-- ===== END CREDIT BUTTON ===== -->
 
 <div class="stars" id="stars"></div>
 
@@ -297,7 +298,6 @@ body {
         <h1>PROXY</h1>
     </div>
 
-    <!-- UV Form -->
     <form id="uv-form">
       <input id="uv-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
 
@@ -309,18 +309,20 @@ body {
         <pre id="uv-error-code"></pre>
     </form>
 
-    <!-- Quick Links -->
     <div class="quick-links">
         <div class="quick-title">Quick Links</div>
         <div class="quick-grid" id="quick-grid"></div>
     </div>
 </div>
 
-<!-- Bottom text -->
 <div class="bottom-left">Made by Nyan Cat LOL</div>
 <div class="bottom-right">© 2026 Fish Proxy</div>
 
-<!-- Stars -->
+</div> <!-- END home-ui -->
+
+<iframe style="display: none; width: 100vw; height: 100vh; border: none; position: fixed; top: 0; left: 0; background: white;" id="uv-frame"></iframe>
+
+<!-- Stars JS -->
 <script>
 const starCount = Math.floor(Math.random() * 101) + 300;
 const stars = document.getElementById("stars");
@@ -333,7 +335,7 @@ for (let i = 0; i < starCount; i++) {
 }
 </script>
 
-<!-- Quick Links -->
+<!-- Quick Links JS -->
 <script>
 const quickLinks = [
     {
@@ -364,11 +366,26 @@ quickLinks.forEach(site => {
 });
 </script>
 
-<!-- UV SYSTEM FILES -->
 <script src="register-sw.js"></script>
 <script src="search.js"></script>
 <script src="index.js"></script>
 
-<iframe style="display: none; width: 100vw; height: 100vh; border: none; position: fixed; top: 0; left: 0; z-index: 999; background: white;" id="uv-frame"></iframe>
 </body>
 </html>
+
+  
+   
+    
+    
+   
+   
+   
+   
+
+
+   
+    
+    
+   
+
+   

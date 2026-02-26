@@ -369,7 +369,88 @@ quickLinks.forEach(site => {
 <script src="register-sw.js"></script>
 <script src="search.js"></script>
 <script src="index.js"></script>
+<!-- ===== Browser Console START ===== -->
+<div id="browser-console" class="browser-console">
+  <button id="nav-back">◀</button>
+  <button id="nav-forward">▶</button>
+  <input id="console-url" type="text" placeholder="Enter URL">
+  <button id="console-go">Go</button>
+</div>
 
+<style>
+.browser-console {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 420px;
+  height: 58px;
+  background: black;
+  color: white;
+  border-radius: 14px 14px 0 0;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  z-index: 9999;
+}
+
+.browser-console button {
+  background: #111;
+  border: 1px solid #333;
+  color: white;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.browser-console input {
+  flex: 1;
+  background: #000;
+  border: 1px solid #333;
+  color: white;
+  padding: 6px;
+}
+</style>
+
+<script>
+/* ===== Fish Proxy Browser Console ===== */
+
+const consoleBar = document.getElementById("browser-console");
+const consoleInput = document.getElementById("console-url");
+const uvFrame = document.querySelector("iframe");
+
+/* Show console when a proxied site loads */
+if (uvFrame) {
+  uvFrame.addEventListener("load", () => {
+    consoleBar.style.display = "flex";
+  });
+}
+
+/* Back */
+document.getElementById("nav-back").onclick = () => {
+  try { uvFrame.contentWindow.history.back(); } catch(e) {}
+};
+
+/* Forward */
+document.getElementById("nav-forward").onclick = () => {
+  try { uvFrame.contentWindow.history.forward(); } catch(e) {}
+};
+
+/* Go */
+document.getElementById("console-go").onclick = () => {
+  const url = consoleInput.value.trim();
+  if (!url) return;
+
+  const addressBar = document.querySelector("input[type='text']");
+  const form = addressBar?.closest("form");
+
+  if (addressBar && form) {
+    addressBar.value = url;
+    form.requestSubmit();
+  }
+};
+</script>
+<!-- ===== Browser Console END ===== -->
 </body>
 </html>
 

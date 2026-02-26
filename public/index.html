@@ -371,44 +371,56 @@ quickLinks.forEach(site => {
 <script src="index.js"></script>
 <!-- ===== Browser Console START ===== -->
 <div id="browser-console" class="browser-console">
-  <button id="nav-back">◀</button>
-  <button id="nav-forward">▶</button>
-  <input id="console-url" type="text" placeholder="Enter URL">
-  <button id="console-go">Go</button>
+  <button id="nav-back" title="Back">◀</button>
+  <button id="nav-forward" title="Forward">▶</button>
+  <input id="console-url" type="text" placeholder="URL">
+  <button id="console-go" title="Go">Go</button>
+  <button id="console-home" title="Home">⌂</button>
+  <button id="console-reload" title="Reload">⟳</button>
 </div>
 
 <style>
 .browser-console {
   position: fixed;
-  bottom: 0;
+  bottom: 8px;
   left: 50%;
   transform: translateX(-50%);
-  width: 420px;
-  height: 58px;
-  background: black;
-  color: white;
-  border-radius: 14px 14px 0 0;
+  height: 42px;
+  background: rgba(0,0,0,0.9);
+  backdrop-filter: blur(6px);
+  border-radius: 999px;
   display: none;
   align-items: center;
-  gap: 8px;
-  padding: 8px;
+  gap: 6px;
+  padding: 6px 8px;
   z-index: 9999;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.4);
 }
 
 .browser-console button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
   background: #111;
-  border: 1px solid #333;
   color: white;
-  padding: 6px 10px;
   cursor: pointer;
+  font-size: 14px;
+}
+
+.browser-console button:hover {
+  background: #222;
 }
 
 .browser-console input {
-  flex: 1;
+  height: 30px;
+  width: 140px;
+  border-radius: 999px;
+  border: none;
+  padding: 0 10px;
   background: #000;
-  border: 1px solid #333;
   color: white;
-  padding: 6px;
+  font-size: 12px;
 }
 </style>
 
@@ -419,10 +431,11 @@ const consoleBar = document.getElementById("browser-console");
 const consoleInput = document.getElementById("console-url");
 const uvFrame = document.querySelector("iframe");
 
-/* Show console when a proxied site loads */
+/* Show console only when a site loads */
 if (uvFrame) {
   uvFrame.addEventListener("load", () => {
-    consoleBar.style.display = "flex";
+    const isHome = uvFrame.src === "" || uvFrame.src === "about:blank";
+    consoleBar.style.display = isHome ? "none" : "flex";
   });
 }
 
@@ -449,10 +462,22 @@ document.getElementById("console-go").onclick = () => {
     form.requestSubmit();
   }
 };
+
+/* Home (return to Fish Proxy main menu) */
+document.getElementById("console-home").onclick = () => {
+  uvFrame.src = "about:blank";
+  consoleBar.style.display = "none";
+};
+
+/* Reload */
+document.getElementById("console-reload").onclick = () => {
+  try { uvFrame.contentWindow.location.reload(); } catch(e) {}
+};
 </script>
 <!-- ===== Browser Console END ===== -->
 </body>
 </html>
+
 
   
    

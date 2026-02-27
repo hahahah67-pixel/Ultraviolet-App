@@ -4,10 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fish Proxy</title>
+<script>
+(function() {
+    document.title = "Study.com | Free Online Courses, Lessons & Practice";
+    const iconUrl = "https://study.com/favicon.ico";
+    let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    link.href = iconUrl;
+    document.head.appendChild(link);
+
+    const metaTags = [
+        { name: "description", content: "Take online courses on Study.com that are fun and effective. Help your kids with their biology and math homework." },
+        { name: "keywords", content: "education, flashcards, study, math help, biology, science lessons" },
+        { name: "theme-color", content: "#ffffff" } 
+    ];
+
+    metaTags.forEach(tag => {
+        let element = document.querySelector(`meta[name="${tag.name}"]`) || document.createElement('meta');
+        element.name = tag.name;
+        element.content = tag.content;
+        document.head.appendChild(element);
+    });
+})();
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
-<!-- UV CORE FILES -->
 <script src="baremux/index.js"></script>
 <script src="uv/uv.bundle.js"></script>
 <script src="uv/uv.config.js"></script>
@@ -280,7 +303,6 @@ body {
 
 <body>
 
-<!-- WRAPPER ADDED -->
 <div id="home-ui">
 
 <a href="/credit.html" class="credit-btn">CREDIT</a>
@@ -318,11 +340,8 @@ body {
 <div class="bottom-left">Made by Nyan Cat LOL</div>
 <div class="bottom-right">© 2026 Fish Proxy</div>
 
-</div> <!-- END home-ui -->
+</div> <iframe style="display: none; width: 100vw; height: 100vh; border: none; position: fixed; top: 0; left: 0; background: white;" id="uv-frame"></iframe>
 
-<iframe style="display: none; width: 100vw; height: 100vh; border: none; position: fixed; top: 0; left: 0; background: white;" id="uv-frame"></iframe>
-
-<!-- Stars JS -->
 <script>
 const starCount = Math.floor(Math.random() * 101) + 300;
 const stars = document.getElementById("stars");
@@ -335,7 +354,6 @@ for (let i = 0; i < starCount; i++) {
 }
 </script>
 
-<!-- Quick Links JS -->
 <script>
 const quickLinks = [
     {
@@ -369,7 +387,6 @@ quickLinks.forEach(site => {
 <script src="register-sw.js"></script>
 <script src="search.js"></script>
 <script src="index.js"></script>
-<!-- ===== Browser Console START ===== -->
 <div id="browser-console" class="browser-console">
   <div class="console-idle">browser console</div>
 
@@ -380,7 +397,6 @@ quickLinks.forEach(site => {
     <input id="console-url" type="text" placeholder="URL">
     <button id="console-go" title="Go">Go</button>
 
-    <!-- Real Home Icon -->
     <button id="console-home" title="Home">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
         <path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3z"/>
@@ -553,24 +569,5 @@ document.getElementById("console-reload").onclick = () => {
   try { uvFrame.contentWindow.location.reload(); } catch(e) {}
 };
 </script>
-<!-- ===== Browser Console END ===== -->
 </body>
 </html>
-
-
-  
-   
-    
-    
-   
-   
-   
-   
-
-
-   
-    
-    
-   
-
-   

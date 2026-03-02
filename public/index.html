@@ -53,9 +53,17 @@ body {
 
 /* ===== CREDIT BUTTON (ADDED) ===== */
 .credit-btn {
-    position: fixed;
-    top: 18px;
-    right: 24px;
+    .credit-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.settings-btn {
+  position: absolute;
+  top: 20px;
+  right: 120px; /* pushes it left of credit */
+}
     color: white;
     font-size: 18px;
     font-weight: 600;
@@ -306,8 +314,8 @@ body {
 <div id="home-ui">
 
 <div class="top-buttons">
-  <a href="/credit.html" class="credit-btn">CREDIT</a>
-  <a href="/settings.html" class="credit-btn">SETTINGS</a>
+  <a href="/settings.html" class="settings-btn">SETTINGS</a>
+<a href="/credit.html" class="credit-btn">CREDIT</a>
 </div>
 <div class="stars" id="stars"></div>
 

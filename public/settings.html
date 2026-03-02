@@ -5,94 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fish Proxy — Settings</title>
 
-<style>
+<style>/* ===== Fish Proxy Background ===== */
 body {
-  <div class="stars"></div>
-}
-
-/* ⭐ Star background */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: url("/stars.png") repeat;
-  opacity: 0.35;
-  z-index: -1;
-}
-
-/* Layout */
-.settings-container {
-  padding: 40px;
-}
-
-.settings-card {
-  width: 320px;
-  background: rgba(0,0,0,0.35);
-  border-radius: 14px;
-  padding: 20px;
-  backdrop-filter: blur(8px);
-}
-
-.settings-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.settings-desc {
-  font-size: 12px;
-  opacity: .8;
-  margin-bottom: 18px;
-}
-
-.option-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-}
-
-.option {
-  text-align: center;
-  cursor: pointer;
-}
-
-.option img {
-  width: 64px;
-  height: 64px;
-  border-radius: 12px;
-  background: white;
-  padding: 6px;
-}
-
-.option span {
-  display: block;
-  margin-top: 6px;
-  font-size: 12px;
-}
-
-.save-btn {
-  margin-top: 18px;
-  width: 100%;
-  background: #2f7df6;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
+  background: linear-gradient(180deg, #3c7be0 0%, #1a3a8a 100%);
   color: white;
-  font-weight: 600;
-  cursor: pointer;
+  position: relative;
+  overflow-x: hidden;
 }
 
-/* Back button */
+.stars {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 0;
+}
+
+/* Back button same style as credits */
 .back-btn {
   position: absolute;
-  top: 20px;
+  top: 18px;
   left: 20px;
-  background: rgba(255,255,255,0.15);
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
   color: white;
-  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+  z-index: 2;
+}
 }
 </style>
 </head>
@@ -152,7 +90,13 @@ function goBack() {
   window.location.href = "/";
 }
 </script>
-
+<script>
+function saveCloak(title, icon) {
+  localStorage.setItem("cloakTitle", title);
+  localStorage.setItem("cloakIcon", icon);
+  window.location.href = "/";
+}
+</script>
 </body>
 </html>
 

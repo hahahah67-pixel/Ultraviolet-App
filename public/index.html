@@ -4,14 +4,42 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fish Proxy</title>
+
+<script>
+(function() {
+    document.title = "Study.com | Free Online Courses, Lessons & Practice";
+    const iconUrl = "https://study.com/favicon.ico";
+    let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    link.href = iconUrl;
+    document.head.appendChild(link);
+
+
+    const metaTags = [
+        { name: "description", content: "Take online courses on Study.com that are fun and effective. Help your kids with their biology and math homework." },
+        { name: "keywords", content: "education, flashcards, study, math help, biology, science lessons" },
+        { name: "theme-color", content: "#ffffff" } 
+    ];
+
+
+    metaTags.forEach(tag => {
+        let element = document.querySelector(`meta[name="${tag.name}"]`) || document.createElement('meta');
+        element.name = tag.name;
+        element.content = tag.content;
+        document.head.appendChild(element);
+    });
+})();
+</script>
+
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
-<!-- UV CORE FILES -->
+
 <script src="baremux/index.js"></script>
 <script src="uv/uv.bundle.js"></script>
 <script src="uv/uv.config.js"></script>
+
 
 <style>
 * {
@@ -21,6 +49,7 @@
     font-family: 'Inter', sans-serif;
 }
 
+
 body {
     height: 100vh;
     color: white;
@@ -29,10 +58,12 @@ body {
     position: relative;
 }
 
-/* ===== TOP RIGHT BUTTONS (FIXED) ===== */
-.credit-btn, .settings-btn {
-    position: absolute;
-    top: 20px;
+
+/* ===== CREDIT BUTTON (ADDED) ===== */
+.credit-btn {
+    position: fixed;
+    top: 18px;
+    right: 24px;
     color: white;
     font-size: 18px;
     font-weight: 600;
@@ -42,14 +73,18 @@ body {
     transition: transform 0.25s ease, text-shadow 0.25s ease;
 }
 
-.credit-btn { right: 20px; }
-.settings-btn { right: 140px; }
 
-.credit-btn:hover,
-.settings-btn:hover {
+.credit-btn:hover {
     transform: scale(1.18);
     text-shadow: 0 0 14px rgba(255,255,255,0.85);
 }
+
+
+.credit-btn:active {
+    transform: scale(1.05);
+}
+/* ===== END CREDIT BUTTON ===== */
+
 
 /* Stars */
 .stars {
@@ -59,6 +94,7 @@ body {
     pointer-events: none;
     z-index: 1;
 }
+
 
 .star {
     position: absolute;
@@ -70,10 +106,12 @@ body {
     animation: floatStar 35s linear infinite;
 }
 
+
 @keyframes floatStar {
     0% { transform: translateX(0) translateY(0); opacity: 0.8; }
     100% { transform: translateX(-120px) translateY(50px); opacity: 0.2; }
 }
+
 
 /* Page container */
 .page {
@@ -86,6 +124,7 @@ body {
     z-index: 2;
 }
 
+
 /* Logo & Fish */
 .logo {
     display: flex;
@@ -93,11 +132,13 @@ body {
     gap: 20px;
 }
 
+
 .logo h1 {
     font-size: 38px;
     font-weight: 800;
     letter-spacing: 4px;
 }
+
 
 .fish {
     position: relative;
@@ -108,10 +149,12 @@ body {
     animation: float 3s ease-in-out infinite;
 }
 
+
 @keyframes float {
     0%,100% { transform: translateY(0px); }
     50% { transform: translateY(-8px); }
 }
+
 
 .fish::before {
     content: "";
@@ -124,6 +167,7 @@ body {
     clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 
+
 .fish::after {
     content: "";
     position: absolute;
@@ -135,6 +179,7 @@ body {
     border-radius: 50%;
 }
 
+
 .fish-eye {
     position: absolute;
     left: 30px;
@@ -144,6 +189,7 @@ body {
     background: black;
     border-radius: 50%;
 }
+
 
 .fin-top {
     position: absolute;
@@ -155,6 +201,7 @@ body {
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
 
+
 .fin-bottom {
     position: absolute;
     bottom: -16px;
@@ -165,11 +212,19 @@ body {
     clip-path: polygon(50% 100%, 0 0, 100% 0);
 }
 
+
 /* UV Form */
 #uv-form {
     width: 420px;
     margin-top: 35px;
 }
+
+
+.search-container {
+    width: 100%;
+    position: relative;
+}
+
 
 .search-container input {
     width: 100%;
@@ -182,6 +237,7 @@ body {
     outline: none;
 }
 
+
 .search-container button {
     position: absolute;
     right: 8px;
@@ -193,22 +249,107 @@ body {
     border: none;
     background: #5c8ed6;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+
+.search-container button::after {
+    content: "🔍";
+    font-size: 18px;
+}
+
+
+/* Error messages */
+#uv-error {
+    margin-top: 10px;
+    color: #ff4d4d;
+    font-size: 12px;
+    text-align: center;
+}
+
+
+/* Quick Links */
 .quick-links {
     width: 420px;
     margin-top: 25px;
+    text-align: left;
 }
+
+
+.quick-title {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    opacity: 0.75;
+    margin-bottom: 15px;
+}
+
+
+.quick-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+
+.quick-item {
+    width: 75px;
+    height: 75px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+
+.quick-item:hover {
+    transform: translateY(-5px);
+    border-color: rgba(111, 169, 255, 0.6);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+
+.quick-item img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+
+/* Bottom left/right text */
+.bottom-left, .bottom-right {
+    position: absolute;
+    font-weight: 700;
+    font-size: 16px;
+    opacity: 0.85;
+    bottom: 12px;
+}
+
+
+.bottom-left { left: 12px; }
+.bottom-right { right: 12px; }
 </style>
 </head>
 
+
 <body>
 
-<!-- SETTINGS + CREDIT BUTTONS -->
-<a href="/settings.html" class="settings-btn">SETTINGS</a>
+
+<div id="home-ui">
+
+
 <a href="/credit.html" class="credit-btn">CREDIT</a>
 
+
 <div class="stars" id="stars"></div>
+
 
 <div class="page">
     <div class="logo">
@@ -221,24 +362,38 @@ body {
         <h1>PROXY</h1>
     </div>
 
+
     <form id="uv-form">
+      <input id="uv-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
+
+
         <div class="search-container">
             <input id="uv-address" type="text" placeholder="Search or enter URL">
             <button type="submit"></button>
         </div>
+        <p id="uv-error"></p>
+        <pre id="uv-error-code"></pre>
     </form>
 
+
     <div class="quick-links">
-        <div id="quick-grid"></div>
+        <div class="quick-title">Quick Links</div>
+        <div class="quick-grid" id="quick-grid"></div>
     </div>
 </div>
 
-<iframe id="uv-frame" style="display:none;width:100vw;height:100vh;border:none;position:fixed;top:0;left:0;background:white;"></iframe>
+
+<div class="bottom-left">Made by Nyan Cat LOL</div>
+<div class="bottom-right">© 2026 Fish Proxy</div>
+
+
+</div> <iframe style="display: none; width: 100vw; height: 100vh; border: none; position: fixed; top: 0; left: 0; background: white;" id="uv-frame"></iframe>
+
 
 <script>
-/* ⭐ stars */
+const starCount = Math.floor(Math.random() * 101) + 300;
 const stars = document.getElementById("stars");
-for (let i = 0; i < 350; i++) {
+for (let i = 0; i < starCount; i++) {
     const star = document.createElement("div");
     star.classList.add("star");
     star.style.top = Math.random() * 100 + "%";
@@ -247,34 +402,255 @@ for (let i = 0; i < 350; i++) {
 }
 </script>
 
+
+<script>
+const quickLinks = [
+    {
+        name: "roblox",
+        url: "https://nowgg.fun/",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/1/1e/Roblox_Logo_2025.png"
+    }
+];
+
+
+const quickGrid = document.getElementById("quick-grid");
+
+
+quickLinks.forEach(site => {
+    const item = document.createElement("div");
+    item.className = "quick-item";
+
+
+    const icon = document.createElement("img");
+    icon.src = site.icon;
+    icon.alt = site.name;
+
+
+    item.appendChild(icon);
+
+
+    item.addEventListener("click", () => {
+        document.getElementById("uv-address").value = site.url;
+        document.getElementById("uv-form").requestSubmit();
+    });
+
+
+    quickGrid.appendChild(item);
+});
+</script>
+
+
 <script src="register-sw.js"></script>
 <script src="search.js"></script>
 <script src="index.js"></script>
+<div id="browser-console" class="browser-console">
+  <div class="console-idle">browser console</div>
 
-<!-- 🔒 TAB CLOAK LOADER -->
+
+  <div class="console-controls">
+    <button id="nav-back" title="Back">◀</button>
+    <button id="nav-forward" title="Forward">▶</button>
+
+
+    <input id="console-url" type="text" placeholder="URL">
+    <button id="console-go" title="Go">Go</button>
+
+
+    <button id="console-home" title="Home">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+        <path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3z"/>
+      </svg>
+    </button>
+
+
+    <button id="console-reload" title="Reload">⟳</button>
+  </div>
+</div>
+
+
+<style>
+.browser-console {
+  position: fixed;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.88);
+  backdrop-filter: blur(6px);
+  border-radius: 999px;
+  display: none;
+  z-index: 9999;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+  transition: all .25s ease;
+}
+
+
+/* Idle pill (longer & smooth) */
+.console-idle {
+  padding: 10px 26px;
+  color: white;
+  font-size: 12px;
+  letter-spacing: .6px;
+  text-transform: lowercase;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: all .25s ease;
+}
+
+
+.console-idle:hover {
+  opacity: 1;
+}
+
+
+/* Controls */
+.console-controls {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  animation: fadeIn .2s ease;
+}
+
+
+.browser-console.active .console-idle {
+  display: none;
+}
+
+
+.browser-console.active .console-controls {
+  display: flex;
+}
+
+
+/* Round buttons */
+.browser-console button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: #111;
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s ease;
+}
+
+
+.browser-console button:hover {
+  background: #222;
+  transform: scale(1.08);
+}
+
+
+/* URL bar */
+.browser-console input {
+  height: 28px;
+  width: 140px;
+  border-radius: 999px;
+  border: none;
+  padding: 0 12px;
+  background: #000;
+  color: white;
+  font-size: 12px;
+  transition: width .2s ease;
+}
+
+
+.browser-console.active input {
+  width: 180px;
+}
+
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+
 <script>
-(function() {
-  // ===== DEFAULT STUDY.COM CLOAK =====
-  const defaultCloak = {
-    title: "Study.com | Free Online Courses, Lessons & Practice",
-    icon: "https://study.com/favicon.ico"
-  };
+/* ===== Fish Proxy Browser Console ===== */
 
-  const saved = localStorage.getItem("fishCloak");
-  const cloak = saved ? JSON.parse(saved) : defaultCloak;
 
-  // Apply title
-  document.title = cloak.title;
+const consoleBar = document.getElementById("browser-console");
+const consoleIdle = document.querySelector(".console-idle");
+const consoleInput = document.getElementById("console-url");
+const uvFrame = document.querySelector("iframe");
 
-  // Apply favicon
-  let link = document.querySelector("link[rel~='icon']");
-  if (!link) {
-    link = document.createElement("link");
-    link.rel = "icon";
-    document.head.appendChild(link);
+
+/* Show console only when a proxied site loads */
+if (uvFrame) {
+  uvFrame.addEventListener("load", () => {
+    const isHome = !uvFrame.src || uvFrame.src === "about:blank";
+    consoleBar.style.display = isHome ? "none" : "block";
+    consoleBar.classList.remove("active");
+  });
+}
+
+
+/* Expand / collapse */
+consoleBar.addEventListener("mouseenter", () => {
+  consoleBar.classList.add("active");
+});
+consoleBar.addEventListener("mouseleave", () => {
+  consoleBar.classList.remove("active");
+});
+consoleIdle.addEventListener("click", () => {
+  consoleBar.classList.add("active");
+});
+
+
+/* Back */
+document.getElementById("nav-back").onclick = () => {
+  try { uvFrame.contentWindow.history.back(); } catch(e) {}
+};
+
+
+/* Forward */
+document.getElementById("nav-forward").onclick = () => {
+  try { uvFrame.contentWindow.history.forward(); } catch(e) {}
+};
+
+
+/* Go to URL */
+document.getElementById("console-go").onclick = () => {
+  const url = consoleInput.value.trim();
+  if (!url) return;
+
+
+  const addressBar = document.querySelector("input[type='text']");
+  const form = addressBar?.closest("form");
+
+
+  if (addressBar && form) {
+    addressBar.value = url;
+    form.requestSubmit();
   }
-  link.href = cloak.icon;
-})();
+};
+
+
+/* HOME — return to Fish Proxy menu */
+document.getElementById("console-home").onclick = () => {
+  if (uvFrame) {
+    uvFrame.src = "about:blank";
+  }
+  consoleBar.style.display = "none";
+
+
+  /* ensures homepage visible */
+  window.location.href = "/";
+};
+
+
+/* Reload */
+document.getElementById("console-reload").onclick = () => {
+  try { uvFrame.contentWindow.location.reload(); } catch(e) {}
+};
 </script>
 </body>
 </html>

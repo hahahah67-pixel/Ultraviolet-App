@@ -253,29 +253,28 @@ for (let i = 0; i < 350; i++) {
 
 <!-- 🔒 TAB CLOAK LOADER -->
 <script>
-const cloak = localStorage.getItem("fishCloak");
+(function() {
+  // ===== DEFAULT STUDY.COM CLOAK =====
+  const defaultCloak = {
+    title: "Study.com | Free Online Courses, Lessons & Practice",
+    icon: "https://study.com/favicon.ico"
+  };
 
-if (cloak) {
-  const data = JSON.parse(cloak);
-  document.title = data.title;
+  const saved = localStorage.getItem("fishCloak");
+  const cloak = saved ? JSON.parse(saved) : defaultCloak;
 
+  // Apply title
+  document.title = cloak.title;
+
+  // Apply favicon
   let link = document.querySelector("link[rel~='icon']");
   if (!link) {
     link = document.createElement("link");
     link.rel = "icon";
     document.head.appendChild(link);
   }
-  link.href = data.icon;
-} else {
-  // default Study.com cloak
-  document.title = "Study.com | Free Online Courses";
-
-  let link = document.createElement("link");
-  link.rel = "icon";
-  link.href = "https://study.com/favicon.ico";
-  document.head.appendChild(link);
-}
+  link.href = cloak.icon;
+})();
 </script>
-
 </body>
 </html>

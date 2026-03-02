@@ -5,23 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fish Proxy — Settings</title>
 
-<style>/* ===== Fish Proxy Background ===== */
+<style>
 body {
   background: linear-gradient(180deg, #3c7be0 0%, #1a3a8a 100%);
   color: white;
-  position: relative;
-  overflow-x: hidden;
+  margin: 0;
+  font-family: Inter, sans-serif;
 }
 
+/* Stars */
 .stars {
   position: fixed;
   width: 100%;
   height: 100%;
-  background: transparent;
   z-index: 0;
 }
 
-/* Back button same style as credits */
+/* Back button */
 .back-btn {
   position: absolute;
   top: 18px;
@@ -30,11 +30,76 @@ body {
   text-decoration: none;
   font-weight: 600;
   z-index: 2;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
 }
+
+/* Layout */
+.settings-container {
+  display: flex;
+  justify-content: flex-start;
+  padding: 80px 40px;
+}
+
+.settings-card {
+  background: rgba(0,0,0,0.25);
+  padding: 24px;
+  border-radius: 16px;
+  width: 340px;
+  backdrop-filter: blur(8px);
+}
+
+.settings-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.settings-desc {
+  font-size: 14px;
+  opacity: .8;
+  margin-bottom: 20px;
+}
+
+.option-grid {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.option {
+  text-align: center;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.option.selected {
+  background: rgba(255,255,255,0.2);
+}
+
+.option img {
+  width: 40px;
+  height: 40px;
+  display: block;
+  margin: 0 auto 6px;
+}
+
+.save-btn {
+  background: #5c8ed6;
+  border: none;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 </style>
 </head>
 <body>
+
+<div class="stars" id="stars"></div>
 
 <button class="back-btn" onclick="goBack()">← Back</button>
 
@@ -46,13 +111,13 @@ body {
     </div>
 
     <div class="option-grid">
-      <div class="option" onclick="selectCloak('classroom')">
+      <div class="option" onclick="selectCloak(this,'classroom')">
         <img src="https://ssl.gstatic.com/classroom/favicon.png">
         <span>Google Classroom</span>
       </div>
 
-      <div class="option" onclick="selectCloak('powerschool')">
-        <img src="https://www.powerschool.com/favicon.ico">
+      <div class="option" onclick="selectCloak(this,'powerschool')">
+        <img src="https://assets.powerschool.com/favicon.ico">
         <span>PowerSchool</span>
       </div>
     </div>
@@ -62,9 +127,25 @@ body {
 </div>
 
 <script>
+/* ⭐ star background */
+const stars = document.getElementById("stars");
+for (let i = 0; i < 350; i++) {
+  const star = document.createElement("div");
+  star.style.position = "absolute";
+  star.style.width = "2px";
+  star.style.height = "2px";
+  star.style.background = "white";
+  star.style.opacity = Math.random();
+  star.style.top = Math.random() * 100 + "%";
+  star.style.left = Math.random() * 100 + "%";
+  stars.appendChild(star);
+}
+
 let selected = null;
 
-function selectCloak(type) {
+function selectCloak(el, type) {
+  document.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
+  el.classList.add("selected");
   selected = type;
 }
 
@@ -78,7 +159,7 @@ function saveCloak() {
     },
     powerschool: {
       title: "PowerSchool",
-      icon: "https://www.powerschool.com/favicon.ico"
+      icon: "https://assets.powerschool.com/favicon.ico"
     }
   };
 
@@ -90,14 +171,6 @@ function goBack() {
   window.location.href = "/";
 }
 </script>
-<script>
-function saveCloak(title, icon) {
-  localStorage.setItem("cloakTitle", title);
-  localStorage.setItem("cloakIcon", icon);
-  window.location.href = "/";
-}
-</script>
+
 </body>
 </html>
-
-    

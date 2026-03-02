@@ -571,5 +571,22 @@ document.getElementById("console-reload").onclick = () => {
   try { uvFrame.contentWindow.location.reload(); } catch(e) {}
 };
 </script>
+
+<!-- 🔒 Fish Proxy Tab Cloak Loader -->
+<script>
+const cloak = localStorage.getItem("fishCloak");
+if (cloak) {
+  const data = JSON.parse(cloak);
+  document.title = data.title;
+
+  let link = document.querySelector("link[rel~='icon']");
+  if (!link) {
+    link = document.createElement("link");
+    link.rel = "icon";
+    document.head.appendChild(link);
+  }
+  link.href = data.icon;
+}
+</script>
 </body>
 </html>

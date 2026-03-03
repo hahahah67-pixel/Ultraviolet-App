@@ -3,173 +3,207 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fish Proxy — Settings</title>
+
+<title>Settings | Fish Proxy</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
 body {
-  background: linear-gradient(180deg, #3c7be0 0%, #1a3a8a 100%);
-  color: white;
-  margin: 0;
-  font-family: Inter, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    color: white;
+    background: linear-gradient(180deg, #3c7be0 0%, #1a3a8a 100%);
+    position: relative;
 }
 
-/* Stars */
-.stars {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
-
-/* Back button */
+/* BACK BUTTON */
 .back-btn {
-  position: absolute;
-  top: 18px;
-  left: 20px;
-  color: white;
-  text-decoration: none;
-  font-weight: 600;
-  z-index: 2;
-  background: none;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
+    position: fixed;
+    top: 18px;
+    left: 24px;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    color: white;
+    letter-spacing: 2px;
+    transition: transform 0.25s ease, text-shadow 0.25s ease;
+    z-index: 9999;
 }
 
-/* Layout */
-.settings-container {
-  display: flex;
-  justify-content: flex-start;
-  padding: 80px 40px;
+.back-btn:hover {
+    transform: scale(1.18);
+    text-shadow: 0 0 14px rgba(255,255,255,0.85);
+}
+
+/* STARS */
+.stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(255,255,255,0.5);
+    animation: drift linear infinite;
+}
+
+@keyframes drift {
+    from { transform: translateY(0px); }
+    to { transform: translateY(-120vh); }
+}
+
+/* PAGE */
+.page {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .settings-card {
-  background: rgba(0,0,0,0.25);
-  padding: 24px;
-  border-radius: 16px;
-  width: 340px;
-  backdrop-filter: blur(8px);
+    width: 500px; /* Bigger card */
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(12px);
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
-.settings-title {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 10px;
+.settings-card h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    letter-spacing: 2px;
 }
 
-.settings-desc {
-  font-size: 14px;
-  opacity: .8;
-  margin-bottom: 20px;
+/* SETTING ROW */
+.setting {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
 }
 
-.option-grid {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
+.setting span {
+    font-size: 16px;
+    font-weight: 600;
 }
 
-.option {
-  text-align: center;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 10px;
+/* TOGGLE */
+.switch {
+    position: relative;
+    width: 55px;
+    height: 28px;
 }
 
-.option.selected {
-  background: rgba(255,255,255,0.2);
+.switch input {
+    display: none;
 }
 
-.option img {
-  width: 40px;
-  height: 40px;
-  display: block;
-  margin: 0 auto 6px;
+.slider {
+    position: absolute;
+    cursor: pointer;
+    background-color: #888;
+    border-radius: 34px;
+    width: 100%;
+    height: 100%;
+    transition: .4s;
 }
 
-.save-btn {
-  background: #5c8ed6;
-  border: none;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 10px;
-  cursor: pointer;
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    top: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #5c8ed6;
+}
+
+input:checked + .slider:before {
+    transform: translateX(27px);
 }
 </style>
 </head>
+
 <body>
+
+<a href="/" class="back-btn">HOME</a>
 
 <div class="stars" id="stars"></div>
 
-<button class="back-btn" onclick="goBack()">← Back</button>
+<div class="page">
+    <div class="settings-card">
+        <h1>SETTINGS</h1>
 
-<div class="settings-container">
-  <div class="settings-card">
-    <div class="settings-title">Visual Tab Cloak</div>
-    <div class="settings-desc">
-      Cloak Fish Proxy with a custom favicon and title.
+        <div class="setting">
+            <span>Enable Moving Stars</span>
+            <label class="switch">
+                <input type="checkbox" id="starsToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="setting">
+            <span>Enable Tab Clock</span>
+            <label class="switch">
+                <input type="checkbox" id="clockToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+
     </div>
-
-    <div class="option-grid">
-      <div class="option" onclick="selectCloak(this,'classroom')">
-        <img src="https://ssl.gstatic.com/classroom/favicon.png">
-        <span>Google Classroom</span>
-      </div>
-
-      <div class="option" onclick="selectCloak(this,'powerschool')">
-        <img src="https://assets.powerschool.com/favicon.ico">
-        <span>PowerSchool</span>
-      </div>
-    </div>
-
-    <button class="save-btn" onclick="saveCloak()">Save</button>
-  </div>
 </div>
 
 <script>
-/* ⭐ star background */
-const stars = document.getElementById("stars");
+/* Generate Moving Stars */
+const starContainer = document.getElementById("stars");
 for (let i = 0; i < 350; i++) {
-  const star = document.createElement("div");
-  star.style.position = "absolute";
-  star.style.width = "2px";
-  star.style.height = "2px";
-  star.style.background = "white";
-  star.style.opacity = Math.random();
-  star.style.top = Math.random() * 100 + "%";
-  star.style.left = Math.random() * 100 + "%";
-  stars.appendChild(star);
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.left = Math.random() * 100 + "%";
+    star.style.top = Math.random() * 100 + "%";
+    star.style.animationDuration = (20 + Math.random() * 20) + "s";
+    starContainer.appendChild(star);
 }
 
-let selected = null;
+/* SETTINGS LOGIC */
+const starsToggle = document.getElementById("starsToggle");
+const clockToggle = document.getElementById("clockToggle");
 
-function selectCloak(el, type) {
-  document.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
-  el.classList.add("selected");
-  selected = type;
-}
+/* Load saved settings */
+starsToggle.checked = localStorage.getItem("stars") !== "false";
+clockToggle.checked = localStorage.getItem("tabClock") === "true";
 
-function saveCloak() {
-  if (!selected) return alert("Select an option first");
+/* Save changes */
+starsToggle.addEventListener("change", () => {
+    localStorage.setItem("stars", starsToggle.checked);
+});
 
-  const cloaks = {
-    classroom: {
-      title: "Classes",
-      icon: "https://ssl.gstatic.com/classroom/favicon.png"
-    },
-    powerschool: {
-      title: "PowerSchool",
-      icon: "https://assets.powerschool.com/favicon.ico"
-    }
-  };
-
-  localStorage.setItem("fishCloak", JSON.stringify(cloaks[selected]));
-  window.location.href = "/";
-}
-
-function goBack() {
-  window.location.href = "/";
-}
+clockToggle.addEventListener("change", () => {
+    localStorage.setItem("tabClock", clockToggle.checked);
+});
 </script>
 
 </body>

@@ -417,15 +417,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (starField) starField.style.display = "none";
   }
 
-  const tabClockEnabled = localStorage.getItem("tabClock") === "true";
-  if (tabClockEnabled) {
-    setInterval(() => {
-      const now = new Date();
-      document.title = now.toLocaleTimeString();
-    }, 1000);
-  }
-
-});
+ 
 </script>
 <!-- Browser Console -->
 <div id="browser-console" class="browser-console">

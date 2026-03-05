@@ -541,7 +541,14 @@ document.getElementById("console-go").onclick = () => {
 };
 
 document.getElementById("console-home").onclick = () => {
-  uvFrame.src = "about:blank";
+  const frame = document.getElementById("uv-frame");
+  const homeUI = document.getElementById("home-ui");
+
+  frame.src = "about:blank";
+  frame.style.display = "none";
+
+  if (homeUI) homeUI.style.display = "flex";
+
   consoleBar.style.display = "none";
 };
 

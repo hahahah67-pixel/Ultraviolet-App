@@ -1,44 +1,85 @@
 "use strict";
 
-const form = document.getElementById("uv-form");
-const address = document.getElementById("uv-address");
-const searchEngine = document.getElementById("uv-search-engine");
-const error = document.getElementById("uv-error");
-const errorCode = document.getElementById("uv-error-code");
+window.addEventListener("load", () => {
+    const form = document.getElementById("uv-form");
+    const address = document.getElementById("uv-address");
+    const searchEngine = document.getElementById("uv-search-engine");
+    const error = document.getElementById("uv-error");
+    const errorCode = document.getElementById("uv-error-code");
+    const homeUI = document.getElementById("home-ui");
+    const frame = document.getElementById("uv-frame");
 
-const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+    const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 
-form.addEventListener("submit", async (event) => {
-	event.preventDefault();
+    // Helper to validate or convert user input to a full URL
+    function search(input, engine) {
+        input = input.trim();
+        if (!input) return "";
+        // If it's already a full URL
+        if (/^https?:\/\//i.test(input)) return input;
+        // If it looks like domain-only (example.com), add https
+        if (/^[\w\-]+\.[\w\-]+/.test(input)) return "https://" + input;
+        // Otherwise treat as a search query
+        return engine.replace("%s", encodeURIComponent(input));
+    }
 
-	try {
-		await registerSW();
-	} catch (err) {
-		error.textContent = "Failed to register service worker.";
-		errorCode.textContent = err.toString();
-		throw err;
-	}
+    async function loadSite(url) {
+        if (!url) {
+            error.textContent = "Please enter a valid URL or search term.";
+            return;
+        }
 
-	const url = search(address.value, searchEngine.value);
+        try {
+            await registerSW();
+        } catch (err) {
+            error.textContent = "Failed to register service worker.";
+            errorCode.textContent = err.toString();
+            return;
+        }
 
-	let frame = document.getElementById("uv-frame");
+        // Hide homepage and show iframe
+        homeUI.style.display = "none";
+        frame.style.display = "block";
 
-	// 🔥 Hide homepage completely
-	document.getElementById("home-ui").style.display = "none";
+        const wispUrl =
+            (location.protocol === "https:" ? "wss" : "ws") +
+            "://" +
+            location.host +
+            "/wisp/";
 
-	frame.style.display = "block";
+        try {
+            if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
+                await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+            }
+        } catch (err) {
+            error.textContent = "Failed to setup connection.";
+            errorCode.textContent = err.toString();
+            return;
+        }
 
-	let wispUrl =
-		(location.protocol === "https:" ? "wss" : "ws") +
-		"://" +
-		location.host +
-		"/wisp/";
+        // Encode URL using UV config
+        frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+    }
 
-	if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
-		await connection.setTransport("/epoxy/index.mjs", [
-			{ wisp: wispUrl },
-		]);
-	}
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        error.textContent = "";
+        errorCode.textContent = "";
+        const url = search(address.value, searchEngine.value);
+        loadSite(url);
+    });
 
-	frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+    // Fallback: if iframe fails or blank, show homepage
+    frame.addEventListener("error", () => {
+        homeUI.style.display = "flex";
+        frame.style.display = "none";
+        error.textContent = "Failed to load the site.";
+    });
+
+    frame.addEventListener("load", () => {
+        if (!frame.src || frame.src === "about:blank") {
+            homeUI.style.display = "flex";
+            frame.style.display = "none";
+        }
+    });
 });

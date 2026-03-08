@@ -343,7 +343,7 @@ body {
     </div>
 
     <form id="uv-form">
-      <input id="uv-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
+<input id="uv-search-engine" type="hidden" />
 
         <div class="search-container">
             <input id="uv-address" type="text" placeholder="Search or enter URL">
@@ -558,8 +558,44 @@ document.getElementById("console-reload").onclick = () => {
 </script>
 
 <script src="register-sw.js"></script>
+
+<script>
+
+/* SEARCH ENGINE MEMORY SYSTEM */
+
+const engineInput = document.getElementById("uv-search-engine");
+
+const defaultEngine = "https://duckduckgo.com/?q=%s";
+
+/* load saved engine */
+let savedEngine = localStorage.getItem("fish_search_engine");
+
+if (!savedEngine) {
+    savedEngine = defaultEngine;
+    localStorage.setItem("fish_search_engine", savedEngine);
+}
+
+/* apply engine to fish proxy */
+if (engineInput) {
+    engineInput.value = savedEngine;
+}
+
+/* allow settings page to change engine */
+window.setFishSearchEngine = function(engineURL) {
+
+    localStorage.setItem("fish_search_engine", engineURL);
+
+    const input = document.getElementById("uv-search-engine");
+    if (input) input.value = engineURL;
+
+};
+
+</script>
+
 <script src="search.js"></script>
 <script src="index.js"></script>
+
+    
 
 </body>
 </html>

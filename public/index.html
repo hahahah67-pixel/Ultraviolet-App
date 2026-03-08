@@ -51,7 +51,7 @@ body {
     position: relative;
 }
 
-/* CREDIT BUTTON */
+/* ===== CREDIT BUTTON (ADDED) ===== */
 .credit-btn {
     position: fixed;
     top: 18px;
@@ -73,29 +73,7 @@ body {
 .credit-btn:active {
     transform: scale(1.05);
 }
-
-/* SETTINGS BUTTON (ADDED) */
-.settings-btn {
-    position: fixed;
-    top: 18px;
-    right: 120px;
-    color: white;
-    font-size: 18px;
-    font-weight: 600;
-    text-decoration: none;
-    letter-spacing: 2px;
-    z-index: 9999;
-    transition: transform 0.25s ease, text-shadow 0.25s ease;
-}
-
-.settings-btn:hover {
-    transform: scale(1.18);
-    text-shadow: 0 0 14px rgba(255,255,255,0.85);
-}
-
-.settings-btn:active {
-    transform: scale(1.05);
-}
+/* ===== END CREDIT BUTTON ===== */
 
 /* Stars */
 .stars {
@@ -309,6 +287,7 @@ body {
     object-fit: contain;
 }
 
+/* Bottom left/right text */
 .bottom-left, .bottom-right {
     position: absolute;
     font-weight: 700;
@@ -326,7 +305,6 @@ body {
 
 <div id="home-ui">
 
-<a href="/settings.html" class="settings-btn">SETTINGS</a>
 <a href="/credit.html" class="credit-btn">CREDIT</a>
 
 <div class="stars" id="stars"></div>
@@ -362,9 +340,7 @@ body {
 <div class="bottom-left">Made by Nyan Cat LOL</div>
 <div class="bottom-right">© 2026 Fish Proxy</div>
 
-</div>
-
-<iframe style="display: none; width: 100vw; height: 100vh; border: none; position: fixed; top: 0; left: 0; background: white;" id="uv-frame"></iframe>
+</div> <iframe style="display: none; width: 100vw; height: 100vh; border: none; position: fixed; top: 0; left: 0; background: white;" id="uv-frame"></iframe>
 
 <script>
 const starCount = Math.floor(Math.random() * 101) + 300;
@@ -408,26 +384,10 @@ quickLinks.forEach(site => {
 });
 </script>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-  const starsEnabled = localStorage.getItem("stars") !== "false";
-  if (!starsEnabled) {
-    const starField = document.getElementById("stars");
-    if (starField) starField.style.display = "none";
-  }
-
-  const tabClockEnabled = localStorage.getItem("tabClock") === "true";
-  if (tabClockEnabled) {
-    setInterval(() => {
-      const now = new Date();
-      document.title = now.toLocaleTimeString();
-    }, 1000);
-  }
-
-});
-</script>
-<!-- Browser Console- ->
+<script src="register-sw.js"></script>
+<script src="search.js"></script>
+<script src="index.js"></script>
+<div id="browser-console" class="browser-console">
   <div class="console-idle">browser console</div>
 
   <div class="console-controls">
@@ -607,15 +567,10 @@ document.getElementById("console-home").onclick = () => {
 /* Reload */
 document.getElementById("console-reload").onclick = () => {
   try { uvFrame.contentWindow.location.reload(); } catch(e) {}
-
-
-<script src="register-sw.js"></script>
-<script src="search.js"></script>
-<script src="index.js"></script>
-
+};
+</script>
 </body>
 </html>
-
 
 
     

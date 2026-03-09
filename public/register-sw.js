@@ -1,4 +1,11 @@
 "use strict";
+
+navigator.serviceWorker.getRegistrations().then(function(registrations) {
+  for (let registration of registrations) {
+    registration.unregister();
+  }
+});
+
 const stockSW = "./sw.js";
 
 /**
@@ -24,6 +31,6 @@ async function registerSW() {
 	// Ultraviolet service worker
 	await navigator.serviceWorker.register(stockSW);
 
-	// Scramjet service worker
+	// Scramjet service worker (disabled for now)
 	// await navigator.serviceWorker.register("./scramjet/sw.js", { scope: "/service/sj/" });
 }

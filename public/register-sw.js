@@ -25,5 +25,5 @@ async function registerSW() {
 	await navigator.serviceWorker.register(stockSW);
 
 	// Scramjet service worker
-	await navigator.serviceWorker.register("./scramjet/sw.js", { scope: "/service/sj/" });
+	// await navigator.serviceWorker.register("./scramjet/sw.js", { scope: "/service/sj/" });
 }

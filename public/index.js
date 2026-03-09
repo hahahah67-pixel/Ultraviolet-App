@@ -9,16 +9,22 @@ window.addEventListener("load", () => {
     const homeUI = document.getElementById("home-ui");
     const frame = document.getElementById("uv-frame");
 
+    // Proxy engine setting
+    let proxyEngine = localStorage.getItem("proxyEngine") || "uv";
+
     const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 
     // Helper to validate or convert user input to a full URL
     function search(input, engine) {
         input = input.trim();
         if (!input) return "";
+
         // If it's already a full URL
         if (/^https?:\/\//i.test(input)) return input;
+
         // If it looks like domain-only (example.com), add https
         if (/^[\w\-]+\.[\w\-]+/.test(input)) return "https://" + input;
+
         // Otherwise treat as a search query
         return engine.replace("%s", encodeURIComponent(input));
     }
@@ -57,8 +63,12 @@ window.addEventListener("load", () => {
             return;
         }
 
-        // Encode URL using UV config
-        frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+        // Launch correct proxy engine
+        if (proxyEngine === "uv") {
+            frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+        } else if (proxyEngine === "sj") {
+            frame.src = "/scramjet/" + encodeURIComponent(url);
+        }
     }
 
     form.addEventListener("submit", (e) => {

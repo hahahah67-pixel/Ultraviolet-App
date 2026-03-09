@@ -73,6 +73,21 @@ body {
 .credit-btn:active {
     transform: scale(1.05);
 }
+
+/* top right buttons layout */
+.top-buttons {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    display: flex;
+    gap: 18px;
+    z-index: 9999;
+}
+
+/* remove fixed positioning when inside container */
+.top-buttons .credit-btn {
+    position: static;
+}
 /* ===== END CREDIT BUTTON ===== */
 
 /* Stars */

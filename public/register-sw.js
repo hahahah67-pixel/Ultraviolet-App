@@ -1,28 +1,28 @@
 "use strict";
+/**
+ * Distributed with Ultraviolet and compatible with most configurations.
+ */
+const stockSW = "/uv/sw.js";
 
-const stockSW = "/sw.js";
-
+/**
+ * List of hostnames that are allowed to run serviceworkers on http://
+ */
 const swAllowedHostnames = ["localhost", "127.0.0.1"];
 
+/**
+ * Global util
+ * Used in 404.html and index.html
+ */
 async function registerSW() {
-
 	if (!navigator.serviceWorker) {
-		console.warn("Service workers not supported.");
-		return;
+		if (
+			location.protocol !== "https:" &&
+			!swAllowedHostnames.includes(location.hostname)
+		)
+			throw new Error("Service workers cannot be registered without https.");
+
+		throw new Error("Your browser doesn't support service workers.");
 	}
 
-	if (
-		location.protocol !== "https:" &&
-		!swAllowedHostnames.includes(location.hostname)
-	) {
-		console.warn("Service workers require HTTPS.");
-		return;
-	}
-
-	try {
-		await navigator.serviceWorker.register(stockSW);
-		console.log("Service worker registered.");
-	} catch (err) {
-		console.error("Service worker registration failed:", err);
-	}
+	await navigator.serviceWorker.register(stockSW);
 }

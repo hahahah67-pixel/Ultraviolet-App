@@ -21,5 +21,9 @@ async function registerSW() {
 		throw new Error("Your browser doesn't support service workers.");
 	}
 
+	// Ultraviolet service worker
 	await navigator.serviceWorker.register(stockSW);
+
+	// Scramjet service worker
+	await navigator.serviceWorker.register("./scramjet/sw.js", { scope: "/service/sj/" });
 }

@@ -305,7 +305,10 @@ body {
 
 <div id="home-ui">
 
+<div class="top-buttons">
 <a href="/credit.html" class="credit-btn">CREDIT</a>
+<a href="#" id="settings-open" class="credit-btn">SETTINGS</a>
+</div>
 
 <div class="stars" id="stars"></div>
 
@@ -568,6 +571,104 @@ document.getElementById("console-home").onclick = () => {
 document.getElementById("console-reload").onclick = () => {
   try { uvFrame.contentWindow.location.reload(); } catch(e) {}
 };
+</script>
+
+    <!-- SETTINGS PAGE -->
+<div id="settings-page" style="display:none; position:fixed; inset:0; z-index:10000; background:linear-gradient(180deg,#3c7be0 0%,#1a3a8a 100%);">
+
+<div class="stars" id="settings-stars"></div>
+
+<button id="settings-back" style="
+position:absolute;
+top:18px;
+left:24px;
+background:none;
+border:none;
+color:white;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+letter-spacing:1px;
+">← BACK</button>
+
+<div style="
+height:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+">
+
+<div style="
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(10px);
+padding:40px;
+border-radius:30px;
+width:320px;
+color:white;
+text-align:left;
+">
+
+<h2 style="margin-bottom:10px;">Proxy Type</h2>
+
+<p style="opacity:.8;margin-bottom:25px;">
+Select your proxy type
+</p>
+
+<label style="display:flex;justify-content:space-between;margin-bottom:15px;cursor:pointer;">
+<span>Ultraviolet (default)</span>
+<input type="radio" name="proxy" value="uv">
+</label>
+
+<label style="display:flex;justify-content:space-between;cursor:pointer;">
+<span>Scramjet</span>
+<input type="radio" name="proxy" value="sj">
+</label>
+
+</div>
+</div>
+</div>
+
+<script>
+/* SETTINGS SYSTEM */
+
+const settingsPage = document.getElementById("settings-page");
+const settingsOpen = document.getElementById("settings-open");
+const settingsBack = document.getElementById("settings-back");
+
+settingsOpen.onclick = e => {
+    e.preventDefault();
+    document.getElementById("home-ui").style.display="none";
+    settingsPage.style.display="block";
+};
+
+settingsBack.onclick = () => {
+    settingsPage.style.display="none";
+    document.getElementById("home-ui").style.display="flex";
+};
+
+/* star background */
+const settingsStars = document.getElementById("settings-stars");
+for(let i=0;i<350;i++){
+  const star=document.createElement("div");
+  star.className="star";
+  star.style.top=Math.random()*100+"%";
+  star.style.left=Math.random()*100+"%";
+  settingsStars.appendChild(star);
+}
+
+/* proxy selection */
+const saved = localStorage.getItem("proxyEngine") || "uv";
+
+document.querySelectorAll("input[name='proxy']").forEach(r=>{
+  if(r.value===saved) r.checked=true;
+
+  r.addEventListener("change",()=>{
+    localStorage.setItem("proxyEngine", r.value);
+
+    settingsPage.style.display="none";
+    document.getElementById("home-ui").style.display="flex";
+  });
+});
 </script>
 </body>
 </html>

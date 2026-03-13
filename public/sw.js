@@ -1,16 +1,36 @@
-importScripts("/scram/scramjet.all.js");
+importScripts("/uv/uv.bundle.js");
+importScripts("/uv/uv.config.js");
+
+// Scramjet runtime
+importScripts("/scramjet/scramjet.all.js");
+importScripts("/scramjet/scramjet.sync.js");
 
 const { ScramjetServiceWorker } = $scramjetLoadWorker();
 const scramjet = new ScramjetServiceWorker();
 
-async function handleRequest(event) {
-	await scramjet.loadConfig();
-	if (scramjet.route(event)) {
-		return scramjet.fetch(event);
-	}
-	return fetch(event.request);
-}
+// Original UV worker
+const uv = new UVServiceWorker();
 
 self.addEventListener("fetch", (event) => {
-	event.respondWith(handleRequest(event));
+    const url = new URL(event.request.url);
+
+    // SCRAMJET ROUTE
+    if (url.pathname.startsWith("/scramjet/")) {
+        event.respondWith((async () => {
+            await scramjet.loadConfig();
+
+            if (scramjet.route(event)) {
+                return scramjet.fetch(event);
+            }
+
+            return fetch(event.request);
+        })());
+        return;
+    }
+
+    // ORIGINAL ULTRAVIOLET ROUTE (unchanged)
+    if (url.pathname.startsWith(__uv$config.prefix)) {
+        event.respondWith(uv.fetch(event));
+        return;
+    }
 });

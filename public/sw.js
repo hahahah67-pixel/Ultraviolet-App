@@ -29,8 +29,9 @@ self.addEventListener("fetch", (event) => {
     }
 
     // ORIGINAL ULTRAVIOLET ROUTE (unchanged)
-    if (url.pathname.startsWith(__uv$config.prefix)) {
-        event.respondWith(uv.fetch(event));
-        return;
-    }
+if (url.pathname.startsWith(__uv$config.prefix)) {
+    event.respondWith(uv.fetch(event.request));
+    return;
+}
+
 });

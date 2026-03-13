@@ -64,12 +64,14 @@ window.addEventListener("load", () => {
         }
 
         // Launch correct proxy engine
-        if (proxyEngine === "uv") {
-            frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
-        } else if (proxyEngine === "sj") {
-            frame.src = "/scramjet/" + encodeURIComponent(url);
-        }
-    }
+frame.src = "about:blank";
+await new Promise(r => setTimeout(r, 50));
+
+if (proxyEngine === "uv") {
+    frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+} else if (proxyEngine === "sj") {
+    frame.src = "/scramjet/" + encodeURIComponent(url);
+}
 
     form.addEventListener("submit", (e) => {
         e.preventDefault();

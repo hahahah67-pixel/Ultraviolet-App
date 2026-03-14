@@ -54,8 +54,9 @@ app.use("/baremux/", express.static(baremuxPath));
 // Error for everything else
 app.use((req, res) => {
 	res.status(404);
-	res.sendFile("./public/404.html");
+	res.sendFile(join(process.cwd(), "public", "404.html"));
 });
+
 
 const server = createServer();
 

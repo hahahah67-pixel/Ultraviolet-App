@@ -9,17 +9,14 @@ importScripts("/scramjet/scramjet.sync.js");
 const { ScramjetServiceWorker } = $scramjetLoadWorker();
 const scramjet = new ScramjetServiceWorker();
 
-// Ultraviolet worker
 const uv = new UVServiceWorker();
 
 self.addEventListener("fetch", (event) => {
-
     const url = new URL(event.request.url);
 
-    // SCRAMJET ROUTE
+    // Scramjet proxy
     if (url.pathname.startsWith("/scramjet/")) {
         event.respondWith((async () => {
-
             await scramjet.loadConfig();
 
             if (scramjet.route(event)) {
@@ -27,16 +24,16 @@ self.addEventListener("fetch", (event) => {
             }
 
             return fetch(event.request);
-
         })());
-
         return;
     }
 
-    // ULTRAVIOLET ROUTE
+    // Ultraviolet proxy
     if (url.pathname.startsWith(__uv$config.prefix)) {
-        event.respondWith(uv.fetch(event.request));
+        event.respondWith(uv.fetch(event));
         return;
     }
 
+    // Normal requests
+    event.respondWith(fetch(event.request));
 });

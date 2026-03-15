@@ -93,6 +93,4 @@ Ultraviolet-App-main/
 
 ## Requirements
 
-- All normal requirements of UV ex. app ONLY
--
--
+- All normal requirements of ultraviltot example app ONLY

@@ -93,6 +93,6 @@ Ultraviolet-App-main/
 
 ## Requirements
 
-- All normal requirements of ultraviltot exmaple app no extra requierments.
+- All normal requirements of UV ex. app ONLY
 -
 -

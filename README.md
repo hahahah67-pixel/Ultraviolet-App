@@ -91,6 +91,5 @@ Ultraviolet-App-main/
     └── index.js
 
 
-## Requirements
-
-- All normal requirements of UV example app ONLY
+## Requirement
+-all requirments of UV EX app ONLY

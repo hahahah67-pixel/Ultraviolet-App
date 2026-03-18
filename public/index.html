@@ -143,5 +143,168 @@
 		<script src="register-sw.js"></script>
 		<script src="search.js"></script>
 		<script src="index.js"></script>
+
+		<div id="browser-console" class="browser-console">
+		  <div class="console-idle">browser console</div>
+		  <div class="console-controls">
+		    <button id="nav-back" title="Back">◀</button>
+		    <button id="nav-forward" title="Forward">▶</button>
+		    <input id="console-url" type="text" placeholder="URL">
+		    <button id="console-go" title="Go">Go</button>
+		    <button id="console-home" title="Home">
+		      <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+		        <path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3z"/>
+		      </svg>
+		    </button>
+		    <button id="console-reload" title="Reload">⟳</button>
+		  </div>
+		</div>
+
+		<style>
+		.browser-console {
+		  position: fixed;
+		  bottom: 8px;
+		  left: 50%;
+		  transform: translateX(-50%);
+		  background: rgba(0,0,0,0.88);
+		  backdrop-filter: blur(6px);
+		  border-radius: 999px;
+		  display: none;
+		  z-index: 9999;
+		  overflow: hidden;
+		  box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+		  transition: all .25s ease;
+		}
+
+		.console-idle {
+		  padding: 10px 26px;
+		  color: white;
+		  font-size: 12px;
+		  letter-spacing: .6px;
+		  text-transform: lowercase;
+		  cursor: pointer;
+		  opacity: 0.85;
+		  transition: all .25s ease;
+		}
+
+		.console-idle:hover {
+		  opacity: 1;
+		}
+
+		.console-controls {
+		  display: none;
+		  align-items: center;
+		  gap: 6px;
+		  padding: 6px 10px;
+		  animation: fadeIn .2s ease;
+		}
+
+		.browser-console.active .console-idle {
+		  display: none;
+		}
+
+		.browser-console.active .console-controls {
+		  display: flex;
+		}
+
+		.browser-console button {
+		  width: 30px;
+		  height: 30px;
+		  border-radius: 50%;
+		  border: none;
+		  background: #111;
+		  color: white;
+		  cursor: pointer;
+		  font-size: 13px;
+		  display: flex;
+		  align-items: center;
+		  justify-content: center;
+		  transition: all .15s ease;
+		}
+
+		.browser-console button:hover {
+		  background: #222;
+		  transform: scale(1.08);
+		}
+
+		.browser-console input {
+		  height: 28px;
+		  width: 140px;
+		  border-radius: 999px;
+		  border: none;
+		  padding: 0 12px;
+		  background: #000;
+		  color: white;
+		  font-size: 12px;
+		  transition: width .2s ease;
+		}
+
+		.browser-console.active input {
+		  width: 180px;
+		}
+
+		@keyframes fadeIn {
+		  from { opacity: 0; transform: translateY(6px); }
+		  to { opacity: 1; transform: translateY(0); }
+		}
+		</style>
+
+		<script>
+		const consoleBar = document.getElementById("browser-console");
+		const consoleIdle = document.querySelector(".console-idle");
+		const consoleInput = document.getElementById("console-url");
+		const uvFrame = document.querySelector("iframe");
+
+		if (uvFrame) {
+		  uvFrame.addEventListener("load", () => {
+		    const isHome = !uvFrame.src || uvFrame.src === "about:blank";
+		    consoleBar.style.display = isHome ? "none" : "block";
+		    consoleBar.classList.remove("active");
+		  });
+		}
+
+		consoleBar.addEventListener("mouseenter", () => {
+		  consoleBar.classList.add("active");
+		});
+		consoleBar.addEventListener("mouseleave", () => {
+		  consoleBar.classList.remove("active");
+		});
+		consoleIdle.addEventListener("click", () => {
+		  consoleBar.classList.add("active");
+		});
+
+		document.getElementById("nav-back").onclick = () => {
+		  try { uvFrame.contentWindow.history.back(); } catch(e) {}
+		};
+
+		document.getElementById("nav-forward").onclick = () => {
+		  try { uvFrame.contentWindow.history.forward(); } catch(e) {}
+		};
+
+		document.getElementById("console-go").onclick = () => {
+		  const url = consoleInput.value.trim();
+		  if (!url) return;
+		  const addressBar = document.querySelector("input[type='text']");
+		  const form = addressBar?.closest("form");
+		  if (addressBar && form) {
+		    addressBar.value = url;
+		    form.requestSubmit();
+		  }
+		};
+
+		document.getElementById("console-home").onclick = () => {
+		  if (uvFrame) {
+		    uvFrame.src = "about:blank";
+		  }
+		  consoleBar.style.display = "none";
+		  window.location.href = "/";
+		};
+
+		document.getElementById("console-reload").onclick = () => {
+		  try { uvFrame.contentWindow.location.reload(); } catch(e) {}
+		};
+		</script>
+
 	</body>
-</html>
+	</html>
+	

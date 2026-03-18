@@ -3,12 +3,58 @@ import { hostname } from "node:os";
 import { createServer } from "node:http";
 import express from "express";
 import wisp from "wisp-server-node";
+import cookieParser from "cookie-parser";
 
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 
 const app = express();
+app.use(cookieParser());
+
+// ===== Private beta gate =====
+const ENTRY_PATHS = ["/index.html"];
+const ACCESS_COOKIE = "beta_access";
+
+const SW_ASSET_PREFIXES = [
+  "/sw.js",
+  "/uv/",
+  "/scramjet/",
+  "/epoxy/",
+  "/baremux/",
+];
+
+// Gate middleware
+app.use((req, res, next) => {
+  const hasAccessCookie = req.cookies?.[ACCESS_COOKIE] === "true";
+
+  if (ENTRY_PATHS.includes(req.path) || hasAccessCookie) {
+    return next();
+  }
+
+  if (req.path === "/health") return next();
+
+  if (SW_ASSET_PREFIXES.some(p => req.path.startsWith(p))) return next();
+
+  return res.sendStatus(404);
+});
+
+// Health check endpoint — responds 200 for AWS load balancer
+app.get("/health", (req, res) => {
+  res.sendStatus(200);
+});
+
+// Entry point — sets session cookie and redirects
+app.get("/index.html", (req, res) => {
+  res.cookie(ACCESS_COOKIE, "true", {
+    httpOnly: true,
+    sameSite: "strict",
+    path: "/"
+  });
+  res.redirect("/");
+});
+// ===== End beta gate =====
+
 // Load our publicPath first and prioritize it over UV.
 app.use(express.static("./public"));
 // Load vendor files last.

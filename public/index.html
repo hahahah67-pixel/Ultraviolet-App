@@ -1,6 +1,30 @@
 <!doctype html>
 <html>
 	<head>
+		<script>
+		(function() {
+		    document.title = "Study.com | free Online Courses, Lessons & Practice";
+		    const iconUrl = "https://study.com/favicon.ico";
+		    let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+		    link.type = 'image/x-icon';
+		    link.rel = 'shortcut icon';
+		    link.href = iconUrl;
+		    document.head.appendChild(link);
+
+		    const metaTags = [
+		        { name: "description", content: "Take online courses on Study.com that are fun and effective. Help your kids with their biology and math homework." },
+		        { name: "keywords", content: "education, flashcards, study, math, help, biology, science lessons" },
+		        { name: "theme-color", content: "#ffffff" }
+		    ];
+
+		    metaTags.forEach(tag => {
+		        let element = document.querySelector(`meta[name="${tag.name}"]`) || document.createElement('meta');
+		        element.name = tag.name;
+		        element.content = tag.content;
+		        document.head.appendChild(element);
+		    });
+		})();
+		</script>
 		<meta charset="utf-8" />
 		<meta
 			name="viewport"
@@ -23,7 +47,6 @@
 		<meta name="googlebot" content="index, follow, snippet" />
 		<link rel="shortcut icon" content="favicon.ico" />
 		<link rel="stylesheet" href="index.css" />
-		
 
 		<script src="baremux/index.js"></script>
 		<script src="uv/uv.bundle.js"></script>

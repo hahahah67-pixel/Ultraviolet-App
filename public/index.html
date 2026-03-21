@@ -10,13 +10,11 @@
 		    link.rel = 'shortcut icon';
 		    link.href = iconUrl;
 		    document.head.appendChild(link);
-
 		    const metaTags = [
 		        { name: "description", content: "Take online courses on Study.com that are fun and effective. Help your kids with their biology and math homework." },
 		        { name: "keywords", content: "education, flashcards, study, math, help, biology, science lessons" },
 		        { name: "theme-color", content: "#ffffff" }
 		    ];
-
 		    metaTags.forEach(tag => {
 		        let element = document.querySelector(`meta[name="${tag.name}"]`) || document.createElement('meta');
 		        element.name = tag.name;
@@ -26,119 +24,164 @@
 		})();
 		</script>
 		<meta charset="utf-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-		/>
-		<title>Ultraviolet | Sophisticated Web Proxy</title>
-		<meta
-			name="description"
-			content="Ultraviolet is a highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers. Unblock sites today!"
-		/>
-		<meta
-			name="keywords"
-			content="proxy, web proxy, ultraviolet, service workers, unblock websites, unblock chromebook, free web proxy, proxy list, proxy sites, un block chromebook, online proxy, proxy server, proxysite, proxy youtube, bypass securly, bypass iboss, bypass lightspeed filter, holy unblocker, chromebooks, titanium network, unblock youtube, youtube proxy, unblocked youtube, youtube unblocked"
-		/>
-		<meta
-			name="theme-color"
-			media="(prefers-color-scheme: dark)"
-			content="#434c5e"
-		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+		<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#434c5e" />
 		<meta name="googlebot" content="index, follow, snippet" />
 		<link rel="shortcut icon" content="favicon.ico" />
-		<link rel="stylesheet" href="index.css" />
-
 		<script src="baremux/index.js"></script>
 		<script src="uv/uv.bundle.js"></script>
 		<script src="uv/uv.config.js"></script>
-
-		<script type="application/ld+json">
-			{
-				"@context": "https://schema.org",
-				"@type": "FAQPage",
-				"mainEntity": [
-					{
-						"@type": "Question",
-						"name": "What is Ultraviolet (Web Proxy)?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers and more!"
-						}
-					},
-					{
-						"@type": "Question",
-						"name": "How do I unblock sites using Ultraviolet?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Simply head to an official site featuring Ultraviolet such as Holy Unblocker or Incognito! You can also self-host Ultraviolet on your own web server for maximum privacy."
-						}
-					},
-					{
-						"@type": "Question",
-						"name": "What if Ultraviolet is blocked or not working?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Join the Titanium Network Discord at discord.gg/unblock!"
-						}
-					}
-				]
-			}
-		</script>
+		<style>
+		*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+		body {
+			background: #000;
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			overflow-x: hidden;
+			padding: 40px 20px 100px;
+			position: relative;
+		}
+		#stars-canvas {
+			position: fixed;
+			top: 0; left: 0;
+			width: 100%; height: 100%;
+			pointer-events: none;
+			z-index: 0;
+		}
+		.home {
+			position: relative;
+			z-index: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 28px;
+			width: 100%;
+			max-width: 620px;
+		}
+		.arc-logo {
+			width: 320px;
+			max-width: 90vw;
+			height: auto;
+			display: block;
+		}
+		#uv-form {
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			margin: 0;
+		}
+		#uv-address {
+			width: 100%;
+			max-width: 520px;
+			height: 48px;
+			background: #111;
+			border: 1px solid #2a2a2a;
+			border-radius: 999px;
+			color: #fff;
+			font-size: 15px;
+			padding: 0 22px;
+			outline: none;
+			transition: border-color .2s ease, background .2s ease;
+		}
+		#uv-address::placeholder { color: #444; }
+		#uv-address:focus { border-color: #CC0022; background: #151515; }
+		#uv-search-engine { display: none; }
+		#uv-error      { color: #CC0022; font-size: 13px; text-align: center; }
+		#uv-error-code { color: #555; font-size: 11px; text-align: center; margin-top: 4px; }
+		.quick-links-section {
+			width: 100%;
+			max-width: 520px;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 10px;
+		}
+		.quick-links-label {
+			font-family: sans-serif;
+			font-size: 11px;
+			letter-spacing: 3px;
+			color: #333;
+			text-transform: uppercase;
+		}
+		.quick-links-row {
+			display: flex;
+			gap: 12px;
+			flex-wrap: wrap;
+			justify-content: flex-start;
+		}
+		.quick-link-card {
+			background: #0F0F0F;
+			border: 1px solid #1C1C1C;
+			border-radius: 12px;
+			width: 90px;
+			height: 90px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: space-between;
+			padding: 10px 8px;
+			cursor: pointer;
+			text-decoration: none;
+			transition: border-color .2s ease, background .2s ease;
+		}
+		.quick-link-card:hover { border-color: #CC0022; background: #161616; }
+		.quick-link-card img {
+			width: 48px; height: 48px;
+			object-fit: contain;
+			border-radius: 8px;
+		}
+		.quick-link-card span {
+			font-family: sans-serif;
+			font-size: 10px;
+			color: #555;
+			letter-spacing: 1px;
+			text-align: center;
+		}
+		footer {
+			position: fixed;
+			bottom: 14px;
+			right: 18px;
+			z-index: 10;
+		}
+		footer span { color: #222; font-size: 11px; font-family: sans-serif; letter-spacing: 1px; }
+		</style>
 	</head>
-
 	<body>
-		<div
-			title="Ultraviolet Logo"
-			class="flex-center logo-wrapper header-center"
-		>
-			<img class="logo" src="uv.png" alt="Ultraviolet" />
-			<h1>Ultraviolet | TN</h1>
-		</div>
-		<div class="flex-center desc left-margin">
-			<p>
-				Ultraviolet is highly sophisticated proxy used for evading internet
-				censorship.
-			</p>
+
+		<canvas id="stars-canvas"></canvas>
+
+		<div class="home">
+			<img class="arc-logo"
+				src="https://file-runner.weebly.com/uploads/1/5/4/0/154075916/screenshot-2026-03-20-6-31-28-pm_orig.png"
+				alt="Arc Proxy" />
+
+			<form id="uv-form">
+				<input id="uv-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
+				<input id="uv-address" type="text" placeholder="Search the web..." />
+			</form>
+			<div>
+				<p id="uv-error"></p>
+				<pre id="uv-error-code"></pre>
+			</div>
+
+			<div class="quick-links-section">
+				<span class="quick-links-label">quick links</span>
+				<div class="quick-links-row">
+					<a class="quick-link-card" href="#" onclick="goTo('https://www.roblox.com'); return false;">
+						<img src="https://www.roblox.com/favicon.ico" alt="Roblox" style="width:48px;height:48px;object-fit:contain;border-radius:8px;background:#0077cc;padding:6px;" />
+						<span>roblox</span>
+					</a>
+				</div>
+			</div>
 		</div>
 
-		<form id="uv-form" class="flex-center">
-			<input
-				id="uv-search-engine"
-				value="https://duckduckgo.com/?q=%s"
-				type="hidden"
-			/>
-			<input id="uv-address" type="text" placeholder="Search the web freely" />
-		</form>
-		<div class="desc left-margin">
-			<p id="uv-error"></p>
-			<pre id="uv-error-code"></pre>
-		</div>
 		<footer>
-			<div>
-				<a
-					title="The TitaniumNetwork GitHub organization"
-					href="https://github.com/titaniumnetwork-dev"
-					>TitaniumNetwork</a
-				>
-				<a title="The TitaniumNetwork Discord" href="https://discord.gg/unblock"
-					>Discord</a
-				>
-				<a
-					title="The TompHTTP GitHub organization"
-					href="https://github.com/tomphttp"
-					>TompHTTP</a
-				>
-				<a
-					title="The official deployment repository for Ultraviolet"
-					href="https://github.com/titaniumnetwork-dev/Ultraviolet-App"
-					>GitHub</a
-				>
-				<a title="License information" href="credits.html">Credits</a>
-			</div>
-			<div>
-				<span>Ultraviolet &copy; TN 2023</span>
-			</div>
+			<span>Arc Proxy &copy; 2026</span>
 		</footer>
+
 		<iframe style="display: none" id="uv-frame"></iframe>
 		<script src="register-sw.js"></script>
 		<script src="search.js"></script>
@@ -152,9 +195,7 @@
 		    <input id="console-url" type="text" placeholder="URL">
 		    <button id="console-go" title="Go">Go</button>
 		    <button id="console-home" title="Home">
-		      <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-		        <path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3z"/>
-		      </svg>
+		      <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3z"/></svg>
 		    </button>
 		    <button id="console-reload" title="Reload">⟳</button>
 		  </div>
@@ -162,149 +203,105 @@
 
 		<style>
 		.browser-console {
-		  position: fixed;
-		  bottom: 8px;
-		  left: 50%;
-		  transform: translateX(-50%);
-		  background: rgba(0,0,0,0.88);
-		  backdrop-filter: blur(6px);
-		  border-radius: 999px;
-		  display: none;
-		  z-index: 9999;
-		  overflow: hidden;
-		  box-shadow: 0 4px 18px rgba(0,0,0,0.4);
-		  transition: all .25s ease;
+		  position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%);
+		  background: rgba(0,0,0,0.88); backdrop-filter: blur(6px);
+		  border-radius: 999px; display: none; z-index: 9999;
+		  overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.4); transition: all .25s ease;
 		}
-
-		.console-idle {
-		  padding: 10px 26px;
-		  color: white;
-		  font-size: 12px;
-		  letter-spacing: .6px;
-		  text-transform: lowercase;
-		  cursor: pointer;
-		  opacity: 0.85;
-		  transition: all .25s ease;
-		}
-
-		.console-idle:hover {
-		  opacity: 1;
-		}
-
-		.console-controls {
-		  display: none;
-		  align-items: center;
-		  gap: 6px;
-		  padding: 6px 10px;
-		  animation: fadeIn .2s ease;
-		}
-
-		.browser-console.active .console-idle {
-		  display: none;
-		}
-
-		.browser-console.active .console-controls {
-		  display: flex;
-		}
-
-		.browser-console button {
-		  width: 30px;
-		  height: 30px;
-		  border-radius: 50%;
-		  border: none;
-		  background: #111;
-		  color: white;
-		  cursor: pointer;
-		  font-size: 13px;
-		  display: flex;
-		  align-items: center;
-		  justify-content: center;
-		  transition: all .15s ease;
-		}
-
-		.browser-console button:hover {
-		  background: #222;
-		  transform: scale(1.08);
-		}
-
-		.browser-console input {
-		  height: 28px;
-		  width: 140px;
-		  border-radius: 999px;
-		  border: none;
-		  padding: 0 12px;
-		  background: #000;
-		  color: white;
-		  font-size: 12px;
-		  transition: width .2s ease;
-		}
-
-		.browser-console.active input {
-		  width: 180px;
-		}
-
-		@keyframes fadeIn {
-		  from { opacity: 0; transform: translateY(6px); }
-		  to { opacity: 1; transform: translateY(0); }
-		}
+		.console-idle { padding: 10px 26px; color: white; font-size: 12px; letter-spacing: .6px; text-transform: lowercase; cursor: pointer; opacity: 0.85; transition: all .25s ease; }
+		.console-idle:hover { opacity: 1; }
+		.console-controls { display: none; align-items: center; gap: 6px; padding: 6px 10px; animation: fadeIn .2s ease; }
+		.browser-console.active .console-idle { display: none; }
+		.browser-console.active .console-controls { display: flex; }
+		.browser-console button { width: 30px; height: 30px; border-radius: 50%; border: none; background: #111; color: white; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; transition: all .15s ease; }
+		.browser-console button:hover { background: #222; transform: scale(1.08); }
+		.browser-console input { height: 28px; width: 140px; border-radius: 999px; border: none; padding: 0 12px; background: #000; color: white; font-size: 12px; transition: width .2s ease; }
+		.browser-console.active input { width: 180px; }
+		@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 		</style>
 
 		<script>
-		const consoleBar = document.getElementById("browser-console");
-		const consoleIdle = document.querySelector(".console-idle");
-		const consoleInput = document.getElementById("console-url");
-		const uvFrame = document.querySelector("iframe");
+		/* stars */
+		(function() {
+			const canvas = document.getElementById('stars-canvas');
+			const ctx = canvas.getContext('2d');
+			let stars = [];
+			function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+			function init() {
+				resize();
+				stars = [];
+				const count = Math.floor((canvas.width * canvas.height) / 5500);
+				for (let i = 0; i < count; i++) {
+					stars.push({
+						x:  Math.random() * canvas.width,
+						y:  Math.random() * canvas.height,
+						r:  Math.random() * 1.5 + 0.2,
+						a:  Math.random(),
+						da: (Math.random() * 0.004 + 0.001) * (Math.random() < .5 ? 1 : -1),
+						vy: Math.random() * 0.05 + 0.008,
+					});
+				}
+			}
+			function draw() {
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				for (const s of stars) {
+					ctx.beginPath();
+					ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+					ctx.fillStyle = `rgba(255,255,255,${Math.max(0,Math.min(1,s.a)).toFixed(2)})`;
+					ctx.fill();
+					s.y -= s.vy;
+					s.a += s.da;
+					if (s.a >= 1)  { s.a = 1;  s.da = -Math.abs(s.da); }
+					if (s.a <= 0)  { s.a = 0;  s.da =  Math.abs(s.da); }
+					if (s.y < -2)  { s.y = canvas.height + 2; s.x = Math.random() * canvas.width; }
+				}
+				requestAnimationFrame(draw);
+			}
+			window.addEventListener('resize', init);
+			init(); draw();
+		})();
 
-		if (uvFrame) {
-		  uvFrame.addEventListener("load", () => {
-		    const isHome = !uvFrame.src || uvFrame.src === "about:blank";
-		    consoleBar.style.display = isHome ? "none" : "block";
-		    consoleBar.classList.remove("active");
-		  });
+		/* quick link navigation */
+		function goTo(url) {
+			const input = document.getElementById('uv-address');
+			const form  = document.getElementById('uv-form');
+			if (input && form) {
+				input.value = url;
+				form.requestSubmit();
+			}
 		}
 
-		consoleBar.addEventListener("mouseenter", () => {
-		  consoleBar.classList.add("active");
-		});
-		consoleBar.addEventListener("mouseleave", () => {
-		  consoleBar.classList.remove("active");
-		});
-		consoleIdle.addEventListener("click", () => {
-		  consoleBar.classList.add("active");
-		});
-
-		document.getElementById("nav-back").onclick = () => {
-		  try { uvFrame.contentWindow.history.back(); } catch(e) {}
+		/* browser console */
+		const consoleBar   = document.getElementById('browser-console');
+		const consoleIdle  = document.querySelector('.console-idle');
+		const consoleInput = document.getElementById('console-url');
+		const uvFrame      = document.querySelector('iframe');
+		if (uvFrame) {
+		  uvFrame.addEventListener('load', () => {
+		    const isHome = !uvFrame.src || uvFrame.src === 'about:blank';
+		    consoleBar.style.display = isHome ? 'none' : 'block';
+		    consoleBar.classList.remove('active');
+		  });
+		}
+		consoleBar.addEventListener('mouseenter', () => consoleBar.classList.add('active'));
+		consoleBar.addEventListener('mouseleave', () => consoleBar.classList.remove('active'));
+		consoleIdle.addEventListener('click',     () => consoleBar.classList.add('active'));
+		document.getElementById('nav-back').onclick    = () => { try { uvFrame.contentWindow.history.back(); } catch(e) {} };
+		document.getElementById('nav-forward').onclick = () => { try { uvFrame.contentWindow.history.forward(); } catch(e) {} };
+		document.getElementById('console-go').onclick  = () => {
+		  const url = consoleInput.value.trim(); if (!url) return;
+		  const bar = document.querySelector("input[type='text']");
+		  const frm = bar?.closest('form');
+		  if (bar && frm) { bar.value = url; frm.requestSubmit(); }
 		};
-
-		document.getElementById("nav-forward").onclick = () => {
-		  try { uvFrame.contentWindow.history.forward(); } catch(e) {}
+		document.getElementById('console-home').onclick = () => {
+		  if (uvFrame) uvFrame.src = 'about:blank';
+		  consoleBar.style.display = 'none';
+		  window.location.href = '/';
 		};
-
-		document.getElementById("console-go").onclick = () => {
-		  const url = consoleInput.value.trim();
-		  if (!url) return;
-		  const addressBar = document.querySelector("input[type='text']");
-		  const form = addressBar?.closest("form");
-		  if (addressBar && form) {
-		    addressBar.value = url;
-		    form.requestSubmit();
-		  }
-		};
-
-		document.getElementById("console-home").onclick = () => {
-		  if (uvFrame) {
-		    uvFrame.src = "about:blank";
-		  }
-		  consoleBar.style.display = "none";
-		  window.location.href = "/";
-		};
-
-		document.getElementById("console-reload").onclick = () => {
-		  try { uvFrame.contentWindow.location.reload(); } catch(e) {}
-		};
+		document.getElementById('console-reload').onclick = () => { try { uvFrame.contentWindow.location.reload(); } catch(e) {} };
 		</script>
 
 	</body>
-	</html>
+</html>
 	

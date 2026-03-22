@@ -19,8 +19,9 @@ const ACCESS_COOKIE = "beta_access";
 const SW_ASSET_PREFIXES = [
   "/sw.js",
   "/uv/",
-  "/scramjet/",
+  "/scram/",
   "/epoxy/",
+  "/libcurl/",
   "/baremux/",
 ];
 
@@ -55,32 +56,40 @@ app.get("/index.html", (req, res) => {
 });
 // ===== End beta gate =====
 
-// Load our publicPath first and prioritize it over UV.
+// Public files (includes vendored /scram/ and /libcurl/ folders)
 app.use(express.static("./public"));
-// Load vendor files last.
-// The vendor's uv.config.js won't conflict with our uv.config.js inside the publicPath directory.
+
+// Ultraviolet vendor files (still served from npm)
 app.use("/uv/", express.static(uvPath));
+
+// Transport layers (epoxy for UV, baremux shared)
 app.use("/epoxy/", express.static(epoxyPath));
 app.use("/baremux/", express.static(baremuxPath));
 
-// Error for everything else
+// Note: /scram/ and /libcurl/ are vendored directly in public/
+// and served by express.static("./public") above — no npm routes needed.
+
+// 404 fallback
 app.use((req, res) => {
 	res.status(404);
-	res.sendFile("./public/404.html");
+	res.sendFile("./public/404.html", { root: "." });
 });
 
 const server = createServer();
 
 server.on("request", (req, res) => {
+	// Required for SharedArrayBuffer support (used by Scramjet's WASM module)
 	res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
 	res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
 	app(req, res);
 });
+
 server.on("upgrade", (req, socket, head) => {
+	// Single wisp endpoint serves both proxies
 	if (req.url.endsWith("/wisp/")) {
 		wisp.routeRequest(req, socket, head);
 		return;
-	} 
+	}
 	socket.end();
 });
 
@@ -91,8 +100,6 @@ if (isNaN(port)) port = 8080;
 server.on("listening", () => {
 	const address = server.address();
 
-	// by default we are listening on 0.0.0.0 (every interface)
-	// we just need to list a few
 	console.log("Listening on:");
 	console.log(`\thttp://localhost:${address.port}`);
 	console.log(`\thttp://${hostname()}:${address.port}`);
@@ -103,7 +110,6 @@ server.on("listening", () => {
 	);
 });
 
-// https://expressjs.com/en/advanced/healthcheck-graceful-shutdown.html
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 

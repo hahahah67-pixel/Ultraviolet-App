@@ -51,6 +51,7 @@
 		<script src="baremux/index.js"></script>
 		<script src="uv/uv.bundle.js"></script>
 		<script src="uv/uv.config.js"></script>
+		<script src="/scram/scramjet.all.js"></script>
 
 		<script type="application/ld+json">
 			{
@@ -144,6 +145,22 @@
 		<script src="search.js"></script>
 		<script src="index.js"></script>
 
+		<!-- ── Proxy selector: bottom-right corner, home page only ──────────── -->
+		<!--
+		  Layout:  ultraviolet [●]  scramjet [○]
+		  The dot after each label fills blue when that proxy is active.
+		  Hides automatically when a proxy frame loads (UV or SJ).
+		-->
+		<div id="proxy-picker">
+			<span class="proxy-option" id="pick-uv">
+				ultraviolet <span class="proxy-dot" id="dot-uv"></span>
+			</span>
+			<span class="proxy-option" id="pick-sj">
+				scramjet <span class="proxy-dot" id="dot-sj"></span>
+			</span>
+		</div>
+
+		<!-- ── Browser console ───────────────────────────────────────────────── -->
 		<div id="browser-console" class="browser-console">
 		  <div class="console-idle">browser console</div>
 		  <div class="console-controls">
@@ -161,6 +178,71 @@
 		</div>
 
 		<style>
+		/* ── Proxy picker (bottom-right, home only) ──────────────────────────── */
+		#proxy-picker {
+		  position: fixed;
+		  bottom: 18px;
+		  right: 20px;
+		  display: flex;
+		  align-items: center;
+		  gap: 16px;
+		  background: rgba(0, 0, 0, 0.72);
+		  backdrop-filter: blur(10px);
+		  -webkit-backdrop-filter: blur(10px);
+		  border: 1px solid rgba(255, 255, 255, 0.1);
+		  border-radius: 999px;
+		  padding: 8px 18px;
+		  z-index: 9998;
+		  opacity: 1;
+		  transition: opacity .3s ease, transform .3s ease;
+		}
+
+		#proxy-picker.hidden {
+		  opacity: 0;
+		  transform: translateY(6px);
+		  pointer-events: none;
+		}
+
+		.proxy-option {
+		  display: flex;
+		  align-items: center;
+		  gap: 7px;
+		  font-family: "Roboto", Arial, sans-serif;
+		  font-size: 11px;
+		  letter-spacing: .05em;
+		  color: rgba(255, 255, 255, 0.45);
+		  cursor: pointer;
+		  user-select: none;
+		  transition: color .15s ease;
+		  white-space: nowrap;
+		}
+
+		.proxy-option:hover {
+		  color: rgba(255, 255, 255, 0.8);
+		}
+
+		.proxy-option.active {
+		  color: #fff;
+		}
+
+		.proxy-dot {
+		  width: 10px;
+		  height: 10px;
+		  border-radius: 50%;
+		  border: 1.5px solid rgba(255, 255, 255, 0.3);
+		  background: transparent;
+		  display: inline-block;
+		  flex-shrink: 0;
+		  transition: background .2s ease, border-color .2s ease, box-shadow .2s ease;
+		}
+
+		.proxy-dot.active {
+		  background: #4a8fff;
+		  border-color: #4a8fff;
+		  box-shadow: 0 0 6px rgba(74, 143, 255, 0.6);
+		}
+
+		/* ── Browser console ─────────────────────────────────────────────────── */
 		.browser-console {
 		  position: fixed;
 		  bottom: 8px;
@@ -187,9 +269,7 @@
 		  transition: all .25s ease;
 		}
 
-		.console-idle:hover {
-		  opacity: 1;
-		}
+		.console-idle:hover { opacity: 1; }
 
 		.console-controls {
 		  display: none;
@@ -199,13 +279,8 @@
 		  animation: fadeIn .2s ease;
 		}
 
-		.browser-console.active .console-idle {
-		  display: none;
-		}
-
-		.browser-console.active .console-controls {
-		  display: flex;
-		}
+		.browser-console.active .console-idle  { display: none; }
+		.browser-console.active .console-controls { display: flex; }
 
 		.browser-console button {
 		  width: 30px;
@@ -239,21 +314,63 @@
 		  transition: width .2s ease;
 		}
 
-		.browser-console.active input {
-		  width: 180px;
-		}
+		.browser-console.active input { width: 180px; }
 
 		@keyframes fadeIn {
 		  from { opacity: 0; transform: translateY(6px); }
-		  to { opacity: 1; transform: translateY(0); }
+		  to   { opacity: 1; transform: translateY(0); }
 		}
 		</style>
 
 		<script>
-		const consoleBar = document.getElementById("browser-console");
-		const consoleIdle = document.querySelector(".console-idle");
+		// ── Proxy picker ──────────────────────────────────────────────────────
+		const proxyPicker = document.getElementById("proxy-picker");
+		const pickUV = document.getElementById("pick-uv");
+		const pickSJ = document.getElementById("pick-sj");
+		const dotUV  = document.getElementById("dot-uv");
+		const dotSJ  = document.getElementById("dot-sj");
+
+		function updatePickerUI(name) {
+		  const isUV = name === "uv";
+		  pickUV.classList.toggle("active", isUV);
+		  pickSJ.classList.toggle("active", !isUV);
+		  dotUV.classList.toggle("active", isUV);
+		  dotSJ.classList.toggle("active", !isUV);
+		}
+
+		pickUV.addEventListener("click", () => {
+		  if (typeof setProxy === "function") setProxy("uv");
+		  updatePickerUI("uv");
+		});
+
+		pickSJ.addEventListener("click", () => {
+		  if (typeof setProxy === "function") setProxy("sj");
+		  updatePickerUI("sj");
+		});
+
+		// Init from saved preference (default UV)
+		updatePickerUI(localStorage.getItem("proxy-choice") || "sj");
+
+		// ── Hide picker when a proxy frame becomes active ─────────────────────
+		const uvFrame = document.getElementById("uv-frame");
+
+		if (uvFrame) {
+		  uvFrame.addEventListener("load", () => {
+		    const isHome = !uvFrame.src || uvFrame.src === "about:blank";
+		    proxyPicker.classList.toggle("hidden", !isHome);
+		  });
+		}
+
+		// Watch for SJ frame being appended to body
+		new MutationObserver(() => {
+		  const sjFrame = document.getElementById("sj-frame");
+		  if (sjFrame) proxyPicker.classList.add("hidden");
+		}).observe(document.body, { childList: true });
+
+		// ── Browser console ───────────────────────────────────────────────────
+		const consoleBar   = document.getElementById("browser-console");
+		const consoleIdle  = document.querySelector(".console-idle");
 		const consoleInput = document.getElementById("console-url");
-		const uvFrame = document.querySelector("iframe");
 
 		if (uvFrame) {
 		  uvFrame.addEventListener("load", () => {
@@ -263,47 +380,31 @@
 		  });
 		}
 
-		consoleBar.addEventListener("mouseenter", () => {
-		  consoleBar.classList.add("active");
-		});
-		consoleBar.addEventListener("mouseleave", () => {
-		  consoleBar.classList.remove("active");
-		});
-		consoleIdle.addEventListener("click", () => {
-		  consoleBar.classList.add("active");
-		});
+		consoleBar.addEventListener("mouseenter", () => consoleBar.classList.add("active"));
+		consoleBar.addEventListener("mouseleave", () => consoleBar.classList.remove("active"));
+		consoleIdle.addEventListener("click",     () => consoleBar.classList.add("active"));
 
-		document.getElementById("nav-back").onclick = () => {
-		  try { uvFrame.contentWindow.history.back(); } catch(e) {}
-		};
-
-		document.getElementById("nav-forward").onclick = () => {
-		  try { uvFrame.contentWindow.history.forward(); } catch(e) {}
-		};
+		document.getElementById("nav-back").onclick    = () => { try { uvFrame.contentWindow.history.back();    } catch(e) {} };
+		document.getElementById("nav-forward").onclick = () => { try { uvFrame.contentWindow.history.forward(); } catch(e) {} };
+		document.getElementById("console-reload").onclick = () => { try { uvFrame.contentWindow.location.reload(); } catch(e) {} };
 
 		document.getElementById("console-go").onclick = () => {
 		  const url = consoleInput.value.trim();
 		  if (!url) return;
 		  const addressBar = document.querySelector("input[type='text']");
 		  const form = addressBar?.closest("form");
-		  if (addressBar && form) {
-		    addressBar.value = url;
-		    form.requestSubmit();
-		  }
+		  if (addressBar && form) { addressBar.value = url; form.requestSubmit(); }
 		};
 
 		document.getElementById("console-home").onclick = () => {
-		  if (uvFrame) {
-		    uvFrame.src = "about:blank";
-		  }
+		  if (uvFrame) uvFrame.src = "about:blank";
 		  consoleBar.style.display = "none";
+		  const sjFrame = document.getElementById("sj-frame");
+		  if (sjFrame) sjFrame.remove();
+		  proxyPicker.classList.remove("hidden");
 		  window.location.href = "/";
-		};
-
-		document.getElementById("console-reload").onclick = () => {
-		  try { uvFrame.contentWindow.location.reload(); } catch(e) {}
 		};
 		</script>
 
 	</body>
-	</html>
+</html>

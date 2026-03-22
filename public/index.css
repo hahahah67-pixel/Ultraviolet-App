@@ -28,7 +28,9 @@ body {
 	margin: 0px 16px;
 }
 
-#uv-frame {
+/* Both proxy frames share the same full-screen style */
+#uv-frame,
+#sj-frame {
 	border: none;
 	position: absolute;
 	top: 0;
@@ -83,6 +85,71 @@ body {
 	color: white;
 }
 
+/* ── Proxy toggle ─────────────────────────────────────────────────────────── */
+
+.proxy-toggle-wrapper {
+	margin-top: 18px;
+}
+
+.proxy-toggle {
+	display: flex;
+	background: #1e1e1e;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 50px;
+	padding: 4px;
+	gap: 4px;
+}
+
+.toggle-btn {
+	background: none;
+	border: none;
+	color: rgba(255, 255, 255, 0.45);
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 500;
+	padding: 8px 22px;
+	border-radius: 50px;
+	cursor: pointer;
+	transition: background 0.15s, color 0.15s;
+	letter-spacing: 0.02em;
+}
+
+.toggle-btn:hover {
+	color: rgba(255, 255, 255, 0.75);
+}
+
+.toggle-btn.active {
+	background: #3b3b5e;
+	color: #fff;
+}
+
+/* ── Search input ─────────────────────────────────────────────────────────── */
+
+#uv-form {
+	margin-top: 14px;
+}
+
+#uv-address {
+	background: none;
+	font-family: inherit;
+	padding: 0px 17px;
+	height: 48px;
+	border: 1px solid rgb(255, 255, 255, 0.2);
+	color: var(--text-color);
+	border-radius: 3px;
+	outline: none;
+	width: 350px;
+	margin-top: 5px;
+	border-radius: 50px;
+	color: #fff;
+	transition: border-radius 0.1s;
+}
+
+#uv-address:focus {
+	border: 1px solid rgba(253, 253, 253, 0.514);
+	border-radius: 6px;
+}
+
 footer {
 	margin: 0 5vw;
 	margin-top: auto;
@@ -119,27 +186,6 @@ footer a:hover {
 .desc p {
 	width: 560px;
 	color: rgba(253, 253, 253, 0.514);
-}
-
-#uv-address {
-	background: none;
-	font-family: inherit;
-	padding: 0px 17px;
-	height: 48px;
-	border: 1px solid rgb(255, 255, 255, 0.2);
-	color: var(--text-color);
-	border-radius: 3px;
-	outline: none;
-	width: 350px;
-	margin-top: 5px;
-	border-radius: 50px;
-	color: #fff;
-	transition: border-radius 0.1s;
-}
-
-#uv-address:focus {
-	border: 1px solid rgba(253, 253, 253, 0.514);
-	border-radius: 6px;
 }
 
 .credit {

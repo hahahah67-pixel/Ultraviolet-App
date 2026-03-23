@@ -12,16 +12,17 @@ body {
 	justify-content: center;
 }
 
-/* Both proxy frames share the same full-screen style */
+/* Proxy frames — must be above EVERYTHING on the homepage */
 #uv-frame,
 #sj-frame {
 	border: none;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100vw;
 	height: 100vh;
 	background-color: #000;
+	z-index: 9990;
 }
 
 #uv-register-sw {

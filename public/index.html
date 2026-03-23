@@ -434,8 +434,14 @@
 		  const url = consoleInput.value.trim();
 		  if (!url) return;
 		  const addressBar = document.querySelector("#uv-address");
-		  const form = addressBar?.closest("form");
-		  if (addressBar && form) { addressBar.value = url; form.requestSubmit(); }
+		  const form = document.getElementById("uv-form");
+		  if (!addressBar || !form) return;
+		  // Briefly allow pointer events so requestSubmit works even when home-center is hidden
+		  const prev = homeCenter.style.pointerEvents;
+		  homeCenter.style.pointerEvents = "auto";
+		  addressBar.value = url;
+		  form.requestSubmit();
+		  homeCenter.style.pointerEvents = prev;
 		}
 
 		document.getElementById("console-go").onclick = consoleNavigate;

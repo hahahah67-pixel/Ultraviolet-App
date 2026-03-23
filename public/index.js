@@ -30,12 +30,10 @@ function setProxy(name) {
 	activeProxy = name;
 	localStorage.setItem("proxy-choice", name);
 
-	// Look these up here — they live below the <script> tag in the HTML
-	// so they don't exist yet when the file first loads at the top level.
-	const dotUV      = document.getElementById("dot-uv");
-	const dotSJ      = document.getElementById("dot-sj");
-	const pickUV     = document.getElementById("pick-uv");
-	const pickSJ     = document.getElementById("pick-sj");
+	const dotUV  = document.getElementById("dot-uv");
+	const dotSJ  = document.getElementById("dot-sj");
+	const pickUV = document.getElementById("pick-uv");
+	const pickSJ = document.getElementById("pick-sj");
 
 	if (dotUV)  dotUV.classList.toggle("active",  name === "uv");
 	if (dotSJ)  dotSJ.classList.toggle("active",  name === "sj");
@@ -68,53 +66,72 @@ function getWispUrl() {
 	);
 }
 
+// ── Submit guard — prevents double-fire during async transport switch ─────────
+let isSubmitting = false;
+
 // ── Form submit ───────────────────────────────────────────────────────────────
 form.addEventListener("submit", async (event) => {
 	event.preventDefault();
 
-	error.textContent    = "";
+	// Block re-entry while a submit is already in flight
+	if (isSubmitting) return;
+	isSubmitting = true;
+
+	error.textContent     = "";
 	errorCode.textContent = "";
+
+	// ── Hide picker immediately — don't wait for frame load ──────────────────
+	const proxyPicker = document.getElementById("proxy-picker");
+	if (proxyPicker) proxyPicker.classList.add("hidden");
 
 	try {
 		await registerSW();
 	} catch (err) {
-		error.textContent    = "Failed to register service worker.";
+		error.textContent     = "Failed to register service worker.";
 		errorCode.textContent = err.toString();
-		throw err;
+		isSubmitting = false;
+		return;
 	}
 
 	const url     = search(address.value, searchEngine.value);
 	const wispUrl = getWispUrl();
 
-	if (activeProxy === "uv") {
-		// Ultraviolet: use Epoxy transport, load into static iframe
-		if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
-			await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+	try {
+		if (activeProxy === "uv") {
+			// ── Ultraviolet ───────────────────────────────────────────────────
+			// Tear down SJ frame first before touching transport
+			const sjFrame = document.getElementById("sj-frame");
+			if (sjFrame) sjFrame.remove();
+
+			if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
+				await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+			}
+
+			const frame = document.getElementById("uv-frame");
+			frame.style.display = "block";
+			frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+
+		} else {
+			// ── Scramjet ──────────────────────────────────────────────────────
+			// Tear down UV frame first before touching transport
+			const uvFrame = document.getElementById("uv-frame");
+			uvFrame.style.display = "none";
+			uvFrame.src = "";
+
+			if ((await connection.getTransport()) !== "/libcurl/index.mjs") {
+				await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
+			}
+
+			const oldSjFrame = document.getElementById("sj-frame");
+			if (oldSjFrame) oldSjFrame.remove();
+
+			const sjFrameWrapper = scramjet.createFrame();
+			sjFrameWrapper.frame.id = "sj-frame";
+			document.body.appendChild(sjFrameWrapper.frame);
+			sjFrameWrapper.go(url);
 		}
-
-		const sjFrame = document.getElementById("sj-frame");
-		if (sjFrame) sjFrame.remove();
-
-		let frame = document.getElementById("uv-frame");
-		frame.style.display = "block";
-		frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
-
-	} else {
-		// Scramjet: use libcurl transport, create SJ frame dynamically
-		if ((await connection.getTransport()) !== "/libcurl/index.mjs") {
-			await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
-		}
-
-		const uvFrame = document.getElementById("uv-frame");
-		uvFrame.style.display = "none";
-		uvFrame.src = "";
-
-		const oldSjFrame = document.getElementById("sj-frame");
-		if (oldSjFrame) oldSjFrame.remove();
-
-		const sjFrameWrapper = scramjet.createFrame();
-		sjFrameWrapper.frame.id = "sj-frame";
-		document.body.appendChild(sjFrameWrapper.frame);
-		sjFrameWrapper.go(url);
+	} finally {
+		// Always release the guard when done, success or failure
+		isSubmitting = false;
 	}
 });

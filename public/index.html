@@ -30,19 +30,19 @@
 			name="viewport"
 			content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
 		/>
-		<title>Ultraviolet | Sophisticated Web Proxy</title>
+		<title>Fish Proxy | Powerful Web Proxy</title>
 		<meta
 			name="description"
-			content="Ultraviolet is a highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers. Unblock sites today!"
+			content="Fish Proxy is a powerful web proxy powered by proxy engines ultraviolet and scramjet, great UI and features."
 		/>
 		<meta
 			name="keywords"
-			content="proxy, web proxy, ultraviolet, service workers, unblock websites, unblock chromebook, free web proxy, proxy list, proxy sites, un block chromebook, online proxy, proxy server, proxysite, proxy youtube, bypass securly, bypass iboss, bypass lightspeed filter, holy unblocker, chromebooks, titanium network, unblock youtube, youtube proxy, unblocked youtube, youtube unblocked"
+			content="proxy, web proxy, ultraviolet, scramjet, service workers, unblock websites, unblock chromebook, free web proxy, proxy list, proxy sites, online proxy, proxy server, bypass securly, bypass iboss, bypass lightspeed filter, unblock youtube"
 		/>
 		<meta
 			name="theme-color"
 			media="(prefers-color-scheme: dark)"
-			content="#434c5e"
+			content="#000000"
 		/>
 		<meta name="googlebot" content="index, follow, snippet" />
 		<link rel="shortcut icon" content="favicon.ico" />
@@ -52,105 +52,46 @@
 		<script src="uv/uv.bundle.js"></script>
 		<script src="uv/uv.config.js"></script>
 		<script src="/scram/scramjet.all.js"></script>
-
-		<script type="application/ld+json">
-			{
-				"@context": "https://schema.org",
-				"@type": "FAQPage",
-				"mainEntity": [
-					{
-						"@type": "Question",
-						"name": "What is Ultraviolet (Web Proxy)?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers and more!"
-						}
-					},
-					{
-						"@type": "Question",
-						"name": "How do I unblock sites using Ultraviolet?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Simply head to an official site featuring Ultraviolet such as Holy Unblocker or Incognito! You can also self-host Ultraviolet on your own web server for maximum privacy."
-						}
-					},
-					{
-						"@type": "Question",
-						"name": "What if Ultraviolet is blocked or not working?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Join the Titanium Network Discord at discord.gg/unblock!"
-						}
-					}
-				]
-			}
-		</script>
 	</head>
 
 	<body>
-		<div
-			title="Ultraviolet Logo"
-			class="flex-center logo-wrapper header-center"
-		>
-			<img class="logo" src="uv.png" alt="Ultraviolet" />
-			<h1>Ultraviolet | TN</h1>
-		</div>
-		<div class="flex-center desc left-margin">
-			<p>
-				Ultraviolet is highly sophisticated proxy used for evading internet
-				censorship.
-			</p>
+		<!-- Starfield sits behind everything -->
+		<canvas id="starfield"></canvas>
+
+		<!-- Main content — truly vertically centered -->
+		<div class="home-center">
+			<div class="flex-center logo-wrapper">
+				<img class="logo" src="images/Fish%20Proxy%20logo.png" alt="Fish Proxy" />
+			</div>
+
+			<div class="flex-center desc">
+				<p>
+					Fish Proxy is a powerful web proxy powered by proxy engines ultraviolet
+					and scramjet, great UI and features.
+				</p>
+			</div>
+
+			<form id="uv-form" class="flex-center">
+				<input
+					id="uv-search-engine"
+					value="https://duckduckgo.com/?q=%s"
+					type="hidden"
+				/>
+				<input id="uv-address" type="text" placeholder="Search the web freely" />
+			</form>
+
+			<div class="desc">
+				<p id="uv-error" style="color:#ff6666;white-space:pre-wrap;"></p>
+				<pre id="uv-error-code" style="font-size:12px;color:#fff;font-family:'Courier New',monospace;"></pre>
+			</div>
 		</div>
 
-		<form id="uv-form" class="flex-center">
-			<input
-				id="uv-search-engine"
-				value="https://duckduckgo.com/?q=%s"
-				type="hidden"
-			/>
-			<input id="uv-address" type="text" placeholder="Search the web freely" />
-		</form>
-		<div class="desc left-margin">
-			<p id="uv-error"></p>
-			<pre id="uv-error-code"></pre>
-		</div>
-		<footer>
-			<div>
-				<a
-					title="The TitaniumNetwork GitHub organization"
-					href="https://github.com/titaniumnetwork-dev"
-					>TitaniumNetwork</a
-				>
-				<a title="The TitaniumNetwork Discord" href="https://discord.gg/unblock"
-					>Discord</a
-				>
-				<a
-					title="The TompHTTP GitHub organization"
-					href="https://github.com/tomphttp"
-					>TompHTTP</a
-				>
-				<a
-					title="The official deployment repository for Ultraviolet"
-					href="https://github.com/titaniumnetwork-dev/Ultraviolet-App"
-					>GitHub</a
-				>
-				<a title="License information" href="credits.html">Credits</a>
-			</div>
-			<div>
-				<span>Ultraviolet &copy; TN 2023</span>
-			</div>
-		</footer>
 		<iframe style="display: none" id="uv-frame"></iframe>
 		<script src="register-sw.js"></script>
 		<script src="search.js"></script>
 		<script src="index.js"></script>
 
-		<!-- ── Proxy selector: bottom-right corner, home page only ──────────── -->
-		<!--
-		  Layout:  ultraviolet [●]  scramjet [○]
-		  The dot after each label fills blue when that proxy is active.
-		  Hides automatically when a proxy frame loads (UV or SJ).
-		-->
+		<!-- Proxy selector: bottom-right corner, home page only -->
 		<div id="proxy-picker">
 			<span class="proxy-option" id="pick-uv">
 				ultraviolet <span class="proxy-dot" id="dot-uv"></span>
@@ -160,7 +101,7 @@
 			</span>
 		</div>
 
-		<!-- ── Browser console ───────────────────────────────────────────────── -->
+		<!-- Browser console -->
 		<div id="browser-console" class="browser-console">
 		  <div class="console-idle">browser console</div>
 		  <div class="console-controls">
@@ -178,18 +119,65 @@
 		</div>
 
 		<style>
-		/* ── Proxy picker (bottom-right, home only) ──────────────────────────── */
+		/* Starfield */
+		#starfield {
+		  position: fixed;
+		  top: 0; left: 0;
+		  width: 100%; height: 100%;
+		  z-index: 0;
+		  pointer-events: none;
+		}
+
+		/* Home center — true vertical + horizontal center */
+		.home-center {
+		  position: relative;
+		  z-index: 1;
+		  display: flex;
+		  flex-direction: column;
+		  align-items: center;
+		  justify-content: center;
+		  min-height: 100vh;
+		  padding: 24px 16px;
+		  box-sizing: border-box;
+		}
+
+		/* Logo */
+		.logo-wrapper { margin-bottom: 20px; }
+
+		.logo {
+		  width: auto;
+		  max-width: 540px;
+		  height: auto;
+		  max-height: 170px;
+		  object-fit: contain;
+		}
+
+		/* Description */
+		.desc { display: flex; justify-content: center; }
+
+		.desc p {
+		  max-width: 460px;
+		  text-align: center;
+		  color: rgba(255, 255, 255, 0.55);
+		  font-size: 14px;
+		  line-height: 1.65;
+		  margin: 0 0 4px;
+		}
+
+		/* Search form */
+		#uv-form { margin-top: 14px; margin-bottom: 6px; }
+
+		/* Proxy picker */
 		#proxy-picker {
 		  position: fixed;
-		  bottom: 18px;
-		  right: 20px;
+		  bottom: 18px; right: 20px;
 		  display: flex;
 		  align-items: center;
 		  gap: 16px;
-		  background: rgba(0, 0, 0, 0.72);
+		  background: rgba(0,0,0,0.72);
 		  backdrop-filter: blur(10px);
 		  -webkit-backdrop-filter: blur(10px);
-		  border: 1px solid rgba(255, 255, 255, 0.1);
+		  border: 1px solid rgba(255,255,255,0.1);
 		  border-radius: 999px;
 		  padding: 8px 18px;
 		  z-index: 9998;
@@ -210,26 +198,20 @@
 		  font-family: "Roboto", Arial, sans-serif;
 		  font-size: 11px;
 		  letter-spacing: .05em;
-		  color: rgba(255, 255, 255, 0.45);
+		  color: rgba(255,255,255,0.45);
 		  cursor: pointer;
 		  user-select: none;
 		  transition: color .15s ease;
 		  white-space: nowrap;
 		}
 
-		.proxy-option:hover {
-		  color: rgba(255, 255, 255, 0.8);
-		}
-
-		.proxy-option.active {
-		  color: #fff;
-		}
+		.proxy-option:hover { color: rgba(255,255,255,0.8); }
+		.proxy-option.active { color: #fff; }
 
 		.proxy-dot {
-		  width: 10px;
-		  height: 10px;
+		  width: 10px; height: 10px;
 		  border-radius: 50%;
-		  border: 1.5px solid rgba(255, 255, 255, 0.3);
+		  border: 1.5px solid rgba(255,255,255,0.3);
 		  background: transparent;
 		  display: inline-block;
 		  flex-shrink: 0;
@@ -239,14 +221,13 @@
 		.proxy-dot.active {
 		  background: #4a8fff;
 		  border-color: #4a8fff;
-		  box-shadow: 0 0 6px rgba(74, 143, 255, 0.6);
+		  box-shadow: 0 0 6px rgba(74,143,255,0.6);
 		}
 
-		/* ── Browser console ─────────────────────────────────────────────────── */
+		/* Browser console */
 		.browser-console {
 		  position: fixed;
-		  bottom: 8px;
-		  left: 50%;
+		  bottom: 8px; left: 50%;
 		  transform: translateX(-50%);
 		  background: rgba(0,0,0,0.88);
 		  backdrop-filter: blur(6px);
@@ -260,12 +241,10 @@
 
 		.console-idle {
 		  padding: 10px 26px;
-		  color: white;
-		  font-size: 12px;
+		  color: white; font-size: 12px;
 		  letter-spacing: .6px;
 		  text-transform: lowercase;
-		  cursor: pointer;
-		  opacity: 0.85;
+		  cursor: pointer; opacity: 0.85;
 		  transition: all .25s ease;
 		}
 
@@ -274,8 +253,7 @@
 		.console-controls {
 		  display: none;
 		  align-items: center;
-		  gap: 6px;
-		  padding: 6px 10px;
+		  gap: 6px; padding: 6px 10px;
 		  animation: fadeIn .2s ease;
 		}
 
@@ -283,16 +261,11 @@
 		.browser-console.active .console-controls { display: flex; }
 
 		.browser-console button {
-		  width: 30px;
-		  height: 30px;
-		  border-radius: 50%;
-		  border: none;
-		  background: #111;
-		  color: white;
-		  cursor: pointer;
-		  font-size: 13px;
-		  display: flex;
-		  align-items: center;
+		  width: 30px; height: 30px;
+		  border-radius: 50%; border: none;
+		  background: #111; color: white;
+		  cursor: pointer; font-size: 13px;
+		  display: flex; align-items: center;
 		  justify-content: center;
 		  transition: all .15s ease;
 		}
@@ -303,14 +276,10 @@
 		}
 
 		.browser-console input {
-		  height: 28px;
-		  width: 140px;
-		  border-radius: 999px;
-		  border: none;
-		  padding: 0 12px;
-		  background: #000;
-		  color: white;
-		  font-size: 12px;
+		  height: 28px; width: 140px;
+		  border-radius: 999px; border: none;
+		  padding: 0 12px; background: #000;
+		  color: white; font-size: 12px;
 		  transition: width .2s ease;
 		}
 
@@ -323,6 +292,58 @@
 		</style>
 
 		<script>
+		// ── Starfield ─────────────────────────────────────────────────────────
+		(function () {
+		  const canvas = document.getElementById("starfield");
+		  const ctx    = canvas.getContext("2d");
+		  const COUNT  = 180;
+		  const SPEED  = 0.25;
+		  let stars    = [];
+
+		  function resize() {
+		    canvas.width  = window.innerWidth;
+		    canvas.height = window.innerHeight;
+		  }
+
+		  function mkStar() {
+		    return {
+		      x:           Math.random() * canvas.width,
+		      y:           Math.random() * canvas.height,
+		      r:           Math.random() * 1.4 + 0.3,
+		      opacity:     Math.random() * 0.6 + 0.2,
+		      phase:       Math.random() * Math.PI * 2,
+		      phaseSpeed:  Math.random() * 0.015 + 0.005
+		    };
+		  }
+
+		  function init() {
+		    resize();
+		    stars = Array.from({ length: COUNT }, mkStar);
+		  }
+
+		  function draw() {
+		    ctx.clearRect(0, 0, canvas.width, canvas.height);
+		    for (const s of stars) {
+		      s.y += SPEED;
+		      if (s.y > canvas.height + 2) {
+		        s.y = -2;
+		        s.x = Math.random() * canvas.width;
+		      }
+		      s.phase += s.phaseSpeed;
+		      const a = s.opacity * (0.7 + 0.3 * Math.sin(s.phase));
+		      ctx.beginPath();
+		      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+		      ctx.fillStyle = `rgba(255,255,255,${a})`;
+		      ctx.fill();
+		    }
+		    requestAnimationFrame(draw);
+		  }
+
+		  window.addEventListener("resize", resize);
+		  init();
+		  requestAnimationFrame(draw);
+		})();
+
 		// ── Proxy picker ──────────────────────────────────────────────────────
 		const proxyPicker = document.getElementById("proxy-picker");
 		const pickUV = document.getElementById("pick-uv");
@@ -348,10 +369,9 @@
 		  updatePickerUI("sj");
 		});
 
-		// Init from saved preference (default UV)
 		updatePickerUI(localStorage.getItem("proxy-choice") || "sj");
 
-		// ── Hide picker when a proxy frame becomes active ─────────────────────
+		// Hide picker when proxy frame becomes active
 		const uvFrame = document.getElementById("uv-frame");
 
 		if (uvFrame) {
@@ -361,7 +381,6 @@
 		  });
 		}
 
-		// Watch for SJ frame being appended to body
 		new MutationObserver(() => {
 		  const sjFrame = document.getElementById("sj-frame");
 		  if (sjFrame) proxyPicker.classList.add("hidden");
@@ -384,8 +403,8 @@
 		consoleBar.addEventListener("mouseleave", () => consoleBar.classList.remove("active"));
 		consoleIdle.addEventListener("click",     () => consoleBar.classList.add("active"));
 
-		document.getElementById("nav-back").onclick    = () => { try { uvFrame.contentWindow.history.back();    } catch(e) {} };
-		document.getElementById("nav-forward").onclick = () => { try { uvFrame.contentWindow.history.forward(); } catch(e) {} };
+		document.getElementById("nav-back").onclick       = () => { try { uvFrame.contentWindow.history.back();    } catch(e) {} };
+		document.getElementById("nav-forward").onclick    = () => { try { uvFrame.contentWindow.history.forward(); } catch(e) {} };
 		document.getElementById("console-reload").onclick = () => { try { uvFrame.contentWindow.location.reload(); } catch(e) {} };
 
 		document.getElementById("console-go").onclick = () => {

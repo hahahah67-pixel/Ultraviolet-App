@@ -416,21 +416,33 @@
 		  });
 		}
 
-		consoleBar.addEventListener("mouseenter", () => consoleBar.classList.add("active"));
-		consoleBar.addEventListener("mouseleave", () => consoleBar.classList.remove("active"));
-		consoleIdle.addEventListener("click",     () => consoleBar.classList.add("active"));
+		let consoleLeaveTimer;
+		consoleBar.addEventListener("mouseenter", () => {
+		  clearTimeout(consoleLeaveTimer);
+		  consoleBar.classList.add("active");
+		});
+		consoleBar.addEventListener("mouseleave", () => {
+		  consoleLeaveTimer = setTimeout(() => consoleBar.classList.remove("active"), 400);
+		});
+		consoleIdle.addEventListener("click", () => consoleBar.classList.add("active"));
 
 		document.getElementById("nav-back").onclick       = () => { try { uvFrame.contentWindow.history.back();    } catch(e) {} };
 		document.getElementById("nav-forward").onclick    = () => { try { uvFrame.contentWindow.history.forward(); } catch(e) {} };
 		document.getElementById("console-reload").onclick = () => { try { uvFrame.contentWindow.location.reload(); } catch(e) {} };
 
-		document.getElementById("console-go").onclick = () => {
+		function consoleNavigate() {
 		  const url = consoleInput.value.trim();
 		  if (!url) return;
-		  const addressBar = document.querySelector("input[type='text']");
+		  const addressBar = document.querySelector("#uv-address");
 		  const form = addressBar?.closest("form");
 		  if (addressBar && form) { addressBar.value = url; form.requestSubmit(); }
-		};
+		}
+
+		document.getElementById("console-go").onclick = consoleNavigate;
+
+		consoleInput.addEventListener("keydown", (e) => {
+		  if (e.key === "Enter") consoleNavigate();
+		});
 
 		document.getElementById("console-home").onclick = () => {
 		  if (uvFrame) uvFrame.src = "about:blank";

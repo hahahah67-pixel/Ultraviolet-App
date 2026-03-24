@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+	<head>
+		<script>
+		(function() {
+		    document.title = "Study.com | free Online Courses, Lessons & Practice";
+		    const iconUrl = "https://study.com/favicon.ico";
+		    let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+		    link.type = 'image/x-icon';
+		    link.rel = 'shortcut icon';
+		    link.href = iconUrl;
+		    document.head.appendChild(link);
+
+		    const metaTags = [
+		        { name: "description", content: "Take online courses on Study.com that are fun and effective. Help your kids with their biology and math homework." },
+		        { name: "keywords", content: "education, flashcards, study, math, help, biology, science lessons" },
+		        { name: "theme-color", content: "#ffffff" }
+		    ];
+
+		    metaTags.forEach(tag => {
+		        let element = document.querySelector(`meta[name="${tag.name}"]`) || document.createElement('meta');
+		        element.name = tag.name;
+		        element.content = tag.content;
+		        document.head.appendChild(element);
+		    });
+		})();
+		</script>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+		<title>Fish Proxy | Games</title>
+		<meta name="googlebot" content="noindex, nofollow" />
+		<link rel="shortcut icon" content="favicon.ico" />
+		<link rel="stylesheet" href="math.css" />
+
+		<script src="baremux/index.js"></script>
+		<script src="uv/uv.bundle.js"></script>
+		<script src="uv/uv.config.js"></script>
+		<script src="/scram/scramjet.all.js"></script>
+		<script src="register-sw.js"></script>
+	</head>
+
+	<body>
+		<!-- Blue starfield -->
+		<canvas id="starfield"></canvas>
+
+		<!-- ── Game grid page ──────────────────────────────────────────────── -->
+		<div id="games-page">
+			<img id="games-logo" src="images/Fish%20games%20logo.png" alt="Fish Proxy Games" />
+
+			<div id="game-search-wrapper">
+				<input
+					id="game-search"
+					type="text"
+					placeholder="search for games"
+					autocomplete="off"
+				/>
+			</div>
+
+			<div id="game-grid"></div>
+			<p id="no-results">No games found.</p>
+		</div>
+
+		<!-- ── Game frame page ─────────────────────────────────────────────── -->
+		<div id="game-page">
+			<button id="game-back">← back</button>
+
+			<div id="game-frame-wrapper">
+				<iframe id="game-frame" allowfullscreen></iframe>
+			</div>
+
+			<div id="game-controls">
+				<button class="ctrl-btn" id="btn-reload" title="Reload">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="23 4 23 10 17 10"></polyline>
+						<path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+					</svg>
+				</button>
+				<button class="ctrl-btn" id="btn-fullscreen" title="Fullscreen">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="15 3 21 3 21 9"></polyline>
+						<polyline points="9 21 3 21 3 15"></polyline>
+						<line x1="21" y1="3" x2="14" y2="10"></line>
+						<line x1="3" y1="21" x2="10" y2="14"></line>
+					</svg>
+				</button>
+			</div>
+		</div>
+
+		<script>
+		// ── Blue starfield ────────────────────────────────────────────────────
+		(function () {
+		  const canvas = document.getElementById("starfield");
+		  const ctx    = canvas.getContext("2d");
+		  const COUNT  = 180;
+		  const SPEED  = 0.25;
+		  let stars    = [];
+
+		  function resize() {
+		    canvas.width  = window.innerWidth;
+		    canvas.height = window.innerHeight;
+		  }
+
+		  function mkStar() {
+		    return {
+		      x:          Math.random() * canvas.width,
+		      y:          Math.random() * canvas.height,
+		      r:          Math.random() * 1.4 + 0.3,
+		      opacity:    Math.random() * 0.6 + 0.2,
+		      phase:      Math.random() * Math.PI * 2,
+		      phaseSpeed: Math.random() * 0.015 + 0.005
+		    };
+		  }
+
+		  function init() { resize(); stars = Array.from({ length: COUNT }, mkStar); }
+
+		  function draw() {
+		    ctx.clearRect(0, 0, canvas.width, canvas.height);
+		    for (const s of stars) {
+		      s.y += SPEED;
+		      if (s.y > canvas.height + 2) { s.y = -2; s.x = Math.random() * canvas.width; }
+		      s.phase += s.phaseSpeed;
+		      const a = s.opacity * (0.7 + 0.3 * Math.sin(s.phase));
+		      ctx.beginPath();
+		      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+		      ctx.fillStyle = `rgba(100,160,255,${a})`;
+		      ctx.fill();
+		    }
+		    requestAnimationFrame(draw);
+		  }
+
+		  window.addEventListener("resize", resize);
+		  init();
+		  requestAnimationFrame(draw);
+		})();
+
+		// ── Wire up Scramjet controller so math.js can use it ─────────────────
+		(function () {
+		  try {
+		    const { ScramjetController } = $scramjetLoadController();
+		    window.__scramjetController = new ScramjetController({
+		      files: {
+		        wasm: "/scram/scramjet.wasm.wasm",
+		        all:  "/scram/scramjet.all.js",
+		        sync: "/scram/scramjet.sync.js",
+		      }
+		    });
+		    window.__scramjetController.init();
+		  } catch(e) {
+		    console.warn("Scramjet controller init failed:", e);
+		  }
+		})();
+		</script>
+
+		<script src="math.js"></script>
+	</body>
+</html>

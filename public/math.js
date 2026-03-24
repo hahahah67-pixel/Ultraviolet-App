@@ -4,7 +4,7 @@
 // id must match the key in GAME_URLS and the logo filename pattern
 const GAME_URLS = {
   "bitlife":           "https://sz-games.github.io/games/game.html?game=https://sz-games.github.io/Games9/bitlife#goog_rewarded",
-  "crossy-road":       "https://pizzaedition.win/assets/allgames/crossyroadnormal/index.html",
+"crossy-road":       "https://azgames.io/crossy-road.embed",
   "escape-road":       "https://azgames.io/escape-road.embed",
   "escape-road-2":     "https://game.azgame.io/escape-road-2/",
   "escape-road-2-city":"https://game.azgame.io/escape-road-city-2/",

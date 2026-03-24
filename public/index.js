@@ -1,16 +1,18 @@
 "use strict";
 
-// ── DOM refs ──────────────────────────────────────────────────────────────────
+// ── DOM refs ────────────────────────────────────────────────────────────────
 const form         = document.getElementById("uv-form");
 const address      = document.getElementById("uv-address");
 const searchEngine = document.getElementById("uv-search-engine");
 const error        = document.getElementById("uv-error");
 const errorCode    = document.getElementById("uv-error-code");
+const uvFrame      = document.getElementById("uv-frame");
+const consoleBar   = document.getElementById("browser-console");
 
-// ── bare-mux connection (shared by both proxies) ──────────────────────────────
+// ── bare-mux connection ─────────────────────────────────────────────────────
 const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 
-// ── Scramjet controller ───────────────────────────────────────────────────────
+// ── Scramjet controller ─────────────────────────────────────────────────────
 const { ScramjetController } = $scramjetLoadController();
 
 const scramjet = new ScramjetController({
@@ -23,10 +25,7 @@ const scramjet = new ScramjetController({
 
 scramjet.init();
 
-// ── Persistent SJ frame — created ONCE, never destroyed between navigations ───
-// Destroying and recreating the SJ frame on every navigation causes black
-// screens because the service worker loses its interception context. We create
-// it once upfront, hide/show it as needed, and just call .go() for new URLs.
+// ── Persistent SJ frame ─────────────────────────────────────────────────────
 let sjFrameWrapper = null;
 
 function getSjFrame() {
@@ -39,7 +38,7 @@ function getSjFrame() {
 	return sjFrameWrapper;
 }
 
-// ── Proxy toggle state ────────────────────────────────────────────────────────
+// ── Proxy state ─────────────────────────────────────────────────────────────
 let activeProxy = localStorage.getItem("proxy-choice") || "sj";
 
 function setProxy(name) {
@@ -59,19 +58,9 @@ function setProxy(name) {
 
 document.addEventListener("DOMContentLoaded", () => {
 	setProxy(activeProxy);
-
-	const dotUV  = document.getElementById("dot-uv");
-	const dotSJ  = document.getElementById("dot-sj");
-	const pickUV = document.getElementById("pick-uv");
-	const pickSJ = document.getElementById("pick-sj");
-
-	if (dotUV)  dotUV.addEventListener("click",  () => setProxy("uv"));
-	if (dotSJ)  dotSJ.addEventListener("click",  () => setProxy("sj"));
-	if (pickUV) pickUV.addEventListener("click", () => setProxy("uv"));
-	if (pickSJ) pickSJ.addEventListener("click", () => setProxy("sj"));
 });
 
-// ── Wisp URL helper ───────────────────────────────────────────────────────────
+// ── Helpers ─────────────────────────────────────────────────────────────────
 function getWispUrl() {
 	return (
 		(location.protocol === "https:" ? "wss" : "ws") +
@@ -81,9 +70,29 @@ function getWispUrl() {
 	);
 }
 
-// ── SW registered once flag ───────────────────────────────────────────────────
-// Re-registering the SW on every submit can cause SJ's SW to reload and lose
-// its config mid-session, causing black screens on subsequent navigations.
+function getActiveFrame() {
+	const sj = document.getElementById("sj-frame");
+	if (sj && sj.style.display !== "none") return sj;
+	return uvFrame;
+}
+
+// ── Console visibility ──────────────────────────────────────────────────────
+function updateConsoleVisibility() {
+	const sj = document.getElementById("sj-frame");
+	const usingSJ = sj && sj.style.display !== "none";
+
+	const usingUV = uvFrame &&
+		uvFrame.style.display !== "none" &&
+		uvFrame.src !== "about:blank";
+
+	if (usingSJ || usingUV) {
+		consoleBar.style.display = "block";
+	} else {
+		consoleBar.style.display = "none";
+	}
+}
+
+// ── Service worker ──────────────────────────────────────────────────────────
 let swRegistered = false;
 
 async function ensureSW() {
@@ -92,51 +101,66 @@ async function ensureSW() {
 	swRegistered = true;
 }
 
-// ── Pre-warm transport on page load ───────────────────────────────────────────
-// Set up the correct transport immediately so the first navigation doesn't
-// have to wait for it to establish.
+// ── Prewarm ─────────────────────────────────────────────────────────────────
 (async () => {
 	try {
 		await ensureSW();
 		const wispUrl = getWispUrl();
-		const proxy   = localStorage.getItem("proxy-choice") || "sj";
-		if (proxy === "uv") {
-			if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
-				await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
-			}
+
+		if (activeProxy === "uv") {
+			await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
 		} else {
-			if ((await connection.getTransport()) !== "/libcurl/index.mjs") {
-				await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
-			}
-			// Also pre-create the SJ frame so it's ready to go
+			await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
 			getSjFrame();
 		}
 	} catch(e) {
-		console.warn("Pre-warm failed:", e);
+		console.warn("Prewarm failed:", e);
 	}
 })();
 
-// ── Submit guard — prevents double-fire during async transport switch ─────────
+// ── Mutation observer (FIXED) ───────────────────────────────────────────────
+let lastSJState = false;
+
+new MutationObserver(() => {
+	const sj = document.getElementById("sj-frame");
+	const isActive = sj && sj.style.display !== "none";
+
+	if (isActive !== lastSJState) {
+		lastSJState = isActive;
+
+		const proxyPicker = document.getElementById("proxy-picker");
+		const homeCenter  = document.getElementById("home-center");
+
+		if (isActive) {
+			if (proxyPicker) proxyPicker.classList.add("hidden");
+			if (homeCenter) homeCenter.classList.add("hidden");
+		} else {
+			if (proxyPicker) proxyPicker.classList.remove("hidden");
+			if (homeCenter) homeCenter.classList.remove("hidden");
+		}
+	}
+
+	updateConsoleVisibility();
+}).observe(document.body, { attributes: true, subtree: true });
+
+// ── Submit ──────────────────────────────────────────────────────────────────
 let isSubmitting = false;
 
-// ── Form submit ───────────────────────────────────────────────────────────────
 form.addEventListener("submit", async (event) => {
 	event.preventDefault();
-
 	if (isSubmitting) return;
 	isSubmitting = true;
 
 	error.textContent     = "";
 	errorCode.textContent = "";
 
-	// Hide picker immediately
 	const proxyPicker = document.getElementById("proxy-picker");
 	if (proxyPicker) proxyPicker.classList.add("hidden");
 
 	try {
 		await ensureSW();
 	} catch (err) {
-		error.textContent     = "Failed to register service worker.";
+		error.textContent = "SW failed.";
 		errorCode.textContent = err.toString();
 		isSubmitting = false;
 		return;
@@ -144,12 +168,9 @@ form.addEventListener("submit", async (event) => {
 
 	const url     = search(address.value, searchEngine.value);
 	const wispUrl = getWispUrl();
-	const uvFrame = document.getElementById("uv-frame");
 
 	try {
 		if (activeProxy === "uv") {
-			// ── Ultraviolet ───────────────────────────────────────────────────
-			// Hide SJ frame but DO NOT destroy it — just hide it
 			const sj = getSjFrame();
 			sj.frame.style.display = "none";
 
@@ -161,8 +182,6 @@ form.addEventListener("submit", async (event) => {
 			uvFrame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
 
 		} else {
-			// ── Scramjet ──────────────────────────────────────────────────────
-			// Hide UV frame — use about:blank not "" to avoid accidental UV SW trigger
 			uvFrame.style.display = "none";
 			uvFrame.src = "about:blank";
 
@@ -170,10 +189,14 @@ form.addEventListener("submit", async (event) => {
 				await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
 			}
 
-			// Reuse the persistent SJ frame — just navigate to the new URL
 			const sj = getSjFrame();
 			sj.frame.style.display = "block";
 			sj.go(url);
+
+			// IMPORTANT: prevent freeze
+			setTimeout(() => {
+				try { sj.frame.contentWindow.focus(); } catch(e) {}
+			}, 100);
 		}
 	} finally {
 		isSubmitting = false;

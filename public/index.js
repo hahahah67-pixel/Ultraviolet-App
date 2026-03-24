@@ -23,6 +23,22 @@ const scramjet = new ScramjetController({
 
 scramjet.init();
 
+// ── Persistent SJ frame — created ONCE, never destroyed between navigations ───
+// Destroying and recreating the SJ frame on every navigation causes black
+// screens because the service worker loses its interception context. We create
+// it once upfront, hide/show it as needed, and just call .go() for new URLs.
+let sjFrameWrapper = null;
+
+function getSjFrame() {
+	if (!sjFrameWrapper) {
+		sjFrameWrapper = scramjet.createFrame();
+		sjFrameWrapper.frame.id = "sj-frame";
+		sjFrameWrapper.frame.style.display = "none";
+		document.body.appendChild(sjFrameWrapper.frame);
+	}
+	return sjFrameWrapper;
+}
+
 // ── Proxy toggle state ────────────────────────────────────────────────────────
 let activeProxy = localStorage.getItem("proxy-choice") || "sj";
 
@@ -41,7 +57,6 @@ function setProxy(name) {
 	if (pickSJ) pickSJ.classList.toggle("active", name === "sj");
 }
 
-// Run after DOM is fully ready so picker elements exist
 document.addEventListener("DOMContentLoaded", () => {
 	setProxy(activeProxy);
 
@@ -66,6 +81,41 @@ function getWispUrl() {
 	);
 }
 
+// ── SW registered once flag ───────────────────────────────────────────────────
+// Re-registering the SW on every submit can cause SJ's SW to reload and lose
+// its config mid-session, causing black screens on subsequent navigations.
+let swRegistered = false;
+
+async function ensureSW() {
+	if (swRegistered) return;
+	await registerSW();
+	swRegistered = true;
+}
+
+// ── Pre-warm transport on page load ───────────────────────────────────────────
+// Set up the correct transport immediately so the first navigation doesn't
+// have to wait for it to establish.
+(async () => {
+	try {
+		await ensureSW();
+		const wispUrl = getWispUrl();
+		const proxy   = localStorage.getItem("proxy-choice") || "sj";
+		if (proxy === "uv") {
+			if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
+				await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+			}
+		} else {
+			if ((await connection.getTransport()) !== "/libcurl/index.mjs") {
+				await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
+			}
+			// Also pre-create the SJ frame so it's ready to go
+			getSjFrame();
+		}
+	} catch(e) {
+		console.warn("Pre-warm failed:", e);
+	}
+})();
+
 // ── Submit guard — prevents double-fire during async transport switch ─────────
 let isSubmitting = false;
 
@@ -73,19 +123,18 @@ let isSubmitting = false;
 form.addEventListener("submit", async (event) => {
 	event.preventDefault();
 
-	// Block re-entry while a submit is already in flight
 	if (isSubmitting) return;
 	isSubmitting = true;
 
 	error.textContent     = "";
 	errorCode.textContent = "";
 
-	// ── Hide picker immediately — don't wait for frame load ──────────────────
+	// Hide picker immediately
 	const proxyPicker = document.getElementById("proxy-picker");
 	if (proxyPicker) proxyPicker.classList.add("hidden");
 
 	try {
-		await registerSW();
+		await ensureSW();
 	} catch (err) {
 		error.textContent     = "Failed to register service worker.";
 		errorCode.textContent = err.toString();
@@ -95,43 +144,38 @@ form.addEventListener("submit", async (event) => {
 
 	const url     = search(address.value, searchEngine.value);
 	const wispUrl = getWispUrl();
+	const uvFrame = document.getElementById("uv-frame");
 
 	try {
 		if (activeProxy === "uv") {
 			// ── Ultraviolet ───────────────────────────────────────────────────
-			// Tear down SJ frame first before touching transport
-			const sjFrame = document.getElementById("sj-frame");
-			if (sjFrame) sjFrame.remove();
+			// Hide SJ frame but DO NOT destroy it — just hide it
+			const sj = getSjFrame();
+			sj.frame.style.display = "none";
 
 			if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
 				await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
 			}
 
-			const frame = document.getElementById("uv-frame");
-			frame.style.display = "block";
-			frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+			uvFrame.style.display = "block";
+			uvFrame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
 
 		} else {
 			// ── Scramjet ──────────────────────────────────────────────────────
-			// Tear down UV frame first before touching transport
-			const uvFrame = document.getElementById("uv-frame");
+			// Hide UV frame — use about:blank not "" to avoid accidental UV SW trigger
 			uvFrame.style.display = "none";
-			uvFrame.src = "";
+			uvFrame.src = "about:blank";
 
 			if ((await connection.getTransport()) !== "/libcurl/index.mjs") {
 				await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
 			}
 
-			const oldSjFrame = document.getElementById("sj-frame");
-			if (oldSjFrame) oldSjFrame.remove();
-
-			const sjFrameWrapper = scramjet.createFrame();
-			sjFrameWrapper.frame.id = "sj-frame";
-			document.body.appendChild(sjFrameWrapper.frame);
-			sjFrameWrapper.go(url);
+			// Reuse the persistent SJ frame — just navigate to the new URL
+			const sj = getSjFrame();
+			sj.frame.style.display = "block";
+			sj.go(url);
 		}
 	} finally {
-		// Always release the guard when done, success or failure
 		isSubmitting = false;
 	}
 });

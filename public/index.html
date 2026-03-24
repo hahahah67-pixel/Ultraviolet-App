@@ -394,14 +394,16 @@
 		  });
 		}
 
-		// Watch for SJ frame being appended
+		// Watch for SJ frame becoming visible
+		// Note: SJ frame now exists on page load (pre-created for performance)
+		// so we check display !== "none" rather than just existence
 		new MutationObserver(() => {
 		  const sjFrame = document.getElementById("sj-frame");
-		  if (sjFrame) {
+		  if (sjFrame && sjFrame.style.display !== "none") {
 		    proxyPicker.classList.add("hidden");
 		    hideHome();
 		  }
-		}).observe(document.body, { childList: true });
+		}).observe(document.body, { childList: true, subtree: false, attributes: true, attributeFilter: ["style"] });
 
 // ── Browser console ───────────────────────────────────────────────────
 		const consoleBar   = document.getElementById("browser-console");

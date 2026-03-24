@@ -9,7 +9,7 @@ const GAME_URLS = {
   "escape-road-2":     "https://game.azgame.io/escape-road-2/",
   "escape-road-2-city":"https://game.azgame.io/escape-road-city-2/",
   "path-to-glory":     "https://pizzaedition.win/assets/allgames/pathtoglory/index.html",
-  "subway-surfers":    "https://sz-games.github.io/games/game.html?game=https://dddavit.github.io/subway/"
+  "subway-surfers":    "https://azgames.io/subway-surfers.embed/"
 };
 
 const GAME_LOGOS = {

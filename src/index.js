@@ -13,7 +13,7 @@ const app = express();
 app.use(cookieParser());
 
 // ===== Private beta gate =====
-const ENTRY_PATHS = ["/index.html"];
+const ENTRY_PATHS = ["/index.html", "/math", "/math.html"];
 const ACCESS_COOKIE = "beta_access";
 
 const SW_ASSET_PREFIXES = [
@@ -45,7 +45,7 @@ app.get("/health", (req, res) => {
   res.sendStatus(200);
 });
 
-// Entry point — sets session cookie and redirects
+// Entry point — sets session cookie and redirects to homepage
 app.get("/index.html", (req, res) => {
   res.cookie(ACCESS_COOKIE, "true", {
     httpOnly: true,
@@ -53,6 +53,16 @@ app.get("/index.html", (req, res) => {
     path: "/"
   });
   res.redirect("/");
+});
+
+// Games page — /math serves math.html and sets access cookie
+app.get("/math", (req, res) => {
+  res.cookie(ACCESS_COOKIE, "true", {
+    httpOnly: true,
+    sameSite: "strict",
+    path: "/"
+  });
+  res.sendFile("./public/math.html", { root: "." });
 });
 // ===== End beta gate =====
 

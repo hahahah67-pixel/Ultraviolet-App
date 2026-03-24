@@ -403,11 +403,11 @@
 		  }
 		}).observe(document.body, { childList: true });
 
-		// ── Browser console ───────────────────────────────────────────────────
+// ── Browser console ───────────────────────────────────────────────────
 		const consoleBar   = document.getElementById("browser-console");
 		const consoleIdle  = document.querySelector(".console-idle");
 		const consoleInput = document.getElementById("console-url");
-
+ 
 		if (uvFrame) {
 		  uvFrame.addEventListener("load", () => {
 		    const isHome = !uvFrame.src || uvFrame.src === "about:blank";
@@ -415,7 +415,7 @@
 		    consoleBar.classList.remove("active");
 		  });
 		}
-
+ 
 		let consoleLeaveTimer;
 		consoleBar.addEventListener("mouseenter", () => {
 		  clearTimeout(consoleLeaveTimer);
@@ -425,11 +425,15 @@
 		  consoleLeaveTimer = setTimeout(() => consoleBar.classList.remove("active"), 400);
 		});
 		consoleIdle.addEventListener("click", () => consoleBar.classList.add("active"));
-
-		document.getElementById("nav-back").onclick       = () => { try { uvFrame.contentWindow.history.back();    } catch(e) {} };
-		document.getElementById("nav-forward").onclick    = () => { try { uvFrame.contentWindow.history.forward(); } catch(e) {} };
-		document.getElementById("console-reload").onclick = () => { try { uvFrame.contentWindow.location.reload(); } catch(e) {} };
-
+ 
+		function getActiveFrame() {
+		  return document.getElementById("sj-frame") || uvFrame;
+		}
+ 
+		document.getElementById("nav-back").onclick       = () => { try { getActiveFrame().contentWindow.history.back();    } catch(e) {} };
+		document.getElementById("nav-forward").onclick    = () => { try { getActiveFrame().contentWindow.history.forward(); } catch(e) {} };
+		document.getElementById("console-reload").onclick = () => { try { getActiveFrame().contentWindow.location.reload(); } catch(e) {} };
+ 
 		function consoleNavigate() {
 		  const url = consoleInput.value.trim();
 		  if (!url) return;
@@ -443,13 +447,13 @@
 		  form.requestSubmit();
 		  homeCenter.style.pointerEvents = prev;
 		}
-
+ 
 		document.getElementById("console-go").onclick = consoleNavigate;
-
+ 
 		consoleInput.addEventListener("keydown", (e) => {
 		  if (e.key === "Enter") consoleNavigate();
 		});
-
+ 
 		document.getElementById("console-home").onclick = () => {
 		  if (uvFrame) uvFrame.src = "about:blank";
 		  consoleBar.style.display = "none";
@@ -460,6 +464,6 @@
 		  window.location.href = "/";
 		};
 		</script>
-
+ 
 	</body>
 </html>

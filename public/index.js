@@ -1,29 +1,16 @@
 "use strict";
 
-// ── DOM refs ────────────────────────────────────────────────────────────────
+// ── DOM refs ──────────────────────────────────────────────────────────────────
 const form         = document.getElementById("uv-form");
 const address      = document.getElementById("uv-address");
 const searchEngine = document.getElementById("uv-search-engine");
 const error        = document.getElementById("uv-error");
 const errorCode    = document.getElementById("uv-error-code");
 
-// ── bare-mux connection ─────────────────────────────────────────────────────
+// ── bare-mux connection (shared by both proxies) ──────────────────────────────
 const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 
-async function ensureTransport(type, config) {
-	try {
-		const current = await connection.getTransport();
-		if (current !== type) {
-			await connection.setTransport(type, config);
-			// small delay to stabilize after switching
-			await new Promise(r => setTimeout(r, 60));
-		}
-	} catch (e) {
-		console.warn("Transport error:", e);
-	}
-}
-
-// ── Scramjet ────────────────────────────────────────────────────────────────
+// ── Scramjet controller ───────────────────────────────────────────────────────
 const { ScramjetController } = $scramjetLoadController();
 
 const scramjet = new ScramjetController({
@@ -34,55 +21,9 @@ const scramjet = new ScramjetController({
 	},
 });
 
-let sjReady = false;
+scramjet.init();
 
-(async () => {
-	try {
-		await scramjet.init();
-		sjReady = true;
-	} catch (e) {
-		console.warn("Scramjet init failed:", e);
-		// Still mark ready so we don't block forever — SJ may work anyway
-		sjReady = true;
-	}
-})();
-
-// ── Persistent SJ frame ─────────────────────────────────────────────────────
-let sjFrameWrapper = null;
-let sjNavCount     = 0;
-
-function getSjFrame() {
-	if (!sjFrameWrapper) {
-		sjFrameWrapper = scramjet.createFrame();
-		sjFrameWrapper.frame.id = "sj-frame";
-		sjFrameWrapper.frame.style.display = "none";
-		document.body.appendChild(sjFrameWrapper.frame);
-	}
-	return sjFrameWrapper;
-}
-
-// FIX BUG 3: instead of removing from DOM (loses SW context),
-// just reset src to about:blank and recreate the wrapper object only.
-// Frame stays in DOM so SW context is preserved.
-function resetSjFrameIfNeeded() {
-	sjNavCount++;
-	if (sjNavCount >= 5) {
-		if (sjFrameWrapper?.frame) {
-			sjFrameWrapper.frame.src = "about:blank";
-		}
-		// Recreate the wrapper so .go() gets a fresh navigation state
-		// but the frame element itself stays in the DOM
-		const oldFrame = sjFrameWrapper?.frame;
-		sjFrameWrapper = scramjet.createFrame();
-		if (oldFrame) {
-			// Swap to reuse existing DOM element
-			sjFrameWrapper.frame = oldFrame;
-		}
-		sjNavCount = 0;
-	}
-}
-
-// ── Proxy toggle ────────────────────────────────────────────────────────────
+// ── Proxy toggle state ────────────────────────────────────────────────────────
 let activeProxy = localStorage.getItem("proxy-choice") || "sj";
 
 function setProxy(name) {
@@ -100,6 +41,7 @@ function setProxy(name) {
 	if (pickSJ) pickSJ.classList.toggle("active", name === "sj");
 }
 
+// Run after DOM is fully ready so picker elements exist
 document.addEventListener("DOMContentLoaded", () => {
 	setProxy(activeProxy);
 
@@ -114,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	if (pickSJ) pickSJ.addEventListener("click", () => setProxy("sj"));
 });
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
+// ── Wisp URL helper ───────────────────────────────────────────────────────────
 function getWispUrl() {
 	return (
 		(location.protocol === "https:" ? "wss" : "ws") +
@@ -124,149 +66,72 @@ function getWispUrl() {
 	);
 }
 
-let swRegistered = false;
-
-async function ensureSW() {
-	if (swRegistered) return;
-	await registerSW();
-	swRegistered = true;
-}
-
-// ── Hard engine isolation ────────────────────────────────────────────────────
-function resetUVFrame() {
-	const uvFrame = document.getElementById("uv-frame");
-	if (uvFrame) {
-		uvFrame.src = "about:blank";
-		uvFrame.style.display = "none";
-	}
-}
-
-function resetSJFrame() {
-	if (sjFrameWrapper?.frame) {
-		sjFrameWrapper.frame.src = "about:blank";
-		sjFrameWrapper.frame.style.display = "none";
-	}
-}
-
-// ── Pre-warm ────────────────────────────────────────────────────────────────
-(async () => {
-	try {
-		await ensureSW();
-		const wispUrl = getWispUrl();
-		const proxy   = localStorage.getItem("proxy-choice") || "sj";
-
-		if (proxy === "uv") {
-			await ensureTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
-		} else {
-			await ensureTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
-			getSjFrame(); // pre-create so first nav is instant
-		}
-	} catch(e) {
-		console.warn("Pre-warm failed:", e);
-	}
-})();
-
-// ── Submit guard ────────────────────────────────────────────────────────────
+// ── Submit guard — prevents double-fire during async transport switch ─────────
 let isSubmitting = false;
 
-// ── Scramjet navigation ──────────────────────────────────────────────────────
-async function sjNavigate(sj, url) {
-	// FIX BUG 1: clearTimeout was firing at 2500ms which always cancelled
-	// the 6000ms safety net before it could run. Keep timeout reference
-	// alive the full duration and only cancel after confirmed navigation.
-	let stuckTimer = setTimeout(() => {
-		console.warn("SJ stuck, attempting recovery...");
-		try {
-			sj.frame.src = "about:blank";
-			setTimeout(() => { try { sj.go(url); } catch(e) {} }, 150);
-		} catch (e) {}
-	}, 6000);
+// ── Form submit ───────────────────────────────────────────────────────────────
+form.addEventListener("submit", async (event) => {
+	event.preventDefault();
 
-	// Hard reset before navigating — clears stale state
-	sj.frame.src = "about:blank";
-	await new Promise(r => setTimeout(r, 100));
+	// Block re-entry while a submit is already in flight
+	if (isSubmitting) return;
+	isSubmitting = true;
+
+	error.textContent     = "";
+	errorCode.textContent = "";
+
+	// ── Hide picker immediately — don't wait for frame load ──────────────────
+	const proxyPicker = document.getElementById("proxy-picker");
+	if (proxyPicker) proxyPicker.classList.add("hidden");
 
 	try {
-		sj.go(url);
-		// Only cancel the stuck timer if go() didn't throw
-		setTimeout(() => clearTimeout(stuckTimer), 6100);
-	} catch (e) {
-		console.warn("SJ go error:", e);
-		clearTimeout(stuckTimer);
+		await registerSW();
+	} catch (err) {
+		error.textContent     = "Failed to register service worker.";
+		errorCode.textContent = err.toString();
+		isSubmitting = false;
+		return;
 	}
-}
 
-// ── Form submit ─────────────────────────────────────────────────────────────
-if (form) {
-	form.addEventListener("submit", async (event) => {
-		event.preventDefault();
-		if (isSubmitting) return;
-		isSubmitting = true;
+	const url     = search(address.value, searchEngine.value);
+	const wispUrl = getWispUrl();
 
-		if (error)     error.textContent     = "";
-		if (errorCode) errorCode.textContent = "";
+	try {
+		if (activeProxy === "uv") {
+			// ── Ultraviolet ───────────────────────────────────────────────────
+			// Tear down SJ frame first before touching transport
+			const sjFrame = document.getElementById("sj-frame");
+			if (sjFrame) sjFrame.remove();
 
-		const proxyPicker = document.getElementById("proxy-picker");
-		if (proxyPicker) proxyPicker.classList.add("hidden");
-
-		try {
-			await ensureSW();
-		} catch (err) {
-			if (error)     error.textContent     = "Failed to register service worker.";
-			if (errorCode) errorCode.textContent = err.toString();
-			isSubmitting = false;
-			return;
-		}
-
-		const url     = search(address.value, searchEngine.value);
-		const wispUrl = getWispUrl();
-		const uvFrame = document.getElementById("uv-frame");
-
-		try {
-			if (activeProxy === "uv") {
-
-				resetSJFrame();
-				await ensureTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
-
-				if (uvFrame) {
-					uvFrame.style.display = "block";
-					uvFrame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
-				}
-
-			} else {
-
-				resetUVFrame();
-				await ensureTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
-
-				// FIX BUG 2: add timeout so sjReady wait never blocks forever
-				const sjReadyStart = Date.now();
-				while (!sjReady) {
-					if (Date.now() - sjReadyStart > 5000) {
-						console.warn("SJ init timed out, proceeding anyway");
-						break;
-					}
-					await new Promise(r => setTimeout(r, 50));
-				}
-
-				resetSjFrameIfNeeded();
-
-				const sj = getSjFrame();
-				sj.frame.style.display = "block";
-
-				await sjNavigate(sj, url);
-
-				const homeCenter = document.getElementById("home-center");
-				const consoleBar = document.getElementById("browser-console");
-
-				if (homeCenter) homeCenter.classList.add("hidden");
-				if (consoleBar) {
-					consoleBar.style.display = "block";
-					consoleBar.classList.remove("active");
-				}
+			if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
+				await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
 			}
-		} finally {
-			isSubmitting = false;
-		}
-	});
+
+			const frame = document.getElementById("uv-frame");
+			frame.style.display = "block";
+			frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+
+		} else {
+			// ── Scramjet ──────────────────────────────────────────────────────
+			// Tear down UV frame first before touching transport
+			const uvFrame = document.getElementById("uv-frame");
+			uvFrame.style.display = "none";
+			uvFrame.src = "";
+
+			if ((await connection.getTransport()) !== "/libcurl/index.mjs") {
+				await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
 			}
-		 
+
+			const oldSjFrame = document.getElementById("sj-frame");
+			if (oldSjFrame) oldSjFrame.remove();
+
+			const sjFrameWrapper = scramjet.createFrame();
+			sjFrameWrapper.frame.id = "sj-frame";
+			document.body.appendChild(sjFrameWrapper.frame);
+			sjFrameWrapper.go(url);
+		}
+	} finally {
+		// Always release the guard when done, success or failure
+		isSubmitting = false;
+	}
+});

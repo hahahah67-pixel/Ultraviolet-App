@@ -394,16 +394,16 @@
 		  });
 		}
 
-		// Watch for SJ frame becoming visible
-		// Note: SJ frame now exists on page load (pre-created for performance)
-		// so we check display !== "none" rather than just existence
+		// Watch for SJ frame being appended to body
+		// The SJ frame starts with display:none so this only matters
+		// for showing/hiding — actual hide/show is handled in index.js submit
 		new MutationObserver(() => {
 		  const sjFrame = document.getElementById("sj-frame");
 		  if (sjFrame && sjFrame.style.display !== "none") {
 		    proxyPicker.classList.add("hidden");
 		    hideHome();
 		  }
-		}).observe(document.body, { childList: true, subtree: false, attributes: true, attributeFilter: ["style"] });
+		}).observe(document.body, { childList: true });
 
 // ── Browser console ───────────────────────────────────────────────────
 		const consoleBar   = document.getElementById("browser-console");
@@ -458,9 +458,10 @@
  
 		document.getElementById("console-home").onclick = () => {
 		  if (uvFrame) uvFrame.src = "about:blank";
+		  uvFrame.style.display = "none";
 		  consoleBar.style.display = "none";
 		  const sjFrame = document.getElementById("sj-frame");
-		  if (sjFrame) sjFrame.remove();
+		  if (sjFrame) sjFrame.style.display = "none";
 		  proxyPicker.classList.remove("hidden");
 		  showHome();
 		  window.location.href = "/";

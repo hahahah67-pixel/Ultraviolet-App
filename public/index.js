@@ -170,32 +170,13 @@ function resetSJFrame() {
 let isSubmitting = false;
 
 // ── Scramjet navigation ──────────────────────────────────────────────────────
-let sjFirstNav = true;
-
-async function sjNavigate(sj, url) {
-	let stuckTimer = setTimeout(() => {
-		console.warn("SJ stuck, attempting recovery...");
-		try {
-			sj.frame.src = "about:blank";
-			setTimeout(() => { try { sj.go(url); } catch(e) {} }, 150);
-		} catch (e) {}
-	}, 6000);
-
-	// Skip about:blank reset on very first navigation —
-	// it causes a visible reload flash. Only reset on subsequent navs
-	// where stale state needs clearing.
-	if (!sjFirstNav) {
-		sj.frame.src = "about:blank";
-		await new Promise(r => setTimeout(r, 100));
-	}
-	sjFirstNav = false;
-
+// Just call .go() directly — SJ manages its own navigation state internally.
+// Any reset before .go() causes visible reloads and is unnecessary.
+function sjNavigate(sj, url) {
 	try {
 		sj.go(url);
-		setTimeout(() => clearTimeout(stuckTimer), 6100);
 	} catch (e) {
 		console.warn("SJ go error:", e);
-		clearTimeout(stuckTimer);
 	}
 }
 
@@ -256,7 +237,7 @@ if (form) {
 				const sj = getSjFrame();
 				sj.frame.style.display = "block";
 
-				await sjNavigate(sj, url);
+				sjNavigate(sj, url);
 
 				const homeCenter = document.getElementById("home-center");
 				const consoleBar = document.getElementById("browser-console");

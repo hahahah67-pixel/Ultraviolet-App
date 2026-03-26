@@ -388,6 +388,9 @@
 
 		if (uvFrame) {
 		  uvFrame.addEventListener("load", () => {
+		    // Only react when UV is active — SJ's resetUVFrame() sets src to
+		    // about:blank which fires this and wrongly shows picker over SJ.
+		    if ((localStorage.getItem("proxy-choice") || "sj") !== "uv") return;
 		    const isHome = !uvFrame.src || uvFrame.src === "about:blank";
 		    proxyPicker.classList.toggle("hidden", !isHome);
 		    if (isHome) showHome(); else hideHome();
@@ -403,6 +406,8 @@
  
 		if (uvFrame) {
 		  uvFrame.addEventListener("load", () => {
+		    // Only react when UV is active
+		    if ((localStorage.getItem("proxy-choice") || "sj") !== "uv") return;
 		    const isHome = !uvFrame.src || uvFrame.src === "about:blank";
 		    consoleBar.style.display = isHome ? "none" : "block";
 		    consoleBar.classList.remove("active");
@@ -458,5 +463,4 @@
 		</script>
  
 	</body>
-	</html>
-	
+</html>

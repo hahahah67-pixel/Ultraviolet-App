@@ -170,10 +170,9 @@ function resetSJFrame() {
 let isSubmitting = false;
 
 // ── Scramjet navigation ──────────────────────────────────────────────────────
+let sjFirstNav = true;
+
 async function sjNavigate(sj, url) {
-	// FIX BUG 1: clearTimeout was firing at 2500ms which always cancelled
-	// the 6000ms safety net before it could run. Keep timeout reference
-	// alive the full duration and only cancel after confirmed navigation.
 	let stuckTimer = setTimeout(() => {
 		console.warn("SJ stuck, attempting recovery...");
 		try {
@@ -182,13 +181,17 @@ async function sjNavigate(sj, url) {
 		} catch (e) {}
 	}, 6000);
 
-	// Hard reset before navigating — clears stale state
-	sj.frame.src = "about:blank";
-	await new Promise(r => setTimeout(r, 100));
+	// Skip about:blank reset on very first navigation —
+	// it causes a visible reload flash. Only reset on subsequent navs
+	// where stale state needs clearing.
+	if (!sjFirstNav) {
+		sj.frame.src = "about:blank";
+		await new Promise(r => setTimeout(r, 100));
+	}
+	sjFirstNav = false;
 
 	try {
 		sj.go(url);
-		// Only cancel the stuck timer if go() didn't throw
 		setTimeout(() => clearTimeout(stuckTimer), 6100);
 	} catch (e) {
 		console.warn("SJ go error:", e);

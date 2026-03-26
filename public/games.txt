@@ -1,7 +1,27 @@
-bitlife|BitLife|bit life|bitlife|life sim|life|bit
-crossy-road|Crossy Road|crossy road|crossy|road|frog|hop
-escape-road|Escape Road|escape road|escape|road|driving|car
-escape-road-2|Escape Road 2|escape road 2|escape 2|er2|road 2
-escape-road-2-city|Escape Road 2 City|escape road city|city|escape city|road city 2|er2 city
-path-to-glory|Path to Glory|path to glory|path glory|glory|soccer|football|path
-subway-surfers|Subway Surfers|subway surfers|subway|surfers|surf|runner|endless runner
+# Fish Proxy Games
+# Format: id|Display Name|URL|logo filename|search term|search term|...
+# HOW TO ADD A GAME:
+#   1. Drop the logo image in: public/images/game icons/
+#   2. Fill in one of the placeholder lines below
+#   3. Push to repo — game appears automatically!
+# Leave a placeholder line as-is and it stays hidden.
+
+bitlife|BitLife|https://sz-games.github.io/games/game.html?game=https://sz-games.github.io/Games9/bitlife#goog_rewarded|Bit life logo.png|bitlife|bit life|life sim|life|bit
+crossy-road|Crossy Road|https://pizzaedition.win/assets/allgames/crossyroadnormal/index.html|Crossy road logo.png|crossy road|crossy|road|frog|hop
+escape-road|Escape Road|https://azgames.io/escape-road.embed|escape road logo.png|escape road|escape|road|driving|car
+escape-road-2|Escape Road 2|https://game.azgame.io/escape-road-2/|escape road 2 logo.png|escape road 2|escape 2|er2|road 2
+escape-road-2-city|Escape Road 2 City|https://game.azgame.io/escape-road-city-2/|escape road 2 city logo.png|escape road 2 city|city|escape city|road city
+path-to-glory|Path to Glory|https://pizzaedition.win/assets/allgames/pathtoglory/index.html|path to glory logo.png|path to glory|path glory|glory|soccer|football|path
+subway-surfers|Subway Surfers|https://sz-games.github.io/games/game.html?game=https://dddavit.github.io/subway/|subway surfers logo.png|subway surfers|subway|surfers|surf|runner|endless runner
+
+# ── PLACEHOLDERS — fill these in when you have a new game ──────────────────
+# slot-8|||
+# slot-9|||
+# slot-10|||
+# slot-11|||
+# slot-12|||
+# slot-13|||
+# slot-14|||
+# slot-15|||
+# slot-16|||
+# slot-17|||

@@ -1,21 +1,21 @@
 "use strict";
 
 // ── DOM refs ──────────────────────────────────────────────────────────────────
-const gamesPage    = document.getElementById("games-page");
-const gamePage     = document.getElementById("game-page");
-const gameGrid     = document.getElementById("game-grid");
-const gameSearch   = document.getElementById("game-search");
-const noResults    = document.getElementById("no-results");
-const gameFrame    = document.getElementById("game-frame");
-const gameBack     = document.getElementById("game-back");
-const btnFullscreen= document.getElementById("btn-fullscreen");
-const btnReload    = document.getElementById("btn-reload");
+const gamesPage        = document.getElementById("games-page");
+const gamePage         = document.getElementById("game-page");
+const gameGrid         = document.getElementById("game-grid");
+const gameSearch       = document.getElementById("game-search");
+const noResults        = document.getElementById("no-results");
+const gameFrame        = document.getElementById("game-frame");
+const gameBack         = document.getElementById("game-back");
+const btnFullscreen    = document.getElementById("btn-fullscreen");
+const btnReload        = document.getElementById("btn-reload");
 const gameFrameWrapper = document.getElementById("game-frame-wrapper");
 
-// ── Game index — everything loaded from games.txt ─────────────────────────────
-// Format per line: id|Display Name|URL|logo filename|term|term|...
-// Lines starting with # are comments.
-let games = []; // [ { id, display, url, logo, terms[] } ]
+// ── Game registry — loaded entirely from games.txt ────────────────────────────
+// Format: id|Display Name|URL|logo filename|search term|search term|...
+// Lines starting with # are ignored (comments / unfilled placeholders).
+let games = [];
 
 async function loadGames() {
 	try {
@@ -33,11 +33,25 @@ async function loadGames() {
 					terms:   parts.slice(1).map(t => t.trim().toLowerCase())
 				};
 			})
-			.filter(g => g.id && g.url);
+			.filter(g => g.id && g.url && g.url.startsWith("http"));
 	} catch (e) {
 		console.warn("Failed to load games.txt:", e);
 		games = [];
 	}
+}
+
+// ── Wait for scramjet controller to be ready ─────────────────────────────────
+// math.html inits the controller async — we must wait before encoding URLs.
+async function waitForSJController(timeoutMs = 8000) {
+	const start = Date.now();
+	while (!window.__scramjetController) {
+		if (Date.now() - start > timeoutMs) {
+			console.warn("SJ controller timed out, proceeding without it");
+			return false;
+		}
+		await new Promise(r => setTimeout(r, 50));
+	}
+	return true;
 }
 
 // ── Proxy helpers ─────────────────────────────────────────────────────────────
@@ -53,19 +67,28 @@ async function proxyUrl(rawUrl) {
 	const wispUrl = getWispUrl();
 
 	if (proxy === "uv") {
+		// Make sure UV transport is set
 		const current = await connection.getTransport();
 		if (current !== "/epoxy/index.mjs") {
 			await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
 		}
+		// __uv$config is set synchronously by uv.config.js so always available
 		return __uv$config.prefix + __uv$config.encodeUrl(rawUrl);
+
 	} else {
+		// Make sure SJ transport is set
 		const current = await connection.getTransport();
 		if (current !== "/libcurl/index.mjs") {
 			await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
 		}
-		return window.__scramjetController
-			? window.__scramjetController.encodeUrl(rawUrl)
-			: rawUrl;
+		// Wait for controller to be ready before encoding
+		const ready = await waitForSJController();
+		if (ready && window.__scramjetController) {
+			return window.__scramjetController.encodeUrl(rawUrl);
+		}
+		// Fallback — load raw (won't be proxied but won't crash)
+		console.warn("SJ controller not ready, loading raw URL");
+		return rawUrl;
 	}
 }
 

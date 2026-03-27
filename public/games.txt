@@ -17,7 +17,9 @@ subway-surfers|Subway Surfers|https://sz-games.github.io/games/game.html?game=ht
 # ── PLACEHOLDERS — fill these in when you have a new game ──────────────────
 
 slope|Slope|https://pizzaedition.win/assets/allgames/slope/index.html|slope game.png|slope|slope|ball roll|ball|slope
-# slot-9|||
+
+tankui sunset|Tankiusunset|https://pizzaedition.win/assets/allgames/tanuki-sunset/games/tanuki/index.html
+|sunset game.png|sunset|sunset tanuki|racoon sun|sunset|tankui
 # slot-10|||
 # slot-11|||
 # slot-12|||

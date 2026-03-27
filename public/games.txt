@@ -15,7 +15,8 @@ path-to-glory|Path to Glory|https://pizzaedition.win/assets/allgames/pathtoglory
 subway-surfers|Subway Surfers|https://sz-games.github.io/games/game.html?game=https://dddavit.github.io/subway/|subway surfers logo.png|subway surfers|subway|surfers|surf|runner|endless runner
 
 # ── PLACEHOLDERS — fill these in when you have a new game ──────────────────
-# slot-8|||
+
+slope|Slope|https://https://pizzaedition.win/assets/allgames/slope/index.html|slope game.png|slope|slope|ball roll|ball|slope
 # slot-9|||
 # slot-10|||
 # slot-11|||

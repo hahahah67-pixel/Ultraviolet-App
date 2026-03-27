@@ -5,7 +5,6 @@
 #   2. Fill in one of the placeholder lines below
 #   3. Push to repo — game appears automatically!
 # Leave a placeholder line as-is and it stays hidden.
-
 bitlife|BitLife|https://sz-games.github.io/games/game.html?game=https://sz-games.github.io/Games9/bitlife#goog_rewarded|Bit life logo.png|bitlife|bit life|life sim|life|bit
 crossy-road|Crossy Road|https://azgames.io/crossy-road.embed|Crossy road logo.png|crossy road|crossy|road|frog|hop
 escape-road|Escape Road|https://azgames.io/escape-road.embed|escape road logo.png|escape road|escape|road|driving|car
@@ -13,14 +12,10 @@ escape-road-2|Escape Road 2|https://game.azgame.io/escape-road-2/|escape road 2 
 escape-road-2-city|Escape Road 2 City|https://game.azgame.io/escape-road-city-2/|escape road 2 city logo.png|escape road 2 city|city|escape city|road city
 path-to-glory|Path to Glory|https://pizzaedition.win/assets/allgames/pathtoglory/index.html|path to glory logo.png|path to glory|path glory|glory|soccer|football|path
 subway-surfers|Subway Surfers|https://sz-games.github.io/games/game.html?game=https://dddavit.github.io/subway/|subway surfers logo.png|subway surfers|subway|surfers|surf|runner|endless runner
-
+slope|Slope|https://pizzaedition.win/assets/allgames/slope/index.html|slope game.png|slope|ball roll|ball|slope
+tanuki-sunset|Tanuki Sunset|https://pizzaedition.win/assets/allgames/tanuki-sunset/games/tanuki/index.html|sunset game.png|tanuki sunset|sunset|raccoon|tanuki|sunset
+temple-of-boom|Temple of Boom|REPLACE_WITH_TEMPLE_URL|temple of boom.png|temple of boom|temple boom|boom|temple
 # ── PLACEHOLDERS — fill these in when you have a new game ──────────────────
-
-slope|Slope|https://pizzaedition.win/assets/allgames/slope/index.html|slope game.png|slope|slope|ball roll|ball|slope
-
-tankui sunset|Tankiusunset|https://pizzaedition.win/assets/allgames/tanuki-sunset/games/tanuki/index.html
-|sunset game.png|sunset|sunset tanuki|racoon sun|sunset|tankui
-temple-of-boom|temple of boom|https://pizzaedition.win/assets/allgames/pathtoglory/index.html|temple of boom.png|temple of boom|temple boom|boom|temple|boom|of
 # slot-11|||
 # slot-12|||
 # slot-13|||

@@ -16,7 +16,7 @@ subway-surfers|Subway Surfers|https://sz-games.github.io/games/game.html?game=ht
 
 # ── PLACEHOLDERS — fill these in when you have a new game ──────────────────
 
-slope|Slope|https://https://pizzaedition.win/assets/allgames/slope/index.html|slope game.png|slope|slope|ball roll|ball|slope
+slope|Slope|https://pizzaedition.win/assets/allgames/slope/index.html|slope game.png|slope|slope|ball roll|ball|slope
 # slot-9|||
 # slot-10|||
 # slot-11|||

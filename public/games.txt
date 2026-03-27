@@ -20,7 +20,7 @@ slope|Slope|https://pizzaedition.win/assets/allgames/slope/index.html|slope game
 
 tankui sunset|Tankiusunset|https://pizzaedition.win/assets/allgames/tanuki-sunset/games/tanuki/index.html
 |sunset game.png|sunset|sunset tanuki|racoon sun|sunset|tankui
-# slot-10|||
+temple-of-boom|temple of boom|https://pizzaedition.win/assets/allgames/pathtoglory/index.html|temple of boom.png|temple of boom|temple boom|boom|temple|boom|of
 # slot-11|||
 # slot-12|||
 # slot-13|||

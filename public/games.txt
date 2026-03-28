@@ -18,7 +18,7 @@ temple-of-boom|Temple of Boom|REPLACE_WITH_TEMPLE_URL|temple of boom.png|temple 
 # ── PLACEHOLDERS — fill these in when you have a new game ──────────────────
 temple-of-boom|Temple of Boom|https://pizzaedition.win/assets/allgames/templeofboom/index.html|boom.png|temple of boom|temple boom|boom|temple
 cluster-rush|Cluster Rush|https://pizzaedition.win/assets/allgames/ClusterRush/index.html|cluster.png|cluster rush|cluster rush|rush|cluster
-# slot-13|||
+gladihoppers|Glasihoppers|https://pizzaedition.win/assets/allgames/gladihoppers/index.html|hoppers.png|gladihoppers|hop gladi|gladi|hopper
 # slot-14|||
 # slot-15|||
 # slot-16|||

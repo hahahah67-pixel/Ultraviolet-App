@@ -20,6 +20,6 @@ temple-of-boom|Temple of Boom|https://pizzaedition.win/assets/allgames/templeofb
 cluster-rush|Cluster Rush|https://pizzaedition.win/assets/allgames/ClusterRush/index.html|cluster.png|cluster rush|cluster rush|rush|cluster
 gladihoppers|Glasihoppers|https://pizzaedition.win/assets/allgames/gladihoppers/index.html|hoppers.png|gladihoppers|hop gladi|gladi|hopper
 google-baseball|google baseball|https://www.google.com/logos/2019/july4th19/r6/july4th19.html?hl=en&origin=www.google.com|baseball game.png|ball
-# slot-15|||
+dadish-4|Dadish 4|https://dadish.io/game/dadish-4|dad 4.png|dadish 4|dad ish|dad|ish
 # slot-16|||
 # slot-17|||

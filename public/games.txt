@@ -19,7 +19,7 @@ temple-of-boom|Temple of Boom|REPLACE_WITH_TEMPLE_URL|temple of boom.png|temple 
 temple-of-boom|Temple of Boom|https://pizzaedition.win/assets/allgames/templeofboom/index.html|boom.png|temple of boom|temple boom|boom|temple
 cluster-rush|Cluster Rush|https://pizzaedition.win/assets/allgames/ClusterRush/index.html|cluster.png|cluster rush|cluster rush|rush|cluster
 gladihoppers|Glasihoppers|https://pizzaedition.win/assets/allgames/gladihoppers/index.html|hoppers.png|gladihoppers|hop gladi|gladi|hopper
-# slot-14|||
+google-baseball|google baseball|https://www.google.com/logos/2019/july4th19/r6/july4th19.html?hl=en&origin=www.google.com|baseball game.png|ball
 # slot-15|||
 # slot-16|||
 # slot-17|||

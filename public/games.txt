@@ -16,7 +16,7 @@ slope|Slope|https://pizzaedition.win/assets/allgames/slope/index.html|slope game
 tanuki-sunset|Tanuki Sunset|https://pizzaedition.win/assets/allgames/tanuki-sunset/games/tanuki/index.html|sunset game.png|tanuki sunset|sunset|raccoon|tanuki|sunset
 temple-of-boom|Temple of Boom|REPLACE_WITH_TEMPLE_URL|temple of boom.png|temple of boom|temple boom|boom|temple
 # ── PLACEHOLDERS — fill these in when you have a new game ──────────────────
-temple-of-boom|Temple of Boom|https://pizzaedition.win/assets/allgames/templeofboom/index.htm|temple of boom.png|temple of boom|temple boom|boom|temple
+temple-of-boom|Temple of Boom|https://pizzaedition.win/assets/allgames/templeofboom/index.html|boom.png|temple of boom|temple boom|boom|temple
 # slot-12|||
 # slot-13|||
 # slot-14|||

@@ -57,7 +57,6 @@
 	<body>
 		<!-- Starfield sits behind everything -->
 		<canvas id="starfield"></canvas>
-		<div id="custom-bg"></div>
 
 		<!-- Main homepage content -->
 		<div class="home-center" id="home-center">
@@ -91,27 +90,6 @@
 		<script src="register-sw.js"></script>
 		<script src="search.js"></script>
 		<script src="index.js"></script>
-
-		<!-- ── Background changer ───────────────────────────────────────────────── -->
-		<div id="bg-btn">
-			<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
-			change background
-		</div>
-
-		<!-- Popup -->
-		<div id="bg-popup" class="hidden">
-			<div id="bg-popup-inner">
-				<div id="bg-change-btn" onclick="document.getElementById('bg-file-input').click()">
-					<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-					<span>change background</span>
-				</div>
-				<div id="bg-restore-btn" onclick="restoreBg()">
-					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4"/></svg>
-					restore default
-				</div>
-			</div>
-		</div>
-		<input type="file" id="bg-file-input" accept="image/*" style="display:none"/>
 
 		<!-- Proxy selector: bottom-right corner, home page only -->
 		<div id="proxy-picker">
@@ -318,130 +296,6 @@
 		  from { opacity: 0; transform: translateY(6px); }
 		  to   { opacity: 1; transform: translateY(0); }
 		}
-
-		/* ── Background changer ─────────────────────────────────────────────────── */
-		#bg-btn {
-		  position: fixed;
-		  bottom: 60px;
-		  right: 20px;
-		  display: flex;
-		  align-items: center;
-		  gap: 7px;
-		  background: rgba(0,0,0,0.72);
-		  backdrop-filter: blur(10px);
-		  -webkit-backdrop-filter: blur(10px);
-		  border: 1px solid rgba(255,255,255,0.1);
-		  border-radius: 999px;
-		  padding: 8px 18px;
-		  z-index: 9997;
-		  color: rgba(255,255,255,0.55);
-		  font-size: 11px;
-		  font-family: "Roboto", Arial, sans-serif;
-		  letter-spacing: .05em;
-		  cursor: pointer;
-		  user-select: none;
-		  transition: color .15s, border-color .15s, opacity .3s ease, transform .3s ease;
-		  white-space: nowrap;
-		}
-
-		#bg-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
-
-		#bg-btn.hidden {
-		  opacity: 0;
-		  transform: translateY(6px);
-		  pointer-events: none;
-		}
-
-		/* Popup */
-		#bg-popup {
-		  position: fixed;
-		  bottom: 108px;
-		  right: 20px;
-		  z-index: 9999;
-		  transition: opacity .2s ease, transform .2s ease;
-		}
-
-		#bg-popup.hidden {
-		  opacity: 0;
-		  transform: translateY(8px);
-		  pointer-events: none;
-		}
-
-		#bg-popup-inner {
-		  background: rgba(10,10,10,0.92);
-		  backdrop-filter: blur(14px);
-		  -webkit-backdrop-filter: blur(14px);
-		  border: 1px solid rgba(255,255,255,0.1);
-		  border-radius: 16px;
-		  padding: 14px;
-		  display: flex;
-		  flex-direction: column;
-		  align-items: center;
-		  gap: 10px;
-		  width: 160px;
-		}
-
-		#bg-change-btn {
-		  width: 100%;
-		  aspect-ratio: 16/9;
-		  border: 1.5px dashed rgba(255,255,255,0.2);
-		  border-radius: 10px;
-		  display: flex;
-		  flex-direction: column;
-		  align-items: center;
-		  justify-content: center;
-		  gap: 6px;
-		  cursor: pointer;
-		  transition: border-color .15s, background .15s;
-		  background: rgba(255,255,255,0.03);
-		}
-
-		#bg-change-btn:hover {
-		  border-color: rgba(255,255,255,0.45);
-		  background: rgba(255,255,255,0.06);
-		}
-
-		#bg-change-btn span {
-		  color: rgba(255,255,255,0.45);
-		  font-size: 10px;
-		  font-family: "Roboto", Arial, sans-serif;
-		  letter-spacing: .04em;
-		  text-align: center;
-		}
-
-		#bg-restore-btn {
-		  display: flex;
-		  align-items: center;
-		  gap: 5px;
-		  color: rgba(255,255,255,0.35);
-		  font-size: 10px;
-		  font-family: "Roboto", Arial, sans-serif;
-		  cursor: pointer;
-		  transition: color .15s;
-		  letter-spacing: .04em;
-		}
-
-		#bg-restore-btn:hover { color: rgba(255,255,255,0.75); }
-
-		/* Custom background image layer */
-		#custom-bg {
-		  position: fixed;
-		  top: 0; left: 0;
-		  width: 100%; height: 100%;
-		  z-index: 0;
-		  background-size: cover;
-		  background-position: center;
-		  background-repeat: no-repeat;
-		  pointer-events: none;
-		  opacity: 0;
-		  transition: opacity .4s ease;
-		}
-
-		#custom-bg.active { opacity: 1; }
-
-		/* When custom bg is active, dim the starfield */
-		body.custom-bg-active #starfield { opacity: 0.15; }
-
 		</style>
 
 		<script>
@@ -606,84 +460,6 @@
 		  proxyPicker.classList.remove("hidden");
 		  showHome();
 		};
-
-		// ── Background changer ────────────────────────────────────────────────────
-		const bgBtn       = document.getElementById("bg-btn");
-		const bgPopup     = document.getElementById("bg-popup");
-		const bgFileInput = document.getElementById("bg-file-input");
-		const customBg    = document.getElementById("custom-bg");
-
-		// Toggle popup
-		bgBtn.addEventListener("click", (e) => {
-		  e.stopPropagation();
-		  bgPopup.classList.toggle("hidden");
-		});
-
-		// Close popup when clicking outside
-		document.addEventListener("click", (e) => {
-		  if (!bgPopup.contains(e.target) && e.target !== bgBtn) {
-		    bgPopup.classList.add("hidden");
-		  }
-		});
-
-		// Apply a background image from a data URL
-		function applyBg(dataUrl) {
-		  customBg.style.backgroundImage = "url(" + dataUrl + ")";
-		  customBg.classList.add("active");
-		  document.body.classList.add("custom-bg-active");
-		  localStorage.setItem("fish-custom-bg", dataUrl);
-		}
-
-		// Restore to default starfield
-		function restoreBg() {
-		  customBg.style.backgroundImage = "";
-		  customBg.classList.remove("active");
-		  document.body.classList.remove("custom-bg-active");
-		  localStorage.removeItem("fish-custom-bg");
-		  bgPopup.classList.add("hidden");
-		}
-
-		// File picker
-		bgFileInput.addEventListener("change", () => {
-		  const file = bgFileInput.files[0];
-		  if (!file) return;
-
-		  // Warn if file is very large
-		  if (file.size > 4 * 1024 * 1024) {
-		    alert("Image is too large (max ~4MB). Please pick a smaller image.");
-		    bgFileInput.value = "";
-		    return;
-		  }
-
-		  const reader = new FileReader();
-		  reader.onload = (e) => {
-		    applyBg(e.target.result);
-		    bgPopup.classList.add("hidden");
-		    bgFileInput.value = "";
-		  };
-		  reader.readAsDataURL(file);
-		});
-
-		// Hide bg button and popup when proxy is active
-		const _origHideHome = hideHome;
-		function hideHome() {
-		  _origHideHome();
-		  bgBtn.classList.add("hidden");
-		  bgPopup.classList.add("hidden");
-		}
-
-		const _origShowHome = showHome;
-		function showHome() {
-		  _origShowHome();
-		  bgBtn.classList.remove("hidden");
-		}
-
-		// Restore saved background on page load
-		(function() {
-		  const saved = localStorage.getItem("fish-custom-bg");
-		  if (saved) applyBg(saved);
-		})();
-
 		</script>
  
 	</body>

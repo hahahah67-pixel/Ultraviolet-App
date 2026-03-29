@@ -26,26 +26,8 @@
 		})();
 		</script>
 		<meta charset="utf-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
 		<title>Fish Proxy | Powerful Web Proxy</title>
-		<meta
-			name="description"
-			content="Fish Proxy is a powerful web proxy powered by proxy engines ultraviolet and scramjet, great UI and features."
-		/>
-		<meta
-			name="keywords"
-			content="proxy, web proxy, ultraviolet, scramjet, service workers, unblock websites, unblock chromebook, free web proxy, proxy list, proxy sites, online proxy, proxy server, bypass securly, bypass iboss, bypass lightspeed filter, unblock youtube"
-		/>
-		<meta
-			name="theme-color"
-			media="(prefers-color-scheme: dark)"
-			content="#000000"
-		/>
-		<meta name="googlebot" content="index, follow, snippet" />
-		<link rel="shortcut icon" content="favicon.ico" />
 		<link rel="stylesheet" href="index.css" />
 
 		<script src="baremux/index.js"></script>
@@ -55,7 +37,7 @@
 	</head>
 
 	<body>
-		<!-- Starfield sits behind everything -->
+		<!-- Starfield layers (Set behind content) -->
 		<canvas id="starfield"></canvas>
 		<div id="custom-bg"></div>
 
@@ -66,18 +48,11 @@
 			</div>
 
 			<div class="flex-center desc">
-				<p>
-					Fish Proxy is a powerful web proxy powered by proxy engines ultraviolet
-					and scramjet, great UI and features.
-				</p>
+				<p>Fish Proxy is a powerful web proxy powered by proxy engines ultraviolet and scramjet, great UI and features.</p>
 			</div>
 
 			<form id="uv-form" class="flex-center">
-				<input
-					id="uv-search-engine"
-					value="https://duckduckgo.com/?q=%s"
-					type="hidden"
-				/>
+				<input id="uv-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
 				<input id="uv-address" type="text" placeholder="Search the web freely" />
 			</form>
 
@@ -92,13 +67,12 @@
 		<script src="search.js"></script>
 		<script src="index.js"></script>
 
-		<!-- ── Background changer ───────────────────────────────────────────────── -->
+		<!-- Background changer UI -->
 		<div id="bg-btn">
 			<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
 			change background
 		</div>
 
-		<!-- Popup -->
 		<div id="bg-popup" class="hidden">
 			<div id="bg-popup-inner">
 				<div id="bg-change-btn" onclick="document.getElementById('bg-file-input').click()">
@@ -127,119 +101,86 @@
 		<div id="browser-console" class="browser-console">
 		  <div class="console-idle">browser console</div>
 		  <div class="console-controls">
-		    <button id="nav-back" title="Back">◀</button>
-		    <button id="nav-forward" title="Forward">▶</button>
+		    <button id="nav-back">◀</button>
+		    <button id="nav-forward">▶</button>
 		    <input id="console-url" type="text" placeholder="URL">
-		    <button id="console-go" title="Go">Go</button>
-		    <button id="console-home" title="Home">
-		      <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-		        <path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3z"/>
-		      </svg>
-		    </button>
-		    <button id="console-reload" title="Reload">⟳</button>
+		    <button id="console-go">Go</button>
+		    <button id="console-home"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3z"/></svg></button>
+		    <button id="console-reload">⟳</button>
 		  </div>
 		</div>
 
 		<style>
-		#starfield {
-		  position: fixed;
-		  top: 0; left: 0;
-		  width: 100%; height: 100%;
-		  z-index: -2;
-		  pointer-events: none;
-		}
-		#custom-bg {
-		  position: fixed;
-		  top: 0; left: 0;
-		  width: 100%; height: 100%;
-		  z-index: -1;
-		  background-size: cover;
-		  background-position: center;
-		  background-repeat: no-repeat;
-		  pointer-events: none;
-		  opacity: 0;
-		  transition: opacity .4s ease;
-		}
-		.home-center {
-		  position: relative;
-		  z-index: 1;
-		  display: flex;
-		  flex-direction: column;
-		  align-items: center;
-		  justify-content: center;
-		  min-height: 100vh;
-		  padding: 24px 16px;
-		  box-sizing: border-box;
-		  transition: opacity .15s ease;
-		}
-		.home-center.hidden {
-		  opacity: 0;
-		  pointer-events: none;
-		}
-		.logo-wrapper { margin-bottom: 20px; }
-		.logo { width: auto; max-width: 540px; height: auto; max-height: 170px; object-fit: contain; }
-		.desc { display: flex; justify-content: center; }
-		.desc p { max-width: 460px; text-align: center; color: rgba(255, 255, 255, 0.55); font-size: 14px; line-height: 1.65; margin: 0 0 4px; }
-		#uv-form { margin-top: 14px; margin-bottom: 6px; }
-		#proxy-picker { position: fixed; bottom: 18px; right: 20px; display: flex; align-items: center; gap: 16px; background: rgba(0,0,0,0.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; padding: 8px 18px; z-index: 9998; opacity: 1; transition: opacity .3s ease, transform .3s ease; }
-		#proxy-picker.hidden { opacity: 0; transform: translateY(6px); pointer-events: none; }
-		.proxy-dot.active { background: #4a8fff; border-color: #4a8fff; box-shadow: 0 0 6px rgba(74,143,255,0.6); }
-		.browser-console { position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.88); backdrop-filter: blur(6px); border-radius: 999px; display: none; z-index: 9999; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.4); transition: all .25s ease; }
-		.console-idle { padding: 10px 26px; color: white; font-size: 12px; letter-spacing: .6px; text-transform: lowercase; cursor: pointer; opacity: 0.85; transition: all .25s ease; }
-		.console-controls { display: none; align-items: center; gap: 6px; padding: 6px 10px; animation: fadeIn .2s ease; }
-		.browser-console.active .console-idle  { display: none; }
-		.browser-console.active .console-controls { display: flex; }
-		.browser-console button { width: 30px; height: 30px; border-radius: 50%; border: none; background: #111; color: white; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; transition: all .15s ease; }
-		.browser-console input { height: 28px; width: 140px; border-radius: 999px; border: none; padding: 0 12px; background: #000; color: white; font-size: 12px; transition: width .2s ease; }
-		#bg-btn { position: fixed; bottom: 60px; right: 20px; display: flex; align-items: center; gap: 7px; background: rgba(0,0,0,0.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; padding: 8px 18px; z-index: 9997; color: rgba(255,255,255,0.55); font-size: 11px; cursor: pointer; transition: opacity .3s ease, transform .3s ease; white-space: nowrap; }
-		#bg-btn.hidden { opacity: 0; transform: translateY(6px); pointer-events: none; }
-		#bg-popup { position: fixed; bottom: 108px; right: 20px; z-index: 9999; transition: opacity .2s ease, transform .2s ease; }
-		#bg-popup.hidden { opacity: 0; transform: translateY(8px); pointer-events: none; }
-		#bg-popup-inner { background: rgba(10,10,10,0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 160px; }
-		#bg-change-btn { width: 100%; aspect-ratio: 16/9; border: 1.5px dashed rgba(255,255,255,0.2); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: border-color .15s, background .15s; background: rgba(255,255,255,0.03); }
-		#bg-restore-btn { display: flex; align-items: center; gap: 5px; color: rgba(255,255,255,0.35); font-size: 10px; cursor: pointer; transition: color .15s; }
+		/* Starfield Layering */
+		#starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; }
+		#custom-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-size: cover; background-position: center; pointer-events: none; opacity: 0; transition: opacity .4s ease; }
 		#custom-bg.active { opacity: 1; }
 		body.custom-bg-active #starfield { opacity: 0.15; }
+
+		/* Animations and Transitions */
+		.home-center { position: relative; z-index: 1; transition: opacity .15s ease; }
+		.home-center.hidden { opacity: 0; pointer-events: none; }
+
+		#bg-btn { 
+			position: fixed; bottom: 60px; right: 20px; display: flex; align-items: center; gap: 7px; 
+			background: rgba(0,0,0,0.72); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); 
+			border-radius: 999px; padding: 8px 18px; z-index: 9997; color: rgba(255,255,255,0.55); 
+			font-size: 11px; cursor: pointer; transition: opacity .3s ease, transform .3s ease; 
+		}
+		#bg-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+		#bg-btn.hidden { opacity: 0; transform: translateY(6px); pointer-events: none; }
+
+		#proxy-picker { position: fixed; bottom: 18px; right: 20px; display: flex; align-items: center; gap: 16px; background: rgba(0,0,0,0.72); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; padding: 8px 18px; z-index: 9998; transition: opacity .3s ease, transform .3s ease; }
+		#proxy-picker.hidden { opacity: 0; transform: translateY(6px); pointer-events: none; }
+		
+		#bg-popup { position: fixed; bottom: 108px; right: 20px; z-index: 9999; transition: opacity .2s ease, transform .2s ease; }
+		#bg-popup.hidden { opacity: 0; transform: translateY(8px); pointer-events: none; }
+		#bg-popup-inner { background: rgba(10,10,10,0.92); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 160px; }
+
+		/* Proxy Dot Styles */
+		.proxy-dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.3); transition: all .2s ease; }
+		.proxy-dot.active { background: #4a8fff; border-color: #4a8fff; box-shadow: 0 0 6px rgba(74,143,255,0.6); }
+		.proxy-option.active { color: #fff; }
 		</style>
 
 		<script>
-		// --- Starfield ---
+		// --- Starfield Logic ---
 		(function () {
 		  const canvas = document.getElementById("starfield");
 		  const ctx    = canvas.getContext("2d");
-		  let stars    = [];
+		  let stars = [];
 		  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-		  function mkStar() { return { x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*1.4+0.3, opacity: Math.random()*0.6+0.2, phase: Math.random()*Math.PI*2, phaseSpeed: Math.random()*0.015+0.005 }; }
-		  function init() { resize(); stars = Array.from({ length: 180 }, mkStar); }
+		  function init() { resize(); stars = Array.from({ length: 180 }, () => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*1.4+0.3, o: Math.random()*0.6+0.2, s: Math.random()*0.02+0.01 })); }
 		  function draw() {
 		    ctx.clearRect(0, 0, canvas.width, canvas.height);
 		    for (const s of stars) {
-		      s.y += 0.25; if (s.y > canvas.height + 2) { s.y = -2; s.x = Math.random() * canvas.width; }
-		      s.phase += s.phaseSpeed; const a = s.opacity * (0.7 + 0.3 * Math.sin(s.phase));
-		      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,255,255,${a})`; ctx.fill();
+		      s.y += 0.25; if (s.y > canvas.height) s.y = 0;
+		      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+		      ctx.fillStyle = `rgba(255,255,255,${s.o})`; ctx.fill();
 		    }
 		    requestAnimationFrame(draw);
 		  }
 		  window.addEventListener("resize", resize); init(); draw();
 		})();
 
-		// --- Hiding Helper Functions (Updated to include Background Button) ---
+		// --- Core UI Toggle (This is the fix for the BG icon) ---
 		const homeCenter = document.getElementById("home-center");
 		const bgBtn = document.getElementById("bg-btn");
 		const proxyPicker = document.getElementById("proxy-picker");
+		const uvFrame = document.getElementById("uv-frame");
 		const consoleBar = document.getElementById("browser-console");
 
-		function hideHome() {
-		  homeCenter.classList.add("hidden");
-		  bgBtn.classList.add("hidden"); // FIXED
+		function syncUIVisibility() {
+			const isHome = !uvFrame.src || uvFrame.src === "about:blank";
+			homeCenter.classList.toggle("hidden", !isHome);
+			bgBtn.classList.toggle("hidden", !isHome); // This hides the BG button on sites
+			proxyPicker.classList.toggle("hidden", !isHome);
+			consoleBar.style.display = isHome ? "none" : "block";
 		}
 
-		function showHome() {
-		  homeCenter.classList.remove("hidden");
-		  bgBtn.classList.remove("hidden"); // FIXED
-		}
+		if (uvFrame) uvFrame.addEventListener("load", syncUIVisibility);
 
-		// --- Proxy picker ---
+		// --- Proxy Selection Logic ---
 		const pickUV = document.getElementById("pick-uv");
 		const pickSJ = document.getElementById("pick-sj");
 		const dotUV  = document.getElementById("dot-uv");
@@ -253,29 +194,14 @@
 		  dotSJ.classList.toggle("active", !isUV);
 		}
 
-		pickUV.addEventListener("click", () => { if (typeof setProxy === "function") setProxy("uv"); updatePickerUI("uv"); });
-		pickSJ.addEventListener("click", () => { if (typeof setProxy === "function") setProxy("sj"); updatePickerUI("sj"); });
+		pickUV.onclick = () => { localStorage.setItem("proxy-choice", "uv"); updatePickerUI("uv"); if(window.setProxy) setProxy("uv"); };
+		pickSJ.onclick = () => { localStorage.setItem("proxy-choice", "sj"); updatePickerUI("sj"); if(window.setProxy) setProxy("sj"); };
 		updatePickerUI(localStorage.getItem("proxy-choice") || "sj");
 
-		const uvFrame = document.getElementById("uv-frame");
-		if (uvFrame) {
-		  uvFrame.addEventListener("load", () => {
-		    if ((localStorage.getItem("proxy-choice") || "sj") !== "uv") return;
-		    const isHome = !uvFrame.src || uvFrame.src === "about:blank";
-		    proxyPicker.classList.toggle("hidden", !isHome);
-		    consoleBar.style.display = isHome ? "none" : "block";
-		    if (isHome) showHome(); else hideHome();
-		  });
-		}
-
-		// --- Console ---
+		// --- Browser Console ---
 		document.getElementById("console-home").onclick = () => {
-		  if (uvFrame) { uvFrame.src = "about:blank"; uvFrame.style.display = "none"; }
-		  consoleBar.style.display = "none";
-		  const sjFrame = document.getElementById("sj-frame");
-		  if (sjFrame) sjFrame.style.display = "none";
-		  proxyPicker.classList.remove("hidden");
-		  showHome();
+			uvFrame.src = "about:blank";
+			syncUIVisibility();
 		};
 
 		// --- Background Changer Logic ---
@@ -285,35 +211,35 @@
 
 		const savedBg = localStorage.getItem("fish-custom-bg");
 		if (savedBg) {
-			customBg.style.backgroundImage = "url(" + savedBg + ")";
+			customBg.style.backgroundImage = `url(${savedBg})`;
 			customBg.classList.add("active");
 			document.body.classList.add("custom-bg-active");
 		}
 
-		bgBtn.addEventListener("click", (e) => { e.stopPropagation(); bgPopup.classList.toggle("hidden"); });
-		document.addEventListener("click", (e) => { if (!bgPopup.contains(e.target) && e.target !== bgBtn) bgPopup.classList.add("hidden"); });
+		bgBtn.onclick = (e) => { e.stopPropagation(); bgPopup.classList.toggle("hidden"); };
+		document.onclick = (e) => { if (!bgPopup.contains(e.target) && e.target !== bgBtn) bgPopup.classList.add("hidden"); };
+
+		bgFileInput.onchange = () => {
+			const file = bgFileInput.files[0];
+			if (file && file.size < 4 * 1024 * 1024) {
+				const reader = new FileReader();
+				reader.onload = (e) => {
+					customBg.style.backgroundImage = `url(${e.target.result})`;
+					customBg.classList.add("active");
+					document.body.classList.add("custom-bg-active");
+					localStorage.setItem("fish-custom-bg", e.target.result);
+				};
+				reader.readAsDataURL(file);
+			}
+		};
 
 		function restoreBg() {
-		  customBg.style.backgroundImage = "";
-		  customBg.classList.remove("active");
-		  document.body.classList.remove("custom-bg-active");
-		  localStorage.removeItem("fish-custom-bg");
-		  bgPopup.classList.add("hidden");
+			customBg.style.backgroundImage = "";
+			customBg.classList.remove("active");
+			document.body.classList.remove("custom-bg-active");
+			localStorage.removeItem("fish-custom-bg");
+			bgPopup.classList.add("hidden");
 		}
-
-		bgFileInput.addEventListener("change", () => {
-		  const file = bgFileInput.files[0];
-		  if (file && file.size < 4 * 1024 * 1024) {
-		    const reader = new FileReader();
-		    reader.onload = (e) => {
-		      customBg.style.backgroundImage = "url(" + e.target.result + ")";
-		      customBg.classList.add("active");
-		      document.body.classList.add("custom-bg-active");
-		      localStorage.setItem("fish-custom-bg", e.target.result);
-		    };
-		    reader.readAsDataURL(file);
-		  }
-		});
 		</script>
 	</body>
 </html>

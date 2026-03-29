@@ -55,7 +55,7 @@
 	</head>
 
 	<body>
-		<!-- Starfield sits behind everything -->
+		<!-- Starfield layers -->
 		<canvas id="starfield"></canvas>
 		<div id="custom-bg"></div>
 
@@ -92,13 +92,12 @@
 		<script src="search.js"></script>
 		<script src="index.js"></script>
 
-		<!-- ── Background changer ───────────────────────────────────────────────── -->
+		<!-- ── Background changer UI ─────────────────────────────────────────── -->
 		<div id="bg-btn">
 			<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
 			change background
 		</div>
 
-		<!-- Popup -->
 		<div id="bg-popup" class="hidden">
 			<div id="bg-popup-inner">
 				<div id="bg-change-btn" onclick="document.getElementById('bg-file-input').click()">
@@ -141,14 +140,31 @@
 		</div>
 
 		<style>
-		/* Starfield Layering Fixes */
-		#starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; }
-		#custom-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-size: cover; background-position: center; pointer-events: none; opacity: 0; transition: opacity .4s ease; }
-		
-		.home-center { position: relative; z-index: 1; transition: opacity .15s ease; }
-		.home-center.hidden { opacity: 0; pointer-events: none; }
+		/* Starfield - FIXED LAYER POSITION */
+		#starfield {
+		  position: fixed;
+		  top: 0; left: 0;
+		  width: 100%; height: 100%;
+		  z-index: -2;
+		  pointer-events: none;
+		}
 
-		/* Preserve all Claude original styles */
+		#custom-bg {
+		  position: fixed;
+		  top: 0; left: 0;
+		  width: 100%; height: 100%;
+		  z-index: -1;
+		  background-size: cover;
+		  background-position: center;
+		  background-repeat: no-repeat;
+		  pointer-events: none;
+		  opacity: 0;
+		  transition: opacity .4s ease;
+		}
+
+		/* Original Claude Styles Kept Exactly */
+		.home-center { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 24px 16px; box-sizing: border-box; transition: opacity .15s ease; }
+		.home-center.hidden { opacity: 0; pointer-events: none; }
 		.logo-wrapper { margin-bottom: 20px; }
 		.logo { width: auto; max-width: 540px; height: auto; max-height: 170px; object-fit: contain; }
 		.desc { display: flex; justify-content: center; }
@@ -163,16 +179,21 @@
 		.proxy-dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.3); background: transparent; display: inline-block; flex-shrink: 0; transition: background .2s ease, border-color .2s ease, box-shadow .2s ease; }
 		.proxy-dot.active { background: #4a8fff; border-color: #4a8fff; box-shadow: 0 0 6px rgba(74,143,255,0.6); }
 
-		#browser-console { position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.88); backdrop-filter: blur(6px); border-radius: 999px; display: none; z-index: 9999; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.4); transition: all .25s ease; }
+		.browser-console { position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.88); backdrop-filter: blur(6px); border-radius: 999px; display: none; z-index: 9999; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.4); transition: all .25s ease; }
 		.console-idle { padding: 10px 26px; color: white; font-size: 12px; letter-spacing: .6px; text-transform: lowercase; cursor: pointer; opacity: 0.85; transition: all .25s ease; }
+		.console-idle:hover { opacity: 1; }
 		.console-controls { display: none; align-items: center; gap: 6px; padding: 6px 10px; animation: fadeIn .2s ease; }
 		.browser-console.active .console-idle  { display: none; }
 		.browser-console.active .console-controls { display: flex; }
 		.browser-console button { width: 30px; height: 30px; border-radius: 50%; border: none; background: #111; color: white; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; transition: all .15s ease; }
+		.browser-console button:hover { background: #222; transform: scale(1.08); }
 		.browser-console input { height: 28px; width: 140px; border-radius: 999px; border: none; padding: 0 12px; background: #000; color: white; font-size: 12px; transition: width .2s ease; }
+		.browser-console.active input { width: 180px; }
 
-		#bg-btn { position: fixed; bottom: 60px; right: 20px; display: flex; align-items: center; gap: 7px; background: rgba(0,0,0,0.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; padding: 8px 18px; z-index: 9997; color: rgba(255,255,255,0.55); font-size: 11px; cursor: pointer; transition: opacity .3s ease, transform .3s ease; white-space: nowrap; }
+		#bg-btn { position: fixed; bottom: 60px; right: 20px; display: flex; align-items: center; gap: 7px; background: rgba(0,0,0,0.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; padding: 8px 18px; z-index: 9997; color: rgba(255,255,255,0.55); font-size: 11px; cursor: pointer; user-select: none; transition: opacity .3s ease, transform .3s ease; white-space: nowrap; }
+		#bg-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
 		#bg-btn.hidden { opacity: 0; transform: translateY(6px); pointer-events: none; }
+
 		#bg-popup { position: fixed; bottom: 108px; right: 20px; z-index: 9999; transition: opacity .2s ease, transform .2s ease; }
 		#bg-popup.hidden { opacity: 0; transform: translateY(8px); pointer-events: none; }
 		#bg-popup-inner { background: rgba(10,10,10,0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 160px; }
@@ -181,10 +202,11 @@
 		
 		#custom-bg.active { opacity: 1; }
 		body.custom-bg-active #starfield { opacity: 0.15; }
+		@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 		</style>
 
 		<script>
-		// --- Starfield ---
+		// --- Starfield Logic (Original) ---
 		(function () {
 		  const canvas = document.getElementById("starfield");
 		  const ctx    = canvas.getContext("2d");
@@ -204,48 +226,63 @@
 		  window.addEventListener("resize", resize); init(); draw();
 		})();
 
-		// --- Original Proxy Logic with Hiding Fix ---
+		// --- Original UI Sync Logic + FIXED: Hide BG Button ---
 		const homeCenter = document.getElementById("home-center");
 		const bgBtn = document.getElementById("bg-btn");
 		const proxyPicker = document.getElementById("proxy-picker");
 		const uvFrame = document.getElementById("uv-frame");
 		const consoleBar = document.getElementById("browser-console");
 
-		function updateUIVisibility() {
-			const isHome = !uvFrame.src || uvFrame.src === "about:blank";
-			homeCenter.classList.toggle("hidden", !isHome);
-			bgBtn.classList.toggle("hidden", !isHome); // FIXED: Hides button on sites
-			proxyPicker.classList.toggle("hidden", !isHome);
-			consoleBar.style.display = isHome ? "none" : "block";
+		function syncUIVisibility() {
+		  const isHome = !uvFrame.src || uvFrame.src === "about:blank";
+		  homeCenter.classList.toggle("hidden", !isHome);
+		  bgBtn.classList.toggle("hidden", !isHome); // FIXED: Hides BG button on sites
+		  proxyPicker.classList.toggle("hidden", !isHome);
+		  consoleBar.style.display = isHome ? "none" : "block";
 		}
 
-		if (uvFrame) uvFrame.addEventListener("load", updateUIVisibility);
+		if (uvFrame) uvFrame.addEventListener("load", syncUIVisibility);
 
-		// --- Proxy picker selection ---
+		// --- Original Console Logic (Restored) ---
+		const consoleIdle  = document.querySelector(".console-idle");
+		const consoleInput = document.getElementById("console-url");
+		let consoleLeaveTimer;
+		consoleBar.addEventListener("mouseenter", () => { clearTimeout(consoleLeaveTimer); consoleBar.classList.add("active"); });
+		consoleBar.addEventListener("mouseleave", () => { consoleLeaveTimer = setTimeout(() => consoleBar.classList.remove("active"), 400); });
+		consoleIdle.addEventListener("click", () => consoleBar.classList.add("active"));
+
+		function getActiveFrame() { return document.getElementById("sj-frame") || uvFrame; }
+		document.getElementById("nav-back").onclick = () => { try { getActiveFrame().contentWindow.history.back(); } catch(e) {} };
+		document.getElementById("nav-forward").onclick = () => { try { getActiveFrame().contentWindow.history.forward(); } catch(e) {} };
+		document.getElementById("console-reload").onclick = () => { try { getActiveFrame().contentWindow.location.reload(); } catch(e) {} };
+		document.getElementById("console-home").onclick = () => { uvFrame.src = "about:blank"; syncUIVisibility(); };
+
+		function consoleNavigate() {
+		  const url = consoleInput.value.trim();
+		  if (!url) return;
+		  const addressBar = document.querySelector("#uv-address");
+		  const form = document.getElementById("uv-form");
+		  addressBar.value = url;
+		  form.requestSubmit();
+		}
+		document.getElementById("console-go").onclick = consoleNavigate;
+		consoleInput.addEventListener("keydown", (e) => { if (e.key === "Enter") consoleNavigate(); });
+
+		// --- Original Proxy Picker Logic ---
 		const pickUV = document.getElementById("pick-uv");
 		const pickSJ = document.getElementById("pick-sj");
 		const dotUV  = document.getElementById("dot-uv");
 		const dotSJ  = document.getElementById("dot-sj");
-
 		function updatePickerUI(name) {
 		  const isUV = name === "uv";
-		  pickUV.classList.toggle("active", isUV);
-		  pickSJ.classList.toggle("active", !isUV);
-		  dotUV.classList.toggle("active", isUV);
-		  dotSJ.classList.toggle("active", !isUV);
+		  pickUV.classList.toggle("active", isUV); pickSJ.classList.toggle("active", !isUV);
+		  dotUV.classList.toggle("active", isUV); dotSJ.classList.toggle("active", !isUV);
 		}
-
 		pickUV.onclick = () => { if (typeof setProxy === "function") setProxy("uv"); updatePickerUI("uv"); };
 		pickSJ.onclick = () => { if (typeof setProxy === "function") setProxy("sj"); updatePickerUI("sj"); };
 		updatePickerUI(localStorage.getItem("proxy-choice") || "sj");
 
-		// --- Console home button ---
-		document.getElementById("console-home").onclick = () => {
-		  uvFrame.src = "about:blank";
-		  updateUIVisibility();
-		};
-
-		// --- Background Changer Logic ---
+		// --- Background Changer Logic (Fixed/Finished) ---
 		const bgPopup = document.getElementById("bg-popup");
 		const bgFileInput = document.getElementById("bg-file-input");
 		const customBg = document.getElementById("custom-bg");

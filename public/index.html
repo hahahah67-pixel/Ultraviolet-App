@@ -630,4 +630,48 @@
 		  // Apply a bg image — sets body class so home UI stays above it
 		  function applyBg(dataUrl) {
 		    customBgEl.style.backgroundImage = "url(" + dataUrl + ")";
-		  
+		    customBgEl.classList.add("active");
+		    document.body.classList.add("has-custom-bg");
+		    try { localStorage.setItem("fish-custom-bg", dataUrl); } catch(e) {}
+		  }
+
+		  // Restore default starfield
+		  function restoreBg() {
+		    customBgEl.style.backgroundImage = "";
+		    customBgEl.classList.remove("active");
+		    document.body.classList.remove("has-custom-bg");
+		    try { localStorage.removeItem("fish-custom-bg"); } catch(e) {}
+		    bgPopup.classList.add("bg-hidden");
+		  }
+
+		  bgRestoreArea.addEventListener("click", restoreBg);
+
+		  // File picker — once image selected, apply and close popup
+		  bgFileInput.addEventListener("change", () => {
+		    const file = bgFileInput.files[0];
+		    if (!file) return;
+		    if (file.size > 4 * 1024 * 1024) {
+		      alert("Image too large (max ~4MB). Please choose a smaller image.");
+		      bgFileInput.value = "";
+		      return;
+		    }
+		    const reader = new FileReader();
+		    reader.onload = (ev) => {
+		      applyBg(ev.target.result);
+		      bgPopup.classList.add("bg-hidden");
+		      bgFileInput.value = "";
+		    };
+		    reader.readAsDataURL(file);
+		  });
+
+		  // Restore saved bg on page load
+		  try {
+		    const saved = localStorage.getItem("fish-custom-bg");
+		    if (saved) applyBg(saved);
+		  } catch(e) {}
+		})();
+
+		</script>
+ 
+	</body>
+</html>

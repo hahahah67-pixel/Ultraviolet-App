@@ -57,7 +57,8 @@
 	<body>
 		<!-- Starfield sits behind everything -->
 		<canvas id="starfield"></canvas>
-		<!-- Custom background layer — sits behind everything -->
+
+		<!-- Custom background image layer — behind starfield, behind everything -->
 		<div id="custom-bg"></div>
 
 		<!-- Main homepage content -->
@@ -93,26 +94,38 @@
 		<script src="search.js"></script>
 		<script src="index.js"></script>
 
-		<!-- ── Change background button ─────────────────────────────────────────── -->
+		<!-- Change background button — above proxy picker, home only -->
 		<div id="bg-btn">
-			<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+			<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+				<path d="M12 20h9"/>
+				<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+			</svg>
 			change background
 		</div>
 
-		<!-- Popup -->
-		<div id="bg-popup" class="bg-hidden">
+		<!-- Popup — hidden by default via CSS opacity/pointer-events -->
+		<div id="bg-popup">
 			<div id="bg-popup-inner">
-				<div id="bg-pick-area" onclick="document.getElementById('bg-file-input').click()">
-					<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+				<div id="bg-pick-area">
+					<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+						<rect x="3" y="3" width="18" height="18" rx="2"/>
+						<circle cx="8.5" cy="8.5" r="1.5"/>
+						<polyline points="21 15 16 10 5 21"/>
+					</svg>
 					<span>change background</span>
 				</div>
-				<div id="bg-restore-area">
-					<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4"/></svg>
+				<div id="bg-restore-btn">
+					<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="1 4 1 10 7 10"/>
+						<path d="M3.51 15a9 9 0 1 0 .49-4"/>
+					</svg>
 					restore default
 				</div>
 			</div>
 		</div>
-		<input type="file" id="bg-file-input" accept="image/*" style="display:none"/>
+
+		<!-- Hidden file input triggered by clicking bg-pick-area -->
+		<input type="file" id="bg-file-input" accept="image/*" style="display:none" />
 
 		<!-- Proxy selector: bottom-right corner, home page only -->
 		<div id="proxy-picker">
@@ -142,7 +155,7 @@
 		</div>
 
 		<style>
-		/* Starfield */
+		/* ── Starfield ────────────────────────────────────────────────────────── */
 		#starfield {
 		  position: fixed;
 		  top: 0; left: 0;
@@ -151,7 +164,20 @@
 		  pointer-events: none;
 		}
 
-		/* Home center */
+		/* ── Custom background ────────────────────────────────────────────────── */
+		/* Sits BEHIND the starfield — z-index -1 */
+		#custom-bg {
+		  position: fixed;
+		  top: 0; left: 0;
+		  width: 100%; height: 100%;
+		  z-index: -1;
+		  background-size: cover;
+		  background-position: center;
+		  background-repeat: no-repeat;
+		  pointer-events: none;
+		}
+
+		/* ── Home center ──────────────────────────────────────────────────────── */
 		.home-center {
 		  position: relative;
 		  z-index: 1;
@@ -165,13 +191,12 @@
 		  transition: opacity .15s ease;
 		}
 
-		/* Hide home UI when a proxy frame is active */
 		.home-center.hidden {
 		  opacity: 0;
 		  pointer-events: none;
 		}
 
-		/* Logo */
+		/* ── Logo ─────────────────────────────────────────────────────────────── */
 		.logo-wrapper { margin-bottom: 20px; }
 
 		.logo {
@@ -182,7 +207,7 @@
 		  object-fit: contain;
 		}
 
-		/* Description */
+		/* ── Description ──────────────────────────────────────────────────────── */
 		.desc { display: flex; justify-content: center; }
 
 		.desc p {
@@ -194,10 +219,120 @@
 		  margin: 0 0 4px;
 		}
 
-		/* Search form */
+		/* ── Search form ──────────────────────────────────────────────────────── */
 		#uv-form { margin-top: 14px; margin-bottom: 6px; }
 
-		/* Proxy picker */
+		/* ── Change background button ─────────────────────────────────────────── */
+		#bg-btn {
+		  position: fixed;
+		  bottom: 60px;
+		  right: 20px;
+		  display: flex;
+		  align-items: center;
+		  gap: 7px;
+		  background: rgba(0,0,0,0.72);
+		  backdrop-filter: blur(10px);
+		  -webkit-backdrop-filter: blur(10px);
+		  border: 1px solid rgba(255,255,255,0.1);
+		  border-radius: 999px;
+		  padding: 8px 18px;
+		  z-index: 9997;
+		  color: rgba(255,255,255,0.5);
+		  font-size: 11px;
+		  font-family: "Roboto", Arial, sans-serif;
+		  letter-spacing: .05em;
+		  cursor: pointer;
+		  user-select: none;
+		  white-space: nowrap;
+		  opacity: 1;
+		  transition: color .15s, border-color .15s, opacity .3s ease, transform .3s ease;
+		}
+
+		#bg-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+
+		/* .gone hides the button — used when proxy is active */
+		#bg-btn.gone {
+		  opacity: 0;
+		  transform: translateY(6px);
+		  pointer-events: none;
+		}
+
+		/* ── Popup ────────────────────────────────────────────────────────────── */
+		#bg-popup {
+		  position: fixed;
+		  bottom: 112px;
+		  right: 20px;
+		  z-index: 9999;
+		  opacity: 0;
+		  transform: translateY(8px);
+		  pointer-events: none;
+		  transition: opacity .2s ease, transform .2s ease;
+		}
+
+		/* .open shows the popup */
+		#bg-popup.open {
+		  opacity: 1;
+		  transform: translateY(0);
+		  pointer-events: auto;
+		}
+
+		#bg-popup-inner {
+		  background: rgba(10,10,10,0.93);
+		  backdrop-filter: blur(14px);
+		  -webkit-backdrop-filter: blur(14px);
+		  border: 1px solid rgba(255,255,255,0.1);
+		  border-radius: 16px;
+		  padding: 14px;
+		  display: flex;
+		  flex-direction: column;
+		  align-items: center;
+		  gap: 10px;
+		  width: 160px;
+		}
+
+		#bg-pick-area {
+		  width: 100%;
+		  aspect-ratio: 16/9;
+		  border: 1.5px dashed rgba(255,255,255,0.2);
+		  border-radius: 10px;
+		  display: flex;
+		  flex-direction: column;
+		  align-items: center;
+		  justify-content: center;
+		  gap: 6px;
+		  cursor: pointer;
+		  background: rgba(255,255,255,0.03);
+		  transition: border-color .15s, background .15s;
+		}
+
+		#bg-pick-area:hover {
+		  border-color: rgba(255,255,255,0.45);
+		  background: rgba(255,255,255,0.07);
+		}
+
+		#bg-pick-area span {
+		  color: rgba(255,255,255,0.4);
+		  font-size: 10px;
+		  font-family: "Roboto", Arial, sans-serif;
+		  letter-spacing: .04em;
+		  text-align: center;
+		}
+
+		#bg-restore-btn {
+		  display: flex;
+		  align-items: center;
+		  gap: 5px;
+		  color: rgba(255,255,255,0.3);
+		  font-size: 10px;
+		  font-family: "Roboto", Arial, sans-serif;
+		  cursor: pointer;
+		  letter-spacing: .04em;
+		  transition: color .15s;
+		}
+
+		#bg-restore-btn:hover { color: rgba(255,255,255,0.75); }
+
+		/* ── Proxy picker ─────────────────────────────────────────────────────── */
 		#proxy-picker {
 		  position: fixed;
 		  bottom: 18px; right: 20px;
@@ -254,7 +389,7 @@
 		  box-shadow: 0 0 6px rgba(74,143,255,0.6);
 		}
 
-		/* Browser console */
+		/* ── Browser console ──────────────────────────────────────────────────── */
 		.browser-console {
 		  position: fixed;
 		  bottom: 8px; left: 50%;
@@ -315,120 +450,6 @@
 
 		.browser-console.active input { width: 180px; }
 
-
-		/* ── Custom background ───────────────────────────────────────────────────── */
-		#custom-bg {
-		  position: fixed;
-		  top: 0; left: 0;
-		  width: 100%; height: 100%;
-		  z-index: 0;
-		  background-size: cover;
-		  background-position: center;
-		  background-repeat: no-repeat;
-		  pointer-events: none;
-		  opacity: 0;
-		  transition: opacity .4s ease;
-		}
-		#custom-bg.active { opacity: 1; }
-		/* Dim starfield when custom bg active so home UI stays readable */
-		body.has-custom-bg #starfield { opacity: 0.08; }
-
-		/* ── Change background button ────────────────────────────────────────────── */
-		#bg-btn {
-		  position: fixed;
-		  bottom: 60px;
-		  right: 20px;
-		  display: flex;
-		  align-items: center;
-		  gap: 7px;
-		  background: rgba(0,0,0,0.72);
-		  backdrop-filter: blur(10px);
-		  -webkit-backdrop-filter: blur(10px);
-		  border: 1px solid rgba(255,255,255,0.1);
-		  border-radius: 999px;
-		  padding: 8px 18px;
-		  z-index: 9997;
-		  color: rgba(255,255,255,0.5);
-		  font-size: 11px;
-		  font-family: "Roboto", Arial, sans-serif;
-		  letter-spacing: .05em;
-		  cursor: pointer;
-		  user-select: none;
-		  white-space: nowrap;
-		  transition: color .15s, border-color .15s, opacity .3s ease, transform .3s ease;
-		}
-		#bg-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
-		#bg-btn.bg-hidden {
-		  opacity: 0;
-		  transform: translateY(6px);
-		  pointer-events: none;
-		}
-
-		/* ── Popup ───────────────────────────────────────────────────────────────── */
-		#bg-popup {
-		  position: fixed;
-		  bottom: 112px;
-		  right: 20px;
-		  z-index: 9999;
-		  opacity: 1;
-		  transition: opacity .2s ease, transform .2s ease;
-		}
-		#bg-popup.bg-hidden {
-		  opacity: 0;
-		  transform: translateY(8px);
-		  pointer-events: none;
-		}
-		#bg-popup-inner {
-		  background: rgba(10,10,10,0.93);
-		  backdrop-filter: blur(14px);
-		  -webkit-backdrop-filter: blur(14px);
-		  border: 1px solid rgba(255,255,255,0.1);
-		  border-radius: 16px;
-		  padding: 14px;
-		  display: flex;
-		  flex-direction: column;
-		  align-items: center;
-		  gap: 10px;
-		  width: 160px;
-		}
-		#bg-pick-area {
-		  width: 100%;
-		  aspect-ratio: 16/9;
-		  border: 1.5px dashed rgba(255,255,255,0.2);
-		  border-radius: 10px;
-		  display: flex;
-		  flex-direction: column;
-		  align-items: center;
-		  justify-content: center;
-		  gap: 6px;
-		  cursor: pointer;
-		  background: rgba(255,255,255,0.03);
-		  transition: border-color .15s, background .15s;
-		}
-		#bg-pick-area:hover {
-		  border-color: rgba(255,255,255,0.45);
-		  background: rgba(255,255,255,0.07);
-		}
-		#bg-pick-area span {
-		  color: rgba(255,255,255,0.4);
-		  font-size: 10px;
-		  font-family: "Roboto", Arial, sans-serif;
-		  letter-spacing: .04em;
-		  text-align: center;
-		}
-		#bg-restore-area {
-		  display: flex;
-		  align-items: center;
-		  gap: 5px;
-		  color: rgba(255,255,255,0.3);
-		  font-size: 10px;
-		  font-family: "Roboto", Arial, sans-serif;
-		  cursor: pointer;
-		  letter-spacing: .04em;
-		  transition: color .15s;
-		}
-		#bg-restore-area:hover { color: rgba(255,255,255,0.75); }
-
 		@keyframes fadeIn {
 		  from { opacity: 0; transform: translateY(6px); }
 		  to   { opacity: 1; transform: translateY(0); }
@@ -436,7 +457,7 @@
 		</style>
 
 		<script>
-		// ── Starfield ─────────────────────────────────────────────────────────
+		// ── Starfield ──────────────────────────────────────────────────────────
 		(function () {
 		  const canvas = document.getElementById("starfield");
 		  const ctx    = canvas.getContext("2d");
@@ -482,26 +503,90 @@
 		  requestAnimationFrame(draw);
 		})();
 
-		// ── Home center show/hide helpers ─────────────────────────────────────
+		// ── Background changer ─────────────────────────────────────────────────
+		// All logic in one place, no function overriding needed.
+		// bg-btn uses .gone to hide/show (distinct from proxy picker's .hidden)
+		// bg-popup uses .open to show (default CSS is hidden via opacity:0)
+
+		const bgBtnEl    = document.getElementById("bg-btn");
+		const bgPopupEl  = document.getElementById("bg-popup");
+		const bgPickArea = document.getElementById("bg-pick-area");
+		const bgRestBtn  = document.getElementById("bg-restore-btn");
+		const bgFileInp  = document.getElementById("bg-file-input");
+		const customBgEl = document.getElementById("custom-bg");
+
+		function applyBg(dataUrl) {
+		  customBgEl.style.backgroundImage = "url(" + dataUrl + ")";
+		  try { localStorage.setItem("fish-custom-bg", dataUrl); } catch(e) {}
+		}
+
+		function restoreBg() {
+		  customBgEl.style.backgroundImage = "";
+		  try { localStorage.removeItem("fish-custom-bg"); } catch(e) {}
+		  bgPopupEl.classList.remove("open");
+		}
+
+		// Toggle popup
+		bgBtnEl.addEventListener("click", () => {
+		  bgPopupEl.classList.toggle("open");
+		});
+
+		// Close popup when clicking outside
+		document.addEventListener("click", (e) => {
+		  if (!bgPopupEl.contains(e.target) && e.target !== bgBtnEl) {
+		    bgPopupEl.classList.remove("open");
+		  }
+		});
+
+		// Clicking the image area opens file picker
+		bgPickArea.addEventListener("click", () => {
+		  bgFileInp.click();
+		});
+
+		// Restore default
+		bgRestBtn.addEventListener("click", restoreBg);
+
+		// File selected
+		bgFileInp.addEventListener("change", () => {
+		  const file = bgFileInp.files[0];
+		  if (!file) return;
+		  if (file.size > 4 * 1024 * 1024) {
+		    alert("Image too large (max ~4MB). Please pick a smaller image.");
+		    bgFileInp.value = "";
+		    return;
+		  }
+		  const reader = new FileReader();
+		  reader.onload = (ev) => {
+		    applyBg(ev.target.result);
+		    bgPopupEl.classList.remove("open");
+		    bgFileInp.value = "";
+		  };
+		  reader.readAsDataURL(file);
+		});
+
+		// Restore saved bg on page load
+		try {
+		  const saved = localStorage.getItem("fish-custom-bg");
+		  if (saved) applyBg(saved);
+		} catch(e) {}
+
+		// ── Home center show/hide ──────────────────────────────────────────────
 		const homeCenter = document.getElementById("home-center");
 
 		function hideHome() {
 		  homeCenter.classList.add("hidden");
-		  // Hide bg button when inside a proxied site
-		  const _bgBtn = document.getElementById("bg-btn");
-		  const _bgPop = document.getElementById("bg-popup");
-		  if (_bgBtn) _bgBtn.classList.add("bg-hidden");
-		  if (_bgPop) _bgPop.classList.add("bg-hidden");
+		  // Also hide bg button and close popup when browsing a site
+		  bgBtnEl.classList.add("gone");
+		  bgPopupEl.classList.remove("open");
 		}
 
 		function showHome() {
 		  homeCenter.classList.remove("hidden");
-		  // Show bg button when back on homepage
-		  const _bgBtn = document.getElementById("bg-btn");
-		  if (_bgBtn) _bgBtn.classList.remove("bg-hidden");
+		  // Show bg button again when back on homepage
+		  bgBtnEl.classList.remove("gone");
 		}
 
-		// ── Proxy picker ──────────────────────────────────────────────────────
+		// ── Proxy picker ───────────────────────────────────────────────────────
 		const proxyPicker = document.getElementById("proxy-picker");
 		const pickUV = document.getElementById("pick-uv");
 		const pickSJ = document.getElementById("pick-sj");
@@ -528,7 +613,7 @@
 
 		updatePickerUI(localStorage.getItem("proxy-choice") || "sj");
 
-		// ── Hide home + picker when proxy frame becomes active ────────────────
+		// ── Hide home + picker when UV frame becomes active ────────────────────
 		const uvFrame = document.getElementById("uv-frame");
 
 		if (uvFrame) {
@@ -544,21 +629,20 @@
 
 		// SJ hide/show is handled directly in index.js submit handler
 
-// ── Browser console ───────────────────────────────────────────────────
+		// ── Browser console ────────────────────────────────────────────────────
 		const consoleBar   = document.getElementById("browser-console");
 		const consoleIdle  = document.querySelector(".console-idle");
 		const consoleInput = document.getElementById("console-url");
- 
+
 		if (uvFrame) {
 		  uvFrame.addEventListener("load", () => {
-		    // Only react when UV is active
 		    if ((localStorage.getItem("proxy-choice") || "sj") !== "uv") return;
 		    const isHome = !uvFrame.src || uvFrame.src === "about:blank";
 		    consoleBar.style.display = isHome ? "none" : "block";
 		    consoleBar.classList.remove("active");
 		  });
 		}
- 
+
 		let consoleLeaveTimer;
 		consoleBar.addEventListener("mouseenter", () => {
 		  clearTimeout(consoleLeaveTimer);
@@ -568,35 +652,34 @@
 		  consoleLeaveTimer = setTimeout(() => consoleBar.classList.remove("active"), 400);
 		});
 		consoleIdle.addEventListener("click", () => consoleBar.classList.add("active"));
- 
+
 		function getActiveFrame() {
 		  return document.getElementById("sj-frame") || uvFrame;
 		}
- 
+
 		document.getElementById("nav-back").onclick       = () => { try { getActiveFrame().contentWindow.history.back();    } catch(e) {} };
 		document.getElementById("nav-forward").onclick    = () => { try { getActiveFrame().contentWindow.history.forward(); } catch(e) {} };
 		document.getElementById("console-reload").onclick = () => { try { getActiveFrame().contentWindow.location.reload(); } catch(e) {} };
- 
+
 		function consoleNavigate() {
 		  const url = consoleInput.value.trim();
 		  if (!url) return;
 		  const addressBar = document.querySelector("#uv-address");
 		  const form = document.getElementById("uv-form");
 		  if (!addressBar || !form) return;
-		  // Briefly allow pointer events so requestSubmit works even when home-center is hidden
 		  const prev = homeCenter.style.pointerEvents;
 		  homeCenter.style.pointerEvents = "auto";
 		  addressBar.value = url;
 		  form.requestSubmit();
 		  homeCenter.style.pointerEvents = prev;
 		}
- 
+
 		document.getElementById("console-go").onclick = consoleNavigate;
- 
+
 		consoleInput.addEventListener("keydown", (e) => {
 		  if (e.key === "Enter") consoleNavigate();
 		});
- 
+
 		document.getElementById("console-home").onclick = () => {
 		  if (uvFrame) { uvFrame.src = "about:blank"; uvFrame.style.display = "none"; }
 		  consoleBar.style.display = "none";
@@ -605,73 +688,7 @@
 		  proxyPicker.classList.remove("hidden");
 		  showHome();
 		};
-
-		// ── Background changer ───────────────────────────────────────────────────
-		(function () {
-		  const bgBtn       = document.getElementById("bg-btn");
-		  const bgPopup     = document.getElementById("bg-popup");
-		  const bgFileInput = document.getElementById("bg-file-input");
-		  const bgRestoreArea = document.getElementById("bg-restore-area");
-		  const customBgEl  = document.getElementById("custom-bg");
-
-		  // Toggle popup open/close
-		  bgBtn.addEventListener("click", (e) => {
-		    e.stopPropagation();
-		    bgPopup.classList.toggle("bg-hidden");
-		  });
-
-		  // Close popup when clicking anywhere outside it
-		  document.addEventListener("click", (e) => {
-		    if (!bgPopup.contains(e.target) && e.target !== bgBtn) {
-		      bgPopup.classList.add("bg-hidden");
-		    }
-		  });
-
-		  // Apply a bg image — sets body class so home UI stays above it
-		  function applyBg(dataUrl) {
-		    customBgEl.style.backgroundImage = "url(" + dataUrl + ")";
-		    customBgEl.classList.add("active");
-		    document.body.classList.add("has-custom-bg");
-		    try { localStorage.setItem("fish-custom-bg", dataUrl); } catch(e) {}
-		  }
-
-		  // Restore default starfield
-		  function restoreBg() {
-		    customBgEl.style.backgroundImage = "";
-		    customBgEl.classList.remove("active");
-		    document.body.classList.remove("has-custom-bg");
-		    try { localStorage.removeItem("fish-custom-bg"); } catch(e) {}
-		    bgPopup.classList.add("bg-hidden");
-		  }
-
-		  bgRestoreArea.addEventListener("click", restoreBg);
-
-		  // File picker — once image selected, apply and close popup
-		  bgFileInput.addEventListener("change", () => {
-		    const file = bgFileInput.files[0];
-		    if (!file) return;
-		    if (file.size > 4 * 1024 * 1024) {
-		      alert("Image too large (max ~4MB). Please choose a smaller image.");
-		      bgFileInput.value = "";
-		      return;
-		    }
-		    const reader = new FileReader();
-		    reader.onload = (ev) => {
-		      applyBg(ev.target.result);
-		      bgPopup.classList.add("bg-hidden");
-		      bgFileInput.value = "";
-		    };
-		    reader.readAsDataURL(file);
-		  });
-
-		  // Restore saved bg on page load
-		  try {
-		    const saved = localStorage.getItem("fish-custom-bg");
-		    if (saved) applyBg(saved);
-		  } catch(e) {}
-		})();
-
 		</script>
- 
+
 	</body>
 </html>

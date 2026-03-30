@@ -15,7 +15,6 @@ async function ensureTransport(type, config) {
 		const current = await connection.getTransport();
 		if (current !== type) {
 			await connection.setTransport(type, config);
-			// small delay to stabilize after switching
 			await new Promise(r => setTimeout(r, 60));
 		}
 	} catch (e) {
@@ -23,29 +22,41 @@ async function ensureTransport(type, config) {
 	}
 }
 
-// ── Scramjet ────────────────────────────────────────────────────────────────
-const { ScramjetController } = $scramjetLoadController();
+// ── Scramjet — LAZY loaded, only when SJ is actually used ───────────────────
+// Do NOT init SJ on page load if UV is the active proxy.
+// SJ's WASM init steals CPU/memory that hurts UV performance.
+let scramjet      = null;
+let sjReady       = false;
+let sjInitPromise = null;
 
-const scramjet = new ScramjetController({
-	files: {
-		wasm: "/scram/scramjet.wasm.wasm",
-		all:  "/scram/scramjet.all.js",
-		sync: "/scram/scramjet.sync.js",
-	},
-});
+function getSjController() {
+	if (scramjet) return scramjet;
+	const { ScramjetController } = $scramjetLoadController();
+	scramjet = new ScramjetController({
+		files: {
+			wasm: "/scram/scramjet.wasm.wasm",
+			all:  "/scram/scramjet.all.js",
+			sync: "/scram/scramjet.sync.js",
+		},
+	});
+	return scramjet;
+}
 
-let sjReady = false;
-
-(async () => {
-	try {
-		await scramjet.init();
-		sjReady = true;
-	} catch (e) {
-		console.warn("Scramjet init failed:", e);
-		// Still mark ready so we don't block forever — SJ may work anyway
-		sjReady = true;
-	}
-})();
+async function initSJ() {
+	// Only init once — return existing promise if already in progress
+	if (sjInitPromise) return sjInitPromise;
+	sjInitPromise = (async () => {
+		try {
+			getSjController();
+			await scramjet.init();
+			sjReady = true;
+		} catch (e) {
+			console.warn("Scramjet init failed:", e);
+			sjReady = true; // proceed anyway
+		}
+	})();
+	return sjInitPromise;
+}
 
 // ── Persistent SJ frame ─────────────────────────────────────────────────────
 let sjFrameWrapper = null;
@@ -53,7 +64,8 @@ let sjNavCount     = 0;
 
 function getSjFrame() {
 	if (!sjFrameWrapper) {
-		sjFrameWrapper = scramjet.createFrame();
+		const ctrl = getSjController();
+		sjFrameWrapper = ctrl.createFrame();
 		sjFrameWrapper.frame.id = "sj-frame";
 		sjFrameWrapper.frame.style.display = "none";
 		document.body.appendChild(sjFrameWrapper.frame);
@@ -61,23 +73,15 @@ function getSjFrame() {
 	return sjFrameWrapper;
 }
 
-// FIX BUG 3: instead of removing from DOM (loses SW context),
-// just reset src to about:blank and recreate the wrapper object only.
-// Frame stays in DOM so SW context is preserved.
 function resetSjFrameIfNeeded() {
 	sjNavCount++;
 	if (sjNavCount >= 5) {
 		if (sjFrameWrapper?.frame) {
 			sjFrameWrapper.frame.src = "about:blank";
 		}
-		// Recreate the wrapper so .go() gets a fresh navigation state
-		// but the frame element itself stays in the DOM
 		const oldFrame = sjFrameWrapper?.frame;
-		sjFrameWrapper = scramjet.createFrame();
-		if (oldFrame) {
-			// Swap to reuse existing DOM element
-			sjFrameWrapper.frame = oldFrame;
-		}
+		sjFrameWrapper = getSjController().createFrame();
+		if (oldFrame) sjFrameWrapper.frame = oldFrame;
 		sjNavCount = 0;
 	}
 }
@@ -148,7 +152,7 @@ function resetSJFrame() {
 	}
 }
 
-// ── Pre-warm ────────────────────────────────────────────────────────────────
+// ── Pre-warm — only warm up the active proxy, leave the other alone ──────────
 (async () => {
 	try {
 		await ensureSW();
@@ -156,22 +160,23 @@ function resetSJFrame() {
 		const proxy   = localStorage.getItem("proxy-choice") || "sj";
 
 		if (proxy === "uv") {
+			// UV selected — just warm up epoxy transport, do NOT touch SJ at all
 			await ensureTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
 		} else {
+			// SJ selected — init SJ and warm up libcurl transport
+			await initSJ();
 			await ensureTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
-			getSjFrame(); // pre-create so first nav is instant
+			getSjFrame(); // pre-create frame so first nav is instant
 		}
 	} catch(e) {
 		console.warn("Pre-warm failed:", e);
 	}
 })();
 
-// ── Submit guard ────────────────────────────────────────────────────────────
+// ── Submit guard ─────────────────────────────────────────────────────────────
 let isSubmitting = false;
 
-// ── Scramjet navigation ──────────────────────────────────────────────────────
-// Just call .go() directly — SJ manages its own navigation state internally.
-// Any reset before .go() causes visible reloads and is unnecessary.
+// ── SJ navigation ────────────────────────────────────────────────────────────
 function sjNavigate(sj, url) {
 	try {
 		sj.go(url);
@@ -180,7 +185,7 @@ function sjNavigate(sj, url) {
 	}
 }
 
-// ── Form submit ─────────────────────────────────────────────────────────────
+// ── Form submit ──────────────────────────────────────────────────────────────
 if (form) {
 	form.addEventListener("submit", async (event) => {
 		event.preventDefault();
@@ -208,7 +213,7 @@ if (form) {
 
 		try {
 			if (activeProxy === "uv") {
-
+				// ── UV path — clean and fast, SJ not touched at all ──────────
 				resetSJFrame();
 				await ensureTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
 
@@ -218,11 +223,14 @@ if (form) {
 				}
 
 			} else {
-
+				// ── SJ path — init lazily if not done yet ────────────────────
 				resetUVFrame();
+
+				// Init SJ now if it hasn't been yet (user started on UV, switched to SJ)
+				await initSJ();
 				await ensureTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
 
-				// FIX BUG 2: add timeout so sjReady wait never blocks forever
+				// Wait for SJ ready with timeout
 				const sjReadyStart = Date.now();
 				while (!sjReady) {
 					if (Date.now() - sjReadyStart > 5000) {
@@ -236,7 +244,6 @@ if (form) {
 
 				const sj = getSjFrame();
 				sj.frame.style.display = "block";
-
 				sjNavigate(sj, url);
 
 				const homeCenter = document.getElementById("home-center");

@@ -143,6 +143,7 @@ function resetUVFrame() {
 
 function resetSJFrame() {
 	if (sjFrameWrapper?.frame) {
+		// Blank src so browser GCs the page content while keeping SW context
 		sjFrameWrapper.frame.src = "about:blank";
 		sjFrameWrapper.frame.style.display = "none";
 	}
@@ -156,10 +157,14 @@ function resetSJFrame() {
 		const proxy   = localStorage.getItem("proxy-choice") || "sj";
 
 		if (proxy === "uv") {
+			// UV selected — only warm up UV transport, do NOT create SJ frame.
+			// The SJ iframe sitting in the DOM burns CPU/memory even when hidden,
+			// which is what was causing UV to feel sluggish.
 			await ensureTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
 		} else {
+			// SJ selected — pre-create frame so first nav is instant
 			await ensureTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
-			getSjFrame(); // pre-create so first nav is instant
+			getSjFrame();
 		}
 	} catch(e) {
 		console.warn("Pre-warm failed:", e);

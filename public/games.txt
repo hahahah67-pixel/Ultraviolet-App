@@ -23,3 +23,4 @@ google-baseball|google baseball|https://www.google.com/logos/2019/july4th19/r6/j
 dadish-4|Dadish 4|https://dadish.io/game/dadish-4|dad 4.png|dadish 4|dad ish|dad|ish
 drift-boss|Drift boss|https://pizzaedition.win/assets/allgames/driftboss/index.html|drift.png|driftboss|drift|boss|car
 five-nights-at-bigE|Five nights at big E|https://brooksch123.github.io/5-nights-at-epsteins/|five.png|fivenightsatbigE|five|nights|E
+ragdoll-archers|Ragdoll archers|https://ragdollhit.gg/game/ragdoll-archers/|Ragdoll.png|ragdollarchers|rag|doll|arch

@@ -27,4 +27,4 @@ ragdoll-archers|Ragdoll archers|https://ragdollhit.gg/game/ragdoll-archers/|Ragd
 run-3|Run 3|https://www.run3.org/|run 3.png|run3|3|run|run
 big-tower-tiny-square|Big tower tiny square|https://bigtowertinysquare.io/|tower 1.png|bigtowertinysquare|big|square|tower
 roblox|Roblox|https://76.ip.nowgg.lol/apps/a/19900/b.html|roblox.png|roblox|blox|block|ro
-mr-mine|Mr.mine|https://www.coolmathgames.com/0-mr-mine|mine.png|mr mine|mine|mine|mr
+mr-mine|Mr.mine|https://www.coolmathgames.com/0-mr-mine|Mine.png|mr mine|mine|mine|mr

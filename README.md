@@ -64,3 +64,7 @@ Fish Proxy cannot be deployed in github seervices like railway,render etc instea
 ## License
 
 AGPL-3.0 license
+
+## resources
+
+Fish Proxy has public google forms for game requests and other things, we also have other infortamin on our websites form links and everything else can be found on:  https://www.fish-proxii.weebly.com

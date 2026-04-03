@@ -1,31 +1,73 @@
-<p align="center"><img src="https://raw.githubusercontent.com/titaniumnetwork-dev/Ultraviolet-Static/main/public/uv.png" height="200"></p>
+# Fish 🐟 Proxy
 
-<h1 align="center">Ultraviolet-App</h1>
+a powerful web proxy powered by proxy engines ultraviolet and scramjet, great UI and features.
 
-> [!CAUTION]
-> Please note that this project isn't really maintained anymore before making issues! It has been superseded by [Scramjet](https://github.com/MercuryWorkshop/scramjet). An example application setup can be found [here](https://github.com/MercuryWorkshop/Scramjet-App).
+---
 
-The deployable all-in-one bundle for [Ultraviolet](https://github.com/titaniumnetwork-dev/Ultraviolet), a highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers and more!
+## Features
+
+- **Dual proxy engine** — switch between Ultraviolet and Scramjet on the fly
+- **Games page** — dedicated games section at `/math` with a growing library
+- **Custom background** — set any image as your homepage background, persists across sessions
+- **Quick links** — one-click access to Roblox and the Games page from the homepage
+- **Browser console** — in-proxy navigation bar with back, forward, reload, and home
+- **Study.com disguise** — page appears as Study.com to casual observers
+- **CAPTCHA support** — works on sites with hCaptcha and reCAPTCHA
+- **Service worker header scrubbing** — strips proxy-revealing headers to reduce bot detection
+
+---
+
+## Tech Stack
+
+- **Node.js** with Express
+- **Ultraviolet** — UV proxy engine
+- **Scramjet 2.0.0** — SJ proxy engine with WASM rewriting
+- **BareMux** — transport multiplexer
+- **libcurl transport** — for Scramjet
+- **Epoxy transport** — for Ultraviolet
+- **Wisp** — WebSocket tunneling protocol
+- **AWS EC2** — hosting (t3.small)
+- **CloudFront** — CDN for static assets
+- **GitHub** — auto-pull deployment every 30 minutes
+
+---
+
+## Proxy Engines
+
+### Ultraviolet
+The classic, battle-tested engine. Best compatibility with most sites. Loads fast and stable.
+
+### Scramjet
+Newer engine with WASM-powered JS rewriting. Better at bypassing detection on modern sites. Lazy-loaded only when selected to avoid slowing down UV users.
+
+---
+
+## Pages
+
+| Route | Description |
+|---|---|
+| `/` | Main homepage with search and quick links |
+| `/math` | Games page |
+
+---
 
 ## Deployment
 
-[![Run on Replit](https://binbashbanana.github.io/deploy-buttons/buttons/remade/replit.svg)](https://github.com/titaniumnetwork-dev/Ultraviolet-App/wiki/Run-on-Replit)
-[![Deploy on Railway](https://binbashbanana.github.io/deploy-buttons/buttons/remade/railway.svg)](https://github.com/titaniumnetwork-dev/Ultraviolet-App/wiki/Deploy-on-Railway)
-[![Deploy to Koyeb](https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg)](https://github.com/titaniumnetwork-dev/Ultraviolet-App/wiki/Deploy-to-Koyeb)
+Fish Proxy cannot be deployed in github seervices like railway,render etc instead:
 
-If you are deploying to an alternative service or to a server, refer to [Deploy via terminal](https://github.com/titaniumnetwork-dev/Ultraviolet-App/wiki/Deploy-via-terminal).
+1. host in a real wbe server with a linux VM (AWS)
+2. fork our repo or make a site to fetch from it to make more unblocked links!
 
-Additional information such as [customizing your frontend](https://github.com/titaniumnetwork-dev/Ultraviolet-App/wiki/Customizing-your-frontend) can be found on the [wiki](https://github.com/titaniumnetwork-dev/Ultraviolet-App/wiki).
+---
 
-Support and updates can be found in our [Discord Server](discord.gg/unblock).
+## Environment
 
-> [!IMPORTANT]  
-> Until deployed on a domain with a valid SSL certificate, Firefox will not be able to load the site. Use chromium for testing on localhost
+- Node.js 24+
+- pnpm 10+
+- 2GB swap recommended alongside base RAM (since Fish Proxy provides both UV and SJ as proxy engines)
 
-### HTTP Transport
+---
 
-The example uses [EpoxyTransport](https://github.com/MercuryWorkshop/EpoxyTransport) to fetch proxied data encrypted.
+## License
 
-You may also want to use [CurlTransport](https://github.com/MercuryWorkshop/CurlTransport), a different way of fetching encrypted data, or [Bare-Client](https://github.com/MercuryWorkshop/Bare-as-module3), the legacy (unencrypted!) transport.
-
-See the [bare-mux](https://github.com/MercuryWorkshop/bare-mux) documentation for more information.
+AGPL-3.0 license

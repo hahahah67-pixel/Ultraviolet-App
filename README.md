@@ -42,14 +42,7 @@ Newer engine with WASM-powered JS rewriting. Better at bypassing detection on mo
 
 ---
 
-## Pages
 
-| Route | Description |
-|---|---|
-| `/` | Main homepage with search and quick links |
-| `/math` | Games page |
-
----
 
 ## Deployment
 

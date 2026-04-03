@@ -95,7 +95,7 @@
 					</div>
 					<div class="quick-link" id="ql-games">
 						<div class="quick-link-icon">
-							<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+							<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
 								<line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/>
 								<line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/>
 								<path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/>
@@ -182,10 +182,9 @@
 		  display: flex;
 		  flex-direction: column;
 		  align-items: center;
-		  justify-content: flex-start;
+		  justify-content: center;
 		  min-height: 100vh;
 		  padding: 24px 16px;
-		  padding-top: 10vh;
 		  box-sizing: border-box;
 		  transition: opacity .15s ease;
 		}
@@ -356,7 +355,7 @@
 		}
 		#custom-bg.active { opacity: 1; }
 		/* Dim starfield when custom bg active so home UI stays readable */
-		body.has-custom-bg #starfield { opacity: 0.08; }
+		body.has-custom-bg #starfield { opacity: 0.35; }
 
 		/* ── Change background button ────────────────────────────────────────────── */
 		#bg-btn {
@@ -494,9 +493,9 @@
 		}
 
 		.quick-link-icon {
-		  width: 36px;
-		  height: 36px;
-		  border-radius: 10px;
+		  width: 56px;
+		  height: 56px;
+		  border-radius: 14px;
 		  object-fit: contain;
 		  background: rgba(255,255,255,0.07);
 		  padding: 4px;
@@ -507,8 +506,8 @@
 		}
 
 		.quick-link-icon img {
-		  width: 28px;
-		  height: 28px;
+		  width: 44px;
+		  height: 44px;
 		  object-fit: contain;
 		}
 
@@ -768,18 +767,19 @@
 		    const addressBar = document.getElementById("uv-address");
 		    const form       = document.getElementById("uv-form");
 		    if (!addressBar || !form) return;
-		    const prev = homeCenter.style.pointerEvents;
-		    homeCenter.style.pointerEvents = "auto";
+		    // Temporarily un-hide home center so requestSubmit can fire through CSS
+		    const wasHidden = homeCenter.classList.contains("hidden");
+		    if (wasHidden) homeCenter.classList.remove("hidden");
 		    addressBar.value = url;
 		    form.requestSubmit();
-		    homeCenter.style.pointerEvents = prev;
+		    if (wasHidden) homeCenter.classList.add("hidden");
 		  }
 
 		  // Roblox → nowgg.fun via proxy
 		  const qlRoblox = document.getElementById("ql-roblox");
 		  if (qlRoblox) qlRoblox.addEventListener("click", () => quickNav("https://nowgg.fun"));
 
-		  // Games → /math section of this site (direct navigate, no proxy)
+		  // Games → /math page (direct, no proxy)
 		  const qlGames = document.getElementById("ql-games");
 		  if (qlGames) qlGames.addEventListener("click", () => { window.location.href = "/math"; });
 		})();

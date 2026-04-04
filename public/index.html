@@ -79,7 +79,7 @@
 					value="https://duckduckgo.com/?q=%s"
 					type="hidden"
 				/>
-				<input id="uv-address" type="text" placeholder="Search the web freely" />
+				<input id="uv-address" type="text" placeholder="Search the web freely" autocomplete="off" />
 			</form>
 
 
@@ -95,7 +95,7 @@
 					</div>
 					<div class="quick-link" id="ql-games">
 						<div class="quick-link-icon">
-							<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+							<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
 								<line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/>
 								<line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/>
 								<path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/>
@@ -154,7 +154,7 @@
 		  <div class="console-controls">
 		    <button id="nav-back" title="Back">◀</button>
 		    <button id="nav-forward" title="Forward">▶</button>
-		    <input id="console-url" type="text" placeholder="URL">
+		    <input id="console-url" type="text" placeholder="URL" autocomplete="off">
 		    <button id="console-go" title="Go">Go</button>
 		    <button id="console-home" title="Home">
 		      <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
@@ -345,7 +345,7 @@
 		  position: fixed;
 		  top: 0; left: 0;
 		  width: 100%; height: 100%;
-		  z-index: 0;
+		  z-index: -1;
 		  background-size: cover;
 		  background-position: center;
 		  background-repeat: no-repeat;
@@ -354,8 +354,6 @@
 		  transition: opacity .4s ease;
 		}
 		#custom-bg.active { opacity: 1; }
-		/* Dim starfield when custom bg active so home UI stays readable */
-		body.has-custom-bg #starfield { opacity: 0.55; }
 
 		/* ── Change background button ────────────────────────────────────────────── */
 		#bg-btn {
@@ -463,11 +461,13 @@
 
 		#quick-links-label {
 		  font-family: "Roboto", Arial, sans-serif;
-		  font-size: 11px;
-		  color: rgba(255,255,255,0.3);
-		  letter-spacing: .05em;
+		  font-size: 13px;
+		  font-weight: 600;
+		  color: #111;
+		  letter-spacing: .04em;
 		  margin-bottom: 8px;
 		  text-align: left;
+		  text-shadow: 0 0 8px rgba(255,255,255,0.6);
 		}
 
 		.quick-links-row {
@@ -495,7 +495,7 @@
 		.quick-link-icon {
 		  width: 64px;
 		  height: 64px;
-		  border-radius: 16px;
+		  border-radius: 4px;
 		  object-fit: contain;
 		  background: rgba(255,255,255,0.06);
 		  border: 1.5px solid rgba(255,255,255,0.15);

@@ -45,16 +45,14 @@ app.get("/health", (req, res) => {
   res.sendStatus(200);
 });
 
-// Entry point — sets cookie then serves index directly with 1102 fallback
+// Entry point — sets cookie then redirects to / (SW scope must be at root)
 app.get("/index.html", (req, res) => {
   res.cookie(ACCESS_COOKIE, "true", {
     httpOnly: true,
     sameSite: "strict",
     path: "/"
   });
-  res.sendFile("./public/index.html", { root: "." }, (err) => {
-    if (err) sendError(res, 1102, "1102.html");
-  });
+  res.redirect("/");
 });
 
 // Games page — /math and /math.html both serve math.html with 1102 fallback
@@ -79,24 +77,12 @@ app.get("/", (req, res) => {
   });
 });
 
-// ── 444 Forbidden: intercept internal files BEFORE express.static serves them
-const FORBIDDEN_PATTERNS = [
-  /^\/sw\.js$/,
-  /^\/register-sw\.js$/,
-  /^\/search\.js$/,
-  /^\/index\.js$/,
-  /^\/index\.css$/,
-  /^\/math\.js$/,
-  /^\/math\.css$/,
-  /^\/error\.js$/,
-  /^\/404\.html$/,
-  /^\/444\.html$/,
-  /^\/1102\.html$/,
-  /^\/games\.txt$/,
-  /^\/images\//,
-];
+// ── 444 Forbidden: only block direct browsing to error pages themselves
+// Everything else (JS, CSS, images, games.txt etc) must serve normally
+// so authenticated users can load the site and games page correctly
+const FORBIDDEN_PATHS = ["/404.html", "/444.html", "/1102.html"];
 app.use((req, res, next) => {
-  if (FORBIDDEN_PATTERNS.some(p => p.test(req.path))) {
+  if (FORBIDDEN_PATHS.includes(req.path)) {
     return sendError(res, 444, "444.html");
   }
   next();

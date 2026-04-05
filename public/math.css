@@ -29,14 +29,18 @@ body {
   min-height: 100vh;
 }
 
-/* Logo */
-#games-logo {
-  width: auto;
-  max-width: 600px;
-  height: auto;
-  max-height: 130px;
-  object-fit: contain;
-  margin-bottom: 24px;
+/* Cursive games title */
+#games-title {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-style: italic;
+  font-size: clamp(56px, 10vw, 96px);
+  font-weight: 700;
+  color: #1a3a6b;
+  text-shadow: 0 2px 12px rgba(26,58,107,0.25);
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  user-select: none;
 }
 
 /* Search bar */
@@ -69,13 +73,13 @@ body {
   border-radius: 6px;
 }
 
-/* Game grid — 4 per row */
+/* Game grid — 7 per row */
 #game-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 14px;
   width: 100%;
-  max-width: 760px;
+  max-width: 1300px;
 }
 
 /* No results message */
@@ -236,7 +240,12 @@ body {
   background: rgba(100,160,255,0.2);
 }
 
-/* ── Responsive — shrink to 2 cols on small screens ─────────────────────── */
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  #game-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
 @media (max-width: 540px) {
   #game-grid {
     grid-template-columns: repeat(2, 1fr);

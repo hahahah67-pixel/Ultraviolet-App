@@ -1,0 +1,23 @@
+UPDATE LOGS:
+fish proxy update logs inclauding lastest build and possibly previus builds not all builds may be doucmented.
+fish proxies code thus conetnts of all builds are protected by the AGPL-3.0 license thus alos protecctd by the DMCA for me info vist dmca.com
+diffrent builds include BETA- not a full stable build may be good enough to relase but not finished. ALPHA- eariler build then BETA not stable even for release testing phase and almost NEVER a mainstream release.
+STABLE- a verison/build of fish proxy is completed period. clear from bugs*(1) and stable with good/big additons from previous update.
+
+Fish Proxy verison 1.0 BETA:
+has the default stary background a banner, search bar dual proxy support for ultravilot and scramjet (not yet 100% stable) and a broswer conlse when in websites.
+
+Fish proxy verison 1.1 STABLE:
+made UV and SJ siwtching more stable and faster all previous lag from UV and SJ trasnions was fixed in this veriosn, SJ also has lazy laoding and advanced caching to keep speed of the proxy even when switching proxy types.
+
+Fish proxy verion 2.0 ALPHA:
+added custom BG letting users upload any ikmage they want as the background works with jpegs and gifs.
+
+Fish proxy verison 2.1 BETA:
+added quick links for roblox and a new games section with around 20 games, also disabled chrouium based broswers recent searches feature on the website search suggestens no long show up when interacting with homepage nor broswer consle. also updated the README.MD from the oringal ultravilot README whcih fish proxy is forked from, custom README.MD with custom visuals and useful info.
+
+*1- no gurante stable releases are 100% bug free or are guranted called "stable" to everybody.
+
+
+Fish Proxy, copyrighted under AGPL-3.0 license all rights reserved.
+

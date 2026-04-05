@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 
   if (SW_ASSET_PREFIXES.some(p => req.path.startsWith(p))) return next();
 
-  return res.sendStatus(404);
+  return sendError(res, 404, "404.html");
 });
 
 // Health check endpoint — responds 200 for AWS load balancer
@@ -45,26 +45,62 @@ app.get("/health", (req, res) => {
   res.sendStatus(200);
 });
 
-// Entry point — sets session cookie and redirects to homepage
+// Entry point — sets cookie then serves index directly with 1102 fallback
 app.get("/index.html", (req, res) => {
   res.cookie(ACCESS_COOKIE, "true", {
     httpOnly: true,
     sameSite: "strict",
     path: "/"
   });
-  res.redirect("/");
+  res.sendFile("./public/index.html", { root: "." }, (err) => {
+    if (err) sendError(res, 1102, "1102.html");
+  });
 });
 
-// Games page — /math serves math.html and sets access cookie
-app.get("/math", (req, res) => {
+// Games page — /math and /math.html both serve math.html with 1102 fallback
+function serveMath(req, res) {
   res.cookie(ACCESS_COOKIE, "true", {
     httpOnly: true,
     sameSite: "strict",
     path: "/"
   });
-  res.sendFile("./public/math.html", { root: "." });
-});
+  res.sendFile("./public/math.html", { root: "." }, (err) => {
+    if (err) sendError(res, 1102, "1102.html");
+  });
+}
+app.get("/math", serveMath);
+app.get("/math.html", serveMath);
 // ===== End beta gate =====
+
+// Explicit root route so we can catch load errors → 1102
+app.get("/", (req, res) => {
+  res.sendFile("./public/index.html", { root: "." }, (err) => {
+    if (err) sendError(res, 1102, "1102.html");
+  });
+});
+
+// ── 444 Forbidden: intercept internal files BEFORE express.static serves them
+const FORBIDDEN_PATTERNS = [
+  /^\/sw\.js$/,
+  /^\/register-sw\.js$/,
+  /^\/search\.js$/,
+  /^\/index\.js$/,
+  /^\/index\.css$/,
+  /^\/math\.js$/,
+  /^\/math\.css$/,
+  /^\/error\.js$/,
+  /^\/404\.html$/,
+  /^\/444\.html$/,
+  /^\/1102\.html$/,
+  /^\/games\.txt$/,
+  /^\/images\//,
+];
+app.use((req, res, next) => {
+  if (FORBIDDEN_PATTERNS.some(p => p.test(req.path))) {
+    return sendError(res, 444, "444.html");
+  }
+  next();
+});
 
 // Public files (includes vendored /scram/ and /libcurl/ folders)
 app.use(express.static("./public"));
@@ -79,10 +115,15 @@ app.use("/baremux/", express.static(baremuxPath));
 // Note: /scram/ and /libcurl/ are vendored directly in public/
 // and served by express.static("./public") above — no npm routes needed.
 
-// 404 fallback
+// ── Error page helper
+function sendError(res, code, file) {
+	res.status(code);
+	res.sendFile(`./public/${file}`, { root: "." });
+}
+
+// ── Genuine 404 catchall
 app.use((req, res) => {
-	res.status(404);
-	res.sendFile("./public/404.html", { root: "." });
+  sendError(res, 404, "404.html");
 });
 
 const server = createServer();

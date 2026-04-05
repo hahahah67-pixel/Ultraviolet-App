@@ -1,23 +1,51 @@
-UPDATE LOGS:
-fish proxy update logs inclauding lastest build and possibly previus builds not all builds may be doucmented.
-fish proxies code thus conetnts of all builds are protected by the AGPL-3.0 license thus alos protecctd by the DMCA for me info vist dmca.com
-diffrent builds include BETA- not a full stable build may be good enough to relase but not finished. ALPHA- eariler build then BETA not stable even for release testing phase and almost NEVER a mainstream release.
-STABLE- a verison/build of fish proxy is completed period. clear from bugs*(1) and stable with good/big additons from previous update.
+ Fish Proxy — Update Logs
 
-Fish Proxy verison 1.0 BETA:
-has the default stary background a banner, search bar dual proxy support for ultravilot and scramjet (not yet 100% stable) and a broswer conlse when in websites.
+This document outlines update logs for Fish Proxy, including the latest build and selected previous builds. Please note that not all builds may be documented.
 
-Fish proxy verison 1.1 STABLE:
-made UV and SJ siwtching more stable and faster all previous lag from UV and SJ trasnions was fixed in this veriosn, SJ also has lazy laoding and advanced caching to keep speed of the proxy even when switching proxy types.
+Fish Proxy’s source code and all associated build contents are licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**. As such, the project is also protected under applicable copyright laws, including the **Digital Millennium Copyright Act (DMCA)**. For more information, please visit dmca.com.
 
-Fish proxy verion 2.0 ALPHA:
-added custom BG letting users upload any ikmage they want as the background works with jpegs and gifs.
+Build Classifications
 
-Fish proxy verison 2.1 BETA:
-added quick links for roblox and a new games section with around 20 games, also disabled chrouium based broswers recent searches feature on the website search suggestens no long show up when interacting with homepage nor broswer consle. also updated the README.MD from the oringal ultravilot README whcih fish proxy is forked from, custom README.MD with custom visuals and useful info.
+ALPHA
+  Early-stage builds prior to beta. These versions are highly unstable, intended for internal testing, and are almost never released publicly.
 
-*1- no gurante stable releases are 100% bug free or are guranted called "stable" to everybody.
+BETA
+  Pre-release builds that may be functional but are not yet finalized. These versions may be suitable for limited release but can still contain significant issues.
 
+STABLE
+  Fully released builds considered complete. These versions are generally stable, include meaningful improvements from prior releases, and are intended for public use.
+  *Note: “Stable” does not guarantee a completely bug-free experience.*
 
-Fish Proxy, copyrighted under AGPL-3.0 license all rights reserved.
+Version History
 
+Fish Proxy v1.0 — BETA
+
+* Introduced default starry background
+* Added homepage banner and search bar
+* Implemented dual proxy support for Ultraviolet and Scramjet *(not fully stable)*
+* Included browser console functionality within websites
+
+Fish Proxy v1.1 — STABLE
+
+* Improved stability and speed of Ultraviolet (UV) and Scramjet (SJ) proxy switching
+* Resolved lag issues during proxy transitions
+* Added lazy loading and advanced caching for Scramjet to enhance performance during switching
+
+Fish Proxy v2.0 — ALPHA
+
+* Added custom background feature
+* Users can upload images (JPEG and GIF formats supported)
+
+Fish Proxy v2.1 — BETA
+
+* Added quick links for Roblox
+* Introduced a new games section with approximately 20 games
+* Disabled Chromium-based browser recent search suggestions on the homepage and browser console
+* Replaced the original Ultraviolet README with a custom README.md featuring improved visuals and updated project information
+
+Disclaimer
+
+While stable releases are tested and refined, they are not guaranteed to be entirely free of bugs. Stability may vary depending on environment and usage.
+
+Fish Proxy
+Licensed under the AGPL-3.0 License. All rights reserved.

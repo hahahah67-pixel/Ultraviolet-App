@@ -517,9 +517,19 @@
 		  const SPEED  = 0.25;
 		  let stars    = [];
 
+		  let resizeTimer = null;
+
 		  function resize() {
-		    canvas.width  = window.innerWidth;
-		    canvas.height = window.innerHeight;
+		    // Debounce: wait until resizing stops to avoid mid-frame tears
+		    clearTimeout(resizeTimer);
+		    resizeTimer = setTimeout(function() {
+		      canvas.width  = window.innerWidth;
+		      canvas.height = window.innerHeight;
+		      // Explicit clear after dimension change to kill the dirty left-edge line
+		      ctx.clearRect(0, 0, canvas.width, canvas.height);
+		      // Re-scatter stars to new bounds so none are stuck off-screen
+		      stars = Array.from({ length: COUNT }, mkStar);
+		    }, 80);
 		  }
 
 		  function mkStar() {
@@ -533,7 +543,11 @@
 		    };
 		  }
 
-		  function init() { resize(); stars = Array.from({ length: COUNT }, mkStar); }
+		  function init() {
+		    canvas.width  = window.innerWidth;
+		    canvas.height = window.innerHeight;
+		    stars = Array.from({ length: COUNT }, mkStar);
+		  }
 
 		  function draw() {
 		    ctx.clearRect(0, 0, canvas.width, canvas.height);

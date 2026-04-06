@@ -35,3 +35,4 @@ google-doodle-pac-man|Google doodle pac man|https://www.google.com/logos/2010/pa
 big-neon-tower-tiny-square|Big neon tower tiny square|https://bigtowertinysquare.io/game/big-neon-tower-vs-tiny-square/|big neon.png|big|neon|square
 moto-bike-x3m|Moto bike x3m|https://play-moto-x3m.com/|moto 3.png|moto|bike|x3m
 pizza-tower|Pizza tower|https://www.autistici.org/burnedprojects/NoiseUpdate/|pizza tower.png|pizza|tower|pizza
+run-2|Run 2|https://www.run3.school/game/run-2/|run 2.png|run|run|2

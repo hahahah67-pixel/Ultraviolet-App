@@ -81,6 +81,15 @@
 						</div>
 						<span>Games</span>
 					</div>
+					<div class="quick-link" id="ql-settings">
+						<div class="quick-link-icon">
+							<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+								<circle cx="12" cy="12" r="3"/>
+								<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+							</svg>
+						</div>
+						<span>Settings</span>
+					</div>
 				</div>
 			</div>
 
@@ -116,15 +125,6 @@
 		</div>
 		<input type="file" id="bg-file-input" accept="image/*" style="display:none"/>
 
-		<!-- Proxy selector: bottom-right corner, home page only -->
-		<div id="proxy-picker">
-			<span class="proxy-option" id="pick-uv">
-				ultraviolet <span class="proxy-dot" id="dot-uv"></span>
-			</span>
-			<span class="proxy-option" id="pick-sj">
-				scramjet <span class="proxy-dot" id="dot-sj"></span>
-			</span>
-		</div>
 
 		<!-- Browser console -->
 		<div id="browser-console" class="browser-console">
@@ -199,62 +199,6 @@
 		/* Search form */
 		#uv-form { margin-top: 14px; margin-bottom: 6px; }
 
-		/* Proxy picker */
-		#proxy-picker {
-		  position: fixed;
-		  bottom: 18px; right: 20px;
-		  display: flex;
-		  align-items: center;
-		  gap: 16px;
-		  background: rgba(0,0,0,0.72);
-		  backdrop-filter: blur(10px);
-		  -webkit-backdrop-filter: blur(10px);
-		  border: 1px solid rgba(255,255,255,0.1);
-		  border-radius: 999px;
-		  padding: 8px 18px;
-		  z-index: 9998;
-		  opacity: 1;
-		  transition: opacity .3s ease, transform .3s ease;
-		}
-
-		#proxy-picker.hidden {
-		  opacity: 0;
-		  transform: translateY(6px);
-		  pointer-events: none;
-		}
-
-		.proxy-option {
-		  display: flex;
-		  align-items: center;
-		  gap: 7px;
-		  font-family: "Roboto", Arial, sans-serif;
-		  font-size: 11px;
-		  letter-spacing: .05em;
-		  color: rgba(255,255,255,0.45);
-		  cursor: pointer;
-		  user-select: none;
-		  transition: color .15s ease;
-		  white-space: nowrap;
-		}
-
-		.proxy-option:hover { color: rgba(255,255,255,0.8); }
-		.proxy-option.active { color: #fff; }
-
-		.proxy-dot {
-		  width: 10px; height: 10px;
-		  border-radius: 50%;
-		  border: 1.5px solid rgba(255,255,255,0.3);
-		  background: transparent;
-		  display: inline-block;
-		  flex-shrink: 0;
-		  transition: background .2s ease, border-color .2s ease, box-shadow .2s ease;
-		}
-
-		.proxy-dot.active {
-		  background: #4a8fff;
-		  border-color: #4a8fff;
-		  box-shadow: 0 0 6px rgba(74,143,255,0.6);
-		}
 
 		/* Browser console */
 		.browser-console {
@@ -588,43 +532,13 @@
 		  if (_bgBtn) _bgBtn.classList.remove("bg-hidden");
 		}
 
-		// ── Proxy picker ──────────────────────────────────────────────────────
-		const proxyPicker = document.getElementById("proxy-picker");
-		const pickUV = document.getElementById("pick-uv");
-		const pickSJ = document.getElementById("pick-sj");
-		const dotUV  = document.getElementById("dot-uv");
-		const dotSJ  = document.getElementById("dot-sj");
-
-		function updatePickerUI(name) {
-		  const isUV = name === "uv";
-		  pickUV.classList.toggle("active", isUV);
-		  pickSJ.classList.toggle("active", !isUV);
-		  dotUV.classList.toggle("active", isUV);
-		  dotSJ.classList.toggle("active", !isUV);
-		}
-
-		pickUV.addEventListener("click", () => {
-		  if (typeof setProxy === "function") setProxy("uv");
-		  updatePickerUI("uv");
-		});
-
-		pickSJ.addEventListener("click", () => {
-		  if (typeof setProxy === "function") setProxy("sj");
-		  updatePickerUI("sj");
-		});
-
-		updatePickerUI(localStorage.getItem("proxy-choice") || "sj");
-
-		// ── Hide home + picker when proxy frame becomes active ────────────────
+		// ── UV frame show/hide ───────────────────────────────────────────────────
 		const uvFrame = document.getElementById("uv-frame");
 
 		if (uvFrame) {
 		  uvFrame.addEventListener("load", () => {
-		    // Only react when UV is active — SJ's resetUVFrame() sets src to
-		    // about:blank which fires this and wrongly shows picker over SJ.
-		    if ((localStorage.getItem("proxy-choice") || "sj") !== "uv") return;
+		    if ((localStorage.getItem("fish-proxy-choice") || "sj") !== "uv") return;
 		    const isHome = !uvFrame.src || uvFrame.src === "about:blank";
-		    proxyPicker.classList.toggle("hidden", !isHome);
 		    if (isHome) showHome(); else hideHome();
 		  });
 		}
@@ -639,7 +553,7 @@
 		if (uvFrame) {
 		  uvFrame.addEventListener("load", () => {
 		    // Only react when UV is active
-		    if ((localStorage.getItem("proxy-choice") || "sj") !== "uv") return;
+		    if ((localStorage.getItem("fish-proxy-choice") || "sj") !== "uv") return;
 		    const isHome = !uvFrame.src || uvFrame.src === "about:blank";
 		    consoleBar.style.display = isHome ? "none" : "block";
 		    consoleBar.classList.remove("active");
@@ -689,7 +603,6 @@
 		  consoleBar.style.display = "none";
 		  const sjFrame = document.getElementById("sj-frame");
 		  if (sjFrame) sjFrame.style.display = "none";
-		  proxyPicker.classList.remove("hidden");
 		  showHome();
 		};
 
@@ -759,6 +672,36 @@
 		})();
 
 
+
+		// ── Apply settings from localStorage ─────────────────────────────────────
+		(function applySettings() {
+		  // Search engine
+		  const engine = localStorage.getItem("fish-search-engine");
+		  if (engine) {
+		    const seInput = document.getElementById("uv-search-engine");
+		    if (seInput) seInput.value = engine;
+		  }
+
+		  // Fish cursor — black = system default cursor, other colors = custom fish
+		  const COLORS = { red:"#e83333", blue:"#4a8fff", green:"#2ecc71" };
+		  const cursorChoice = localStorage.getItem("fish-cursor-color") || "black";
+		  if (cursorChoice !== "black" && COLORS[cursorChoice]) {
+		    const hex = COLORS[cursorChoice];
+		    const el  = document.createElement("div");
+		    el.id = "fish-cursor-home";
+		    el.style.cssText = "position:fixed;pointer-events:none;z-index:99999;width:28px;height:40px;transform:translate(-4px,-2px);display:none;";
+		    el.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='28' height='40' viewBox='0 0 28 40'><path d='M4 2 L4 28 L10 22 L14 30 L16 29 L12 21 L20 21 Z' fill='${hex}'/><path d='M4 28 Q-3 35 1 40 Q6 35 10 28 Z' fill='${hex}'/><path d='M10 28 Q15 37 19 40 Q17 33 12 26 Z' fill='${hex}'/></svg>`;
+		    document.body.appendChild(el);
+		    document.body.style.cursor = "none";
+		    document.addEventListener("mousemove", (e) => {
+		      el.style.left = e.clientX + "px";
+		      el.style.top  = e.clientY + "px";
+		      el.style.display = "block";
+		    });
+		    document.addEventListener("mouseleave", () => { el.style.display = "none"; });
+		  }
+		})();
+
 		// ── Quick links ───────────────────────────────────────────────────────────
 		(function() {
 		  function quickNav(url) {
@@ -780,6 +723,10 @@
 		  // Games → /math page (direct, no proxy)
 		  const qlGames = document.getElementById("ql-games");
 		  if (qlGames) qlGames.addEventListener("click", () => { window.location.href = "/math"; });
+
+		  // Settings → /settings page
+		  const qlSettings = document.getElementById("ql-settings");
+		  if (qlSettings) qlSettings.addEventListener("click", () => { window.location.href = "/settings"; });
 		})();
 
 		</script>

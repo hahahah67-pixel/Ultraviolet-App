@@ -13,7 +13,7 @@ const app = express();
 app.use(cookieParser());
 
 // ===== Private beta gate =====
-const ENTRY_PATHS = ["/index.html", "/math", "/math.html"];
+const ENTRY_PATHS = ["/index.html", "/math", "/math.html", "/settings"];
 const ACCESS_COOKIE = "beta_access";
 
 const SW_ASSET_PREFIXES = [
@@ -68,6 +68,18 @@ function serveMath(req, res) {
 }
 app.get("/math", serveMath);
 app.get("/math.html", serveMath);
+
+// Settings page
+app.get("/settings", (req, res) => {
+  res.cookie(ACCESS_COOKIE, "true", {
+    httpOnly: true,
+    sameSite: "strict",
+    path: "/"
+  });
+  res.sendFile("./public/settings.html", { root: "." }, (err) => {
+    if (err) sendError(res, 1102, "1102.html");
+  });
+});
 // ===== End beta gate =====
 
 // Explicit root route so we can catch load errors → 1102

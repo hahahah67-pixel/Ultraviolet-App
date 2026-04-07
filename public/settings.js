@@ -58,11 +58,11 @@ document.getElementById("save-btn").addEventListener("click", () => {
 
   const el = document.createElement("div");
   el.id = "fish-cursor";
-  el.style.cssText = "position:fixed;pointer-events:none;z-index:99999;width:28px;height:40px;transform:translate(-4px,-2px);display:none;";
-  el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="40" viewBox="0 0 28 40">'
-    + '<path d="M4 2 L4 28 L10 22 L14 30 L16 29 L12 21 L20 21 Z" fill="' + hex + '"/>'
-    + '<path d="M4 28 Q-3 35 1 40 Q6 35 10 28 Z" fill="' + hex + '"/>'
-    + '<path d="M10 28 Q15 37 19 40 Q17 33 12 26 Z" fill="' + hex + '"/>'
+  el.style.cssText = "position:fixed;pointer-events:none;z-index:99999;width:26px;height:38px;transform:translate(-3px,-1px);display:none;";
+  el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="26" height="38" viewBox="0 0 26 38">'
+    + '<path d="M5 1 C5 1 3 1 3 3 L3 27 C3 27 7 24 9 28 L11 33 L12.5 32 L10.5 27 C10.5 27 16 24 19 22 Z" fill="' + hex + '"/>'
+    + '<path d="M3 27 Q-2 33 1 38 Q5 33 9 28 Z" fill="' + hex + '"/>'
+    + '<path d="M9 28 Q13 36 17 38 Q15 32 10.5 27 Z" fill="' + hex + '"/>'
     + '</svg>';
   document.body.appendChild(el);
   document.body.style.cursor = "none";

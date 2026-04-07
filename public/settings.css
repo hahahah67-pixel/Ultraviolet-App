@@ -1,0 +1,152 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Roboto", Arial, sans-serif;
+  background: #000;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Starfield ───────────────────────────────────────────────────────────── */
+#starfield {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── Fish cursor ─────────────────────────────────────────────────────────── */
+#fish-cursor {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  width: 28px;
+  height: 40px;
+  transform: translate(-4px, -2px);
+  transition: none;
+}
+
+/* ── Title ───────────────────────────────────────────────────────────────── */
+#settings-title {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  padding: 40px 40px 28px;
+}
+
+/* ── Settings grid ───────────────────────────────────────────────────────── */
+#settings-grid {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 0 40px;
+  max-width: 860px;
+}
+
+/* ── Individual box ──────────────────────────────────────────────────────── */
+.settings-box {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 20px;
+  padding: 24px 28px;
+  min-width: 210px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.settings-box:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.16);
+}
+
+.box-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+/* ── Radio rows ──────────────────────────────────────────────────────────── */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.radio-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.radio-row input[type="radio"] {
+  accent-color: #4a8fff;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.radio-row span {
+  color: rgba(255,255,255,0.8);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.badge.default-badge {
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.06);
+  border-radius: 999px;
+  padding: 2px 8px;
+  letter-spacing: 0.03em;
+}
+
+.color-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+/* ── Save button ─────────────────────────────────────────────────────────── */
+#save-btn {
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin: 32px 40px;
+  padding: 11px 40px;
+  background: #4a8fff;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  border: none;
+  border-radius: 999px;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 18px rgba(74,143,255,0.3);
+}
+
+#save-btn:hover {
+  background: #3a7aee;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(74,143,255,0.45);
+}
+
+#save-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(74,143,255,0.25);
+}

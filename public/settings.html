@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+		<title>Online Courses for College Credit, Exam Prep &amp; K-12 | Study.com</title>
+		<meta name="description" content="Study.com has engaging online courses in math, science, history, English, business, humanities &amp; more." />
+		<meta name="robots" content="noindex, nofollow" />
+		<meta property="og:site_name" content="Study.com" />
+		<meta property="og:title" content="Online Courses for College Credit, Exam Prep &amp; K-12 | Study.com" />
+		<link rel="canonical" href="https://study.com" />
+		<link rel="icon" type="image/x-icon" href="https://study.com/favicon.ico" />
+		<link rel="stylesheet" href="settings.css" />
+	</head>
+	<body>
+		<canvas id="starfield"></canvas>
+
+		<!-- Top-left title -->
+		<div id="settings-title">settings</div>
+
+		<!-- Settings grid -->
+		<div id="settings-grid">
+
+			<!-- Search Engine box -->
+			<div class="settings-box" id="box-search">
+				<div class="box-label">search engine</div>
+				<div class="radio-group" id="engine-group">
+					<label class="radio-row">
+						<input type="radio" name="engine" value="https://duckduckgo.com/?q=%s" />
+						<span>DuckDuckGo</span>
+						<span class="badge default-badge">default</span>
+					</label>
+					<label class="radio-row">
+						<input type="radio" name="engine" value="https://www.startpage.com/search?q=%s" />
+						<span>Startpage</span>
+					</label>
+					<label class="radio-row">
+						<input type="radio" name="engine" value="https://www.google.com/search?q=%s" />
+						<span>Google</span>
+					</label>
+					<label class="radio-row">
+						<input type="radio" name="engine" value="https://search.yahoo.com/search?p=%s" />
+						<span>Yahoo Search</span>
+					</label>
+				</div>
+			</div>
+
+			<!-- Cursor Color box -->
+			<div class="settings-box" id="box-cursor">
+				<div class="box-label">cursor color</div>
+				<div class="radio-group" id="cursor-group">
+					<label class="radio-row">
+						<input type="radio" name="cursor" value="black" />
+						<span>Black</span>
+						<span class="badge default-badge">default</span>
+					</label>
+					<label class="radio-row">
+						<input type="radio" name="cursor" value="red" />
+						<span>Red</span>
+						<span class="color-dot" style="background:#e83333"></span>
+					</label>
+					<label class="radio-row">
+						<input type="radio" name="cursor" value="blue" />
+						<span>Blue</span>
+						<span class="color-dot" style="background:#4a8fff"></span>
+					</label>
+					<label class="radio-row">
+						<input type="radio" name="cursor" value="green" />
+						<span>Green</span>
+						<span class="color-dot" style="background:#2ecc71"></span>
+					</label>
+				</div>
+			</div>
+
+			<!-- Proxy Type box -->
+			<div class="settings-box" id="box-proxy">
+				<div class="box-label">proxy type</div>
+				<div class="radio-group" id="proxy-group">
+					<label class="radio-row">
+						<input type="radio" name="proxy" value="sj" />
+						<span>Scramjet</span>
+						<span class="badge default-badge">default</span>
+					</label>
+					<label class="radio-row">
+						<input type="radio" name="proxy" value="uv" />
+						<span>Ultraviolet</span>
+					</label>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Save button -->
+		<button id="save-btn">save</button>
+
+		<script src="settings.js"></script>
+	</body>
+</html>

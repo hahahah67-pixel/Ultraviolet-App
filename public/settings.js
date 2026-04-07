@@ -1,0 +1,133 @@
+"use strict";
+
+// ── localStorage keys (shared with index.html / index.js) ─────────────────
+const KEY_ENGINE = "fish-search-engine";
+const KEY_CURSOR = "fish-cursor-color";
+const KEY_PROXY  = "fish-proxy-choice";
+
+// ── Defaults ──────────────────────────────────────────────────────────────
+const DEFAULT_ENGINE = "https://duckduckgo.com/?q=%s";
+const DEFAULT_CURSOR = "black";
+const DEFAULT_PROXY  = "sj";
+
+// ── Color map for fish cursor SVG ─────────────────────────────────────────
+const CURSOR_COLORS = {
+  black: "#111111",
+  red:   "#e83333",
+  blue:  "#4a8fff",
+  green: "#2ecc71",
+};
+
+// ── Load saved values and pre-select radios ───────────────────────────────
+(function loadSettings() {
+  const engine = localStorage.getItem(KEY_ENGINE) || DEFAULT_ENGINE;
+  const cursor = localStorage.getItem(KEY_CURSOR) || DEFAULT_CURSOR;
+  const proxy  = localStorage.getItem(KEY_PROXY)  || DEFAULT_PROXY;
+
+  const engineInputs = document.querySelectorAll('input[name="engine"]');
+  engineInputs.forEach(r => { if (r.value === engine) r.checked = true; });
+
+  const cursorInputs = document.querySelectorAll('input[name="cursor"]');
+  cursorInputs.forEach(r => { if (r.value === cursor) r.checked = true; });
+
+  const proxyInputs = document.querySelectorAll('input[name="proxy"]');
+  proxyInputs.forEach(r => { if (r.value === proxy) r.checked = true; });
+})();
+
+// ── Save button ───────────────────────────────────────────────────────────
+document.getElementById("save-btn").addEventListener("click", () => {
+  const engineEl = document.querySelector('input[name="engine"]:checked');
+  const cursorEl = document.querySelector('input[name="cursor"]:checked');
+  const proxyEl  = document.querySelector('input[name="proxy"]:checked');
+
+  if (engineEl) localStorage.setItem(KEY_ENGINE, engineEl.value);
+  if (cursorEl) localStorage.setItem(KEY_CURSOR, cursorEl.value);
+  if (proxyEl)  localStorage.setItem(KEY_PROXY, proxyEl.value);
+
+  // Go back to homepage
+  window.location.href = "/";
+});
+
+// ── Fish cursor — black = system default, others = custom fish ────────────
+(function initCursor() {
+  const color = localStorage.getItem(KEY_CURSOR) || DEFAULT_CURSOR;
+  if (color === "black") return; // use system cursor
+
+  const hex = CURSOR_COLORS[color];
+  if (!hex) return;
+
+  const el = document.createElement("div");
+  el.id = "fish-cursor";
+  el.style.cssText = "position:fixed;pointer-events:none;z-index:99999;width:28px;height:40px;transform:translate(-4px,-2px);display:none;";
+  el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="40" viewBox="0 0 28 40">'
+    + '<path d="M4 2 L4 28 L10 22 L14 30 L16 29 L12 21 L20 21 Z" fill="' + hex + '"/>'
+    + '<path d="M4 28 Q-3 35 1 40 Q6 35 10 28 Z" fill="' + hex + '"/>'
+    + '<path d="M10 28 Q15 37 19 40 Q17 33 12 26 Z" fill="' + hex + '"/>'
+    + '</svg>';
+  document.body.appendChild(el);
+  document.body.style.cursor = "none";
+
+  document.addEventListener("mousemove", (e) => {
+    el.style.left = e.clientX + "px";
+    el.style.top  = e.clientY + "px";
+    el.style.display = "block";
+  });
+  document.addEventListener("mouseleave", () => { el.style.display = "none"; });
+  document.addEventListener("mouseenter", () => { el.style.display = "block"; });
+})();
+
+// ── Starfield ─────────────────────────────────────────────────────────────
+(function () {
+  const canvas = document.getElementById("starfield");
+  const ctx    = canvas.getContext("2d");
+  const COUNT  = 180;
+  const SPEED  = 0.25;
+  let stars    = [];
+  let resizeTimer = null;
+
+  function mkStar() {
+    return {
+      x:          Math.random() * canvas.width,
+      y:          Math.random() * canvas.height,
+      r:          Math.random() * 1.4 + 0.3,
+      opacity:    Math.random() * 0.6 + 0.2,
+      phase:      Math.random() * Math.PI * 2,
+      phaseSpeed: Math.random() * 0.015 + 0.005
+    };
+  }
+
+  function init() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    stars = Array.from({ length: COUNT }, mkStar);
+  }
+
+  function resize() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars = Array.from({ length: COUNT }, mkStar);
+    }, 80);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const s of stars) {
+      s.y += SPEED;
+      if (s.y > canvas.height + 2) { s.y = -2; s.x = Math.random() * canvas.width; }
+      s.phase += s.phaseSpeed;
+      const a = s.opacity * (0.7 + 0.3 * Math.sin(s.phase));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${a})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener("resize", resize);
+  init();
+  requestAnimationFrame(draw);
+})();

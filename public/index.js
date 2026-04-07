@@ -92,5 +92,15 @@ form.addEventListener("submit", async (event) => {
 		sjFrameWrapper.frame.id = "sj-frame";
 		document.body.appendChild(sjFrameWrapper.frame);
 		sjFrameWrapper.go(url);
+
+		// Hide home + show browser console for SJ.
+		// UV handles this via uvFrame.load event — SJ must do it manually
+		// since it never fires that event.
+		if (typeof hideHome === "function") hideHome();
+		const _consoleBar = document.getElementById("browser-console");
+		if (_consoleBar) {
+			_consoleBar.style.display = "block";
+			_consoleBar.classList.remove("active");
+		}
 	}
 });

@@ -23,9 +23,9 @@ body {
   position: fixed;
   pointer-events: none;
   z-index: 99999;
-  width: 28px;
-  height: 40px;
-  transform: translate(-4px, -2px);
+  width: 22px;
+  height: 38px;
+  transform: translate(-3px, -1px);
   transition: none;
 }
 
@@ -34,10 +34,12 @@ body {
   position: relative;
   z-index: 1;
   color: #fff;
-  font-size: 32px;
-  font-weight: 300;
-  letter-spacing: 0.08em;
-  padding: 40px 40px 28px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 44px 44px 32px;
+  opacity: 0.9;
 }
 
 /* ── Settings grid ───────────────────────────────────────────────────────── */
@@ -46,79 +48,83 @@ body {
   z-index: 1;
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
-  padding: 0 40px;
-  max-width: 860px;
+  gap: 14px;
+  padding: 0 44px;
+  max-width: 900px;
 }
 
 /* ── Individual box ──────────────────────────────────────────────────────── */
 .settings-box {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.09);
-  border-radius: 20px;
-  padding: 24px 28px;
-  min-width: 210px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 28px 32px;
+  min-width: 220px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .settings-box:hover {
-  background: rgba(255,255,255,0.06);
-  border-color: rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.055);
+  border-color: rgba(255,255,255,0.14);
 }
 
 .box-label {
-  font-size: 11px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.35);
-  letter-spacing: 0.10em;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.28);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 /* ── Radio rows ──────────────────────────────────────────────────────────── */
 .radio-group {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .radio-row {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
 }
 
 .radio-row input[type="radio"] {
-  accent-color: #4a8fff;
-  width: 15px;
-  height: 15px;
+  accent-color: #fff;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
+  opacity: 0.7;
 }
 
 .radio-row span {
-  color: rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.75);
   font-size: 14px;
   font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
 .badge.default-badge {
-  font-size: 10px;
-  color: rgba(255,255,255,0.3);
-  background: rgba(255,255,255,0.06);
+  font-size: 9px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.05);
   border-radius: 999px;
-  padding: 2px 8px;
-  letter-spacing: 0.03em;
+  padding: 2px 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .color-dot {
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   flex-shrink: 0;
-  opacity: 0.8;
+  opacity: 0.75;
 }
 
 /* ── Save button ─────────────────────────────────────────────────────────── */
@@ -126,27 +132,27 @@ body {
   position: relative;
   z-index: 1;
   display: block;
-  margin: 32px 40px;
-  padding: 11px 40px;
-  background: #4a8fff;
-  color: #fff;
+  margin: 32px 44px;
+  padding: 12px 44px;
+  background: rgba(255,255,255,0.9);
+  color: #000;
   font-family: inherit;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.05em;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   border: none;
   border-radius: 999px;
-  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
-  box-shadow: 0 4px 18px rgba(74,143,255,0.3);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
 }
 
 #save-btn:hover {
-  background: #3a7aee;
+  background: #fff;
   transform: translateY(-1px);
-  box-shadow: 0 6px 22px rgba(74,143,255,0.45);
 }
 
 #save-btn:active {
   transform: translateY(0);
-  box-shadow: 0 2px 10px rgba(74,143,255,0.25);
+  background: rgba(255,255,255,0.8);
 }

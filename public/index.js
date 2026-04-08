@@ -1,11 +1,11 @@
 "use strict";
 
 // ── DOM refs ──────────────────────────────────────────────────────────────────
-const form        = document.getElementById("uv-form");
-const address     = document.getElementById("uv-address");
+const form         = document.getElementById("uv-form");
+const address      = document.getElementById("uv-address");
 const searchEngine = document.getElementById("uv-search-engine");
-const error       = document.getElementById("uv-error");
-const errorCode   = document.getElementById("uv-error-code");
+const error        = document.getElementById("uv-error");
+const errorCode    = document.getElementById("uv-error-code");
 
 // ── bare-mux connection (shared by both proxies) ──────────────────────────────
 const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
@@ -26,8 +26,7 @@ scramjet.init();
 // ── Proxy state ───────────────────────────────────────────────────────────────
 let activeProxy = localStorage.getItem("fish-proxy-choice") || "sj";
 
-// Store SJ wrapper globally so we reuse the same frame instead of
-// destroying and recreating it every navigation (which corrupts SJ state)
+// SJ wrapper created once and reused — never destroyed to avoid state leaks
 let sjWrapper = null;
 
 function setProxy(name) {
@@ -75,11 +74,12 @@ form.addEventListener("submit", async (event) => {
 	const savedEngine = localStorage.getItem("fish-search-engine");
 	if (savedEngine) searchEngine.value = savedEngine;
 
-	// Re-read proxy choice in case it changed via settings
+	// Re-read proxy choice in case it changed via settings page
 	activeProxy = localStorage.getItem("fish-proxy-choice") || "sj";
 
-	const url = search(address.value, searchEngine.value);
-	const wispUrl = getWispUrl();
+	const url      = search(address.value, searchEngine.value);
+	const wispUrl  = getWispUrl();
+	const uvFrame  = document.getElementById("uv-frame");
 
 	if (activeProxy === "uv") {
 		// ── Ultraviolet ──────────────────────────────────────────────────────
@@ -87,17 +87,14 @@ form.addEventListener("submit", async (event) => {
 			await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
 		}
 
-		// Remove SJ frame if present, reset wrapper
+		// Hide SJ frame if it exists — do NOT destroy it, just hide
 		if (sjWrapper) {
-			const old = document.getElementById("sj-frame");
-			if (old) old.remove();
-			sjWrapper = null;
+			sjWrapper.frame.style.display = "none";
 		}
 
-		const frame = document.getElementById("uv-frame");
-		frame.style.display = "block";
-		frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
-		// UV show/hide and console are handled by uvFrame load event in index.html
+		uvFrame.style.display = "block";
+		uvFrame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+		// UV show/hide and console handled by uvFrame.load listener in index.html
 
 	} else {
 		// ── Scramjet ─────────────────────────────────────────────────────────
@@ -105,26 +102,24 @@ form.addEventListener("submit", async (event) => {
 			await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
 		}
 
-		// Hide UV frame
-		const uvFrame = document.getElementById("uv-frame");
+		// Hide UV frame without triggering load events
 		uvFrame.style.display = "none";
 		uvFrame.src = "";
 
 		if (!sjWrapper) {
-			// First SJ navigation — create the frame once
+			// Create SJ frame exactly once for the lifetime of this page
 			sjWrapper = scramjet.createFrame();
 			sjWrapper.frame.id = "sj-frame";
-			sjWrapper.frame.style.cssText = "border:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:200000;background:#000;";
+			sjWrapper.frame.style.cssText = "border:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:200000;background:#000;display:block;";
 			document.body.appendChild(sjWrapper.frame);
 		} else {
-			// Subsequent SJ navigations — reuse existing frame
+			// Reuse — just make it visible again
 			sjWrapper.frame.style.display = "block";
 		}
 
 		sjWrapper.go(url);
 
-		// Hide homepage and show console — UV does this via frame load event,
-		// SJ must do it manually
+		// SJ never fires uvFrame.load so we handle show/hide manually
 		if (typeof hideHome === "function") hideHome();
 		showConsole();
 	}

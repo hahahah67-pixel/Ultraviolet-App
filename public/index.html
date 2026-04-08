@@ -689,8 +689,8 @@
 		    const hex = COLORS[cursorChoice];
 		    const el  = document.createElement("div");
 		    el.id = "fish-cursor-home";
-		    el.style.cssText = "position:fixed;pointer-events:none;z-index:99999;width:26px;height:38px;transform:translate(-3px,-1px);display:none;";
-		    el.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='26' height='38' viewBox='0 0 26 38'><path d='M5 1 C5 1 3 1 3 3 L3 27 C3 27 7 24 9 28 L11 33 L12.5 32 L10.5 27 C10.5 27 16 24 19 22 Z' fill='${hex}'/><path d='M3 27 Q-2 33 1 38 Q5 33 9 28 Z' fill='${hex}'/><path d='M9 28 Q13 36 17 38 Q15 32 10.5 27 Z' fill='${hex}'/></svg>`;
+		    el.style.cssText = "position:fixed;pointer-events:none;z-index:99999;width:22px;height:38px;transform:translate(-3px,-1px);display:none;";
+		    el.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='22' height='38' viewBox='0 0 22 38'><path d='M3,1 L3,24 Q0,31 3,37 Q7,31 10,25 Q14,37 18,37 Q16,30 12,23 L20,20 Z' fill='${hex}'/></svg>`;
 		    document.body.appendChild(el);
 		    document.body.style.cursor = "none";
 		    document.addEventListener("mousemove", (e) => {

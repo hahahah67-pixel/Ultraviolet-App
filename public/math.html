@@ -152,12 +152,13 @@
 		</script>
 
 
-		<!-- Fish cursor — reads same localStorage key as homepage -->
+<!-- Fish cursor — hides when a game is being played -->
 		<script>
 		(function() {
 		  const COLORS = { red:"#e83333", blue:"#4a8fff", green:"#2ecc71" };
 		  const choice = localStorage.getItem("fish-cursor-color") || "black";
 		  if (choice === "black" || !COLORS[choice]) return; // system cursor
+
 		  const hex = COLORS[choice];
 		  const el = document.createElement("div");
 		  el.style.cssText = "position:fixed;pointer-events:none;z-index:99999;width:26px;height:38px;transform:translate(-3px,-1px);display:none;";
@@ -168,13 +169,34 @@
 		    + "</svg>";
 		  document.body.appendChild(el);
 		  document.body.style.cursor = "none";
+
+		  function isGameActive() {
+		    const gp = document.getElementById("game-page");
+		    return gp && gp.classList.contains("active");
+		  }
+
 		  document.addEventListener("mousemove", function(e) {
+		    if (isGameActive()) { el.style.display = "none"; return; }
 		    el.style.left = e.clientX + "px";
 		    el.style.top  = e.clientY + "px";
 		    el.style.display = "block";
 		  });
 		  document.addEventListener("mouseleave", function() { el.style.display = "none"; });
-		  document.addEventListener("mouseenter", function() { el.style.display = "block"; });
+		  document.addEventListener("mouseenter", function() {
+		    if (!isGameActive()) el.style.display = "block";
+		  });
+
+		  // Also restore system cursor style when game active so iframe gets normal cursor
+		  const observer = new MutationObserver(function() {
+		    if (isGameActive()) {
+		      document.body.style.cursor = "";
+		      el.style.display = "none";
+		    } else {
+		      document.body.style.cursor = "none";
+		    }
+		  });
+		  const gp = document.getElementById("game-page");
+		  if (gp) observer.observe(gp, { attributes: true, attributeFilter: ["class"] });
 		})();
 		</script>
 		<script src="math.js"></script>

@@ -1,11 +1,11 @@
 "use strict";
 
-// ── DOM refs ──────────────────────────────────────────────────────────────────
-const form         = document.getElementById("uv-form");
-const address      = document.getElementById("uv-address");
+// ── DOM refs (using stock UV element IDs) ─────────────────────────────────────
+const form = document.getElementById("uv-form");
+const address = document.getElementById("uv-address");
 const searchEngine = document.getElementById("uv-search-engine");
-const error        = document.getElementById("uv-error");
-const errorCode    = document.getElementById("uv-error-code");
+const error = document.getElementById("uv-error");
+const errorCode = document.getElementById("uv-error-code");
 
 // ── bare-mux connection (shared by both proxies) ──────────────────────────────
 const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
@@ -16,14 +16,14 @@ const { ScramjetController } = $scramjetLoadController();
 const scramjet = new ScramjetController({
 	files: {
 		wasm: "/scram/scramjet.wasm.wasm",
-		all:  "/scram/scramjet.all.js",
+		all: "/scram/scramjet.all.js",
 		sync: "/scram/scramjet.sync.js",
 	},
 });
 
 scramjet.init();
 
-// ── Proxy state ───────────────────────────────────────────────────────────────
+// ── Proxy toggle state ────────────────────────────────────────────────────────
 let activeProxy = localStorage.getItem("fish-proxy-choice") || "sj";
 
 function setProxy(name) {
@@ -58,18 +58,15 @@ form.addEventListener("submit", async (event) => {
 		throw err;
 	}
 
-	// Re-read proxy choice in case user changed it in settings
-	activeProxy = localStorage.getItem("fish-proxy-choice") || "sj";
-
-	// Apply search engine from settings
+	// Apply search engine from settings before building URL
 	const savedEngine = localStorage.getItem("fish-search-engine");
 	if (savedEngine) searchEngine.value = savedEngine;
 
-	const url     = search(address.value, searchEngine.value);
+	const url = search(address.value, searchEngine.value);
 	const wispUrl = getWispUrl();
 
 	if (activeProxy === "uv") {
-		// ── Ultraviolet ──────────────────────────────────────────────────────
+		// Ultraviolet: use Epoxy transport, load into static iframe
 		if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
 			await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
 		}
@@ -80,10 +77,8 @@ form.addEventListener("submit", async (event) => {
 		let frame = document.getElementById("uv-frame");
 		frame.style.display = "block";
 		frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
-		// UV show/hide and console handled by uvFrame.load listener in index.html
-
 	} else {
-		// ── Scramjet ─────────────────────────────────────────────────────────
+		// Scramjet: use libcurl transport, create SJ frame dynamically
 		if ((await connection.getTransport()) !== "/libcurl/index.mjs") {
 			await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
 		}
@@ -92,7 +87,6 @@ form.addEventListener("submit", async (event) => {
 		uvFrame.style.display = "none";
 		uvFrame.src = "";
 
-		// Remove old SJ frame and create fresh — this is how Scramjet is designed
 		const oldSjFrame = document.getElementById("sj-frame");
 		if (oldSjFrame) oldSjFrame.remove();
 
@@ -101,12 +95,9 @@ form.addEventListener("submit", async (event) => {
 		document.body.appendChild(sjFrameWrapper.frame);
 		sjFrameWrapper.go(url);
 
-		// SJ never fires uvFrame.load so handle show/hide manually
+		// SJ never fires uvFrame.load — handle home hide + console manually
 		if (typeof hideHome === "function") hideHome();
-		const consoleBar = document.getElementById("browser-console");
-		if (consoleBar) {
-			consoleBar.style.display = "block";
-			consoleBar.classList.remove("active");
-		}
+		const _bar = document.getElementById("browser-console");
+		if (_bar) { _bar.style.display = "block"; _bar.classList.remove("active"); }
 	}
 });

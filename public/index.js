@@ -26,9 +26,6 @@ scramjet.init();
 // ── Proxy state ───────────────────────────────────────────────────────────────
 let activeProxy = localStorage.getItem("fish-proxy-choice") || "sj";
 
-// SJ wrapper created once and reused — never destroyed to avoid state leaks
-let sjWrapper = null;
-
 function setProxy(name) {
 	activeProxy = name;
 	localStorage.setItem("fish-proxy-choice", name);
@@ -46,15 +43,6 @@ function getWispUrl() {
 	);
 }
 
-// ── Show browser console helper ───────────────────────────────────────────────
-function showConsole() {
-	const bar = document.getElementById("browser-console");
-	if (bar) {
-		bar.style.display = "block";
-		bar.classList.remove("active");
-	}
-}
-
 // ── Form submit ───────────────────────────────────────────────────────────────
 form.addEventListener("submit", async (event) => {
 	event.preventDefault();
@@ -70,16 +58,15 @@ form.addEventListener("submit", async (event) => {
 		throw err;
 	}
 
+	// Re-read proxy choice in case user changed it in settings
+	activeProxy = localStorage.getItem("fish-proxy-choice") || "sj";
+
 	// Apply search engine from settings
 	const savedEngine = localStorage.getItem("fish-search-engine");
 	if (savedEngine) searchEngine.value = savedEngine;
 
-	// Re-read proxy choice in case it changed via settings page
-	activeProxy = localStorage.getItem("fish-proxy-choice") || "sj";
-
-	const url      = search(address.value, searchEngine.value);
-	const wispUrl  = getWispUrl();
-	const uvFrame  = document.getElementById("uv-frame");
+	const url     = search(address.value, searchEngine.value);
+	const wispUrl = getWispUrl();
 
 	if (activeProxy === "uv") {
 		// ── Ultraviolet ──────────────────────────────────────────────────────
@@ -87,13 +74,12 @@ form.addEventListener("submit", async (event) => {
 			await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
 		}
 
-		// Hide SJ frame if it exists — do NOT destroy it, just hide
-		if (sjWrapper) {
-			sjWrapper.frame.style.display = "none";
-		}
+		const sjFrame = document.getElementById("sj-frame");
+		if (sjFrame) sjFrame.remove();
 
-		uvFrame.style.display = "block";
-		uvFrame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+		let frame = document.getElementById("uv-frame");
+		frame.style.display = "block";
+		frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
 		// UV show/hide and console handled by uvFrame.load listener in index.html
 
 	} else {
@@ -102,25 +88,25 @@ form.addEventListener("submit", async (event) => {
 			await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
 		}
 
-		// Hide UV frame without triggering load events
+		const uvFrame = document.getElementById("uv-frame");
 		uvFrame.style.display = "none";
 		uvFrame.src = "";
 
-		if (!sjWrapper) {
-			// Create SJ frame exactly once for the lifetime of this page
-			sjWrapper = scramjet.createFrame();
-			sjWrapper.frame.id = "sj-frame";
-			sjWrapper.frame.style.cssText = "border:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:200000;background:#000;display:block;";
-			document.body.appendChild(sjWrapper.frame);
-		} else {
-			// Reuse — just make it visible again
-			sjWrapper.frame.style.display = "block";
-		}
+		// Remove old SJ frame and create fresh — this is how Scramjet is designed
+		const oldSjFrame = document.getElementById("sj-frame");
+		if (oldSjFrame) oldSjFrame.remove();
 
-		sjWrapper.go(url);
+		const sjFrameWrapper = scramjet.createFrame();
+		sjFrameWrapper.frame.id = "sj-frame";
+		document.body.appendChild(sjFrameWrapper.frame);
+		sjFrameWrapper.go(url);
 
-		// SJ never fires uvFrame.load so we handle show/hide manually
+		// SJ never fires uvFrame.load so handle show/hide manually
 		if (typeof hideHome === "function") hideHome();
-		showConsole();
+		const consoleBar = document.getElementById("browser-console");
+		if (consoleBar) {
+			consoleBar.style.display = "block";
+			consoleBar.classList.remove("active");
+		}
 	}
 });

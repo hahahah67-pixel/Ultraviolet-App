@@ -38,4 +38,4 @@ pizza-tower|Pizza tower|https://www.autistici.org/burnedprojects/NoiseUpdate/|pi
 run-2|Run 2|https://www.run3.school/game/run-2/|run 2.png|run|run|2
 rooftop-snippers|Roof Top Snippers|https://pizzaedition.win/assets/allgames/rooftop-snipers/index.html|rooftop.png|roof|top|snippers
 tiny-towers|Tiny Towers|https://pizzaedition.win/assets/allgames/tinytowers/index.html|towertiny.png|tower|tiny|towers
-brotato|Brotato|https://gnmath.global.ssl.fastly.net/?id=723|brotato.png|bro|tato|brotato
+brotato|Brotato|brotato.html|brotato.png|bro|tato|brotato

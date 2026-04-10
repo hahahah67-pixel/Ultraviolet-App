@@ -33,7 +33,7 @@ async function loadGames() {
 					terms:   parts.slice(1).map(t => t.trim().toLowerCase())
 				};
 			})
-			.filter(g => g.id && g.url && g.url.startsWith("http"));
+			.filter(g => g.id && g.url);
 	} catch (e) {
 		console.warn("Failed to load games.txt:", e);
 		games = [];
@@ -63,7 +63,7 @@ function getWispUrl() {
 }
 
 async function proxyUrl(rawUrl) {
-	const proxy   = localStorage.getItem("proxy-choice") || "sj";
+	const proxy   = localStorage.getItem("fish-proxy-choice") || "sj";
 	const wispUrl = getWispUrl();
 
 	if (proxy === "uv") {
@@ -133,11 +133,18 @@ async function openGame(id) {
 
 	try { await registerSW(); } catch(e) { console.warn("SW reg:", e); }
 
-	const proxied = await proxyUrl(g.url);
+	let frameSrc;
+	if (g.url.startsWith("http")) {
+		// Remote URL — proxy it normally through UV or SJ
+		frameSrc = await proxyUrl(g.url);
+	} else {
+		// Local file — serve directly from public/game files/
+		frameSrc = "/game%20files/" + encodeURIComponent(g.url);
+	}
 
 	gamesPage.style.display = "none";
 	gamePage.classList.add("active");
-	gameFrame.src = proxied;
+	gameFrame.src = frameSrc;
 
 	history.pushState({ game: id }, "", `/math?game=${id}`);
 }

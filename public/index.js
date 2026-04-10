@@ -58,11 +58,8 @@ form.addEventListener("submit", async (event) => {
 		throw err;
 	}
 
-	// Apply search engine from settings before building URL
-	const savedEngine = localStorage.getItem("fish-search-engine");
-	if (savedEngine) searchEngine.value = savedEngine;
-
-	const url = search(address.value, searchEngine.value);
+	const engineUrl = localStorage.getItem("fish-search-engine") || searchEngine.value;
+	const url = search(address.value, engineUrl);
 	const wispUrl = getWispUrl();
 
 	if (activeProxy === "uv") {

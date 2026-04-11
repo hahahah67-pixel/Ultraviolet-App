@@ -39,3 +39,4 @@ rooftop-snippers|Roof Top Snippers|https://pizzaedition.win/assets/allgames/roof
 tiny-towers|Tiny Towers|https://pizzaedition.win/assets/allgames/tinytowers/index.html|towertiny.png|tower|tiny|towers
 brotato|Brotato|brotato.html|brotato.png|bro|tato|brotato
 friday-night-funkin|Friday Night Funkin|friday.html|friday.png|fri|day|night
+alien-homid|Alien homid|alien.html|alien.png|alien|homid|alien

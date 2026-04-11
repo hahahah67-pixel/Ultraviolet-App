@@ -14,7 +14,6 @@ path-to-glory|Path to Glory|https://pizzaedition.win/assets/allgames/pathtoglory
 subway-surfers|Subway Surfers|https://sz-games.github.io/games/game.html?game=https://dddavit.github.io/subway/|subway surfers logo.png|subway surfers|subway|surfers|surf|runner|endless runner
 slope|Slope|https://pizzaedition.win/assets/allgames/slope/index.html|slope game.png|slope|ball roll|ball|slope
 tanuki-sunset|Tanuki Sunset|https://pizzaedition.win/assets/allgames/tanuki-sunset/games/tanuki/index.html|sunset game.png|tanuki sunset|sunset|raccoon|tanuki|sunset
-temple-of-boom|Temple of Boom|REPLACE_WITH_TEMPLE_URL|temple of boom.png|temple of boom|temple boom|boom|temple
 # ── PLACEHOLDERS — fill these in when you have a new game ──────────────────
 temple-of-boom|Temple of Boom|https://pizzaedition.win/assets/allgames/templeofboom/index.html|boom.png|temple of boom|temple boom|boom|temple
 cluster-rush|Cluster Rush|https://pizzaedition.win/assets/allgames/ClusterRush/index.html|cluster.png|cluster rush|cluster rush|rush|cluster
@@ -39,3 +38,4 @@ run-2|Run 2|https://www.run3.school/game/run-2/|run 2.png|run|run|2
 rooftop-snippers|Roof Top Snippers|https://pizzaedition.win/assets/allgames/rooftop-snipers/index.html|rooftop.png|roof|top|snippers
 tiny-towers|Tiny Towers|https://pizzaedition.win/assets/allgames/tinytowers/index.html|towertiny.png|tower|tiny|towers
 brotato|Brotato|brotato.html|brotato.png|bro|tato|brotato
+friday-night-funkin|Friday Night Funkin|friday.html|friday.png|fri|day|night

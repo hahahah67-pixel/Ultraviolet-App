@@ -40,4 +40,5 @@ tiny-towers|Tiny Towers|https://pizzaedition.win/assets/allgames/tinytowers/inde
 brotato|Brotato|brotato.html|brotato.png|bro|tato|brotato
 friday-night-funkin|Friday Night Funkin|friday.html|friday.png|fri|day|night
 alien-homid|Alien homid|alien.html|alien.png|alien|homid|alien
-mario|Super Mario World|emu games/mario/index.html|mario.png|mario|super mario|snes|nintendo
+mario|Super Mario World|emu games/mario.html|mario.png|mario|snes
+

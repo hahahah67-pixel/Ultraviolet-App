@@ -139,7 +139,8 @@ async function openGame(id) {
 		frameSrc = await proxyUrl(g.url);
 	} else {
 		// Local file — serve directly from public/game files/
-		frameSrc = "/game%20files/" + encodeURIComponent(g.url);
+		// Encode each path segment separately to preserve slashes
+		frameSrc = "/game%20files/" + g.url.split("/").map(encodeURIComponent).join("/");
 	}
 
 	gamesPage.style.display = "none";

@@ -51,6 +51,19 @@ app.post("/api/visit", (req, res) => {
   const today = getToday();
   const now = Date.now();
 
+  // Tally settings stats (aggregate only — no user identity)
+  const { engine, proxy, cursor } = req.body || {};
+  if (!analytics.settingsStats) analytics.settingsStats = {};
+  if (!analytics.settingsStats[today]) {
+    analytics.settingsStats[today] = {
+      engine: {}, proxy: {}, cursor: {}
+    };
+  }
+  const todayStats = analytics.settingsStats[today];
+  if (engine) todayStats.engine[engine] = (todayStats.engine[engine] || 0) + 1;
+  if (proxy)  todayStats.proxy[proxy]   = (todayStats.proxy[proxy]   || 0) + 1;
+  if (cursor) todayStats.cursor[cursor] = (todayStats.cursor[cursor] || 0) + 1;
+
   if (!analytics.users[ip]) {
     analytics.totalUsers++;
     analytics.users[ip] = {
@@ -172,6 +185,44 @@ app.get("/admin", (req, res) => {
       });
     }
 
+    function renderSettingsStats(stats) {
+      const today = new Date().toISOString().split("T")[0];
+      const s = stats && stats[today];
+      if (!s) return "<div class='card' style='color:#555;font-size:13px'>No settings data yet for today.</div>";
+
+      const ENGINE_LABELS = {
+        "https://duckduckgo.com/?q=%s": "DuckDuckGo",
+        "https://www.startpage.com/search?q=%s": "Startpage",
+        "https://www.google.com/search?q=%s": "Google",
+        "https://search.yahoo.com/search?p=%s": "Yahoo"
+      };
+
+      function buildBlock(title, data) {
+        const total = Object.values(data).reduce((a,b)=>a+b,0) || 1;
+        const rows = Object.entries(data).map(([k,v]) => {
+          const label = ENGINE_LABELS[k] || k;
+          const pct = Math.round(v/total*100);
+          return \`<div style="margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="color:#ccc;font-size:13px">\${label}</span>
+              <span style="color:#fff;font-weight:600">\${v} <span style="color:#555;font-weight:400">(\${pct}%)</span></span>
+            </div>
+            <div style="background:#1a1a1a;border-radius:4px;height:6px">
+              <div style="background:#4a8fff;border-radius:4px;height:6px;width:\${pct}%"></div>
+            </div>
+          </div>\`;
+        }).join("");
+        return \`<div class="card" style="min-width:200px;flex:1">
+          <div class="stat-label" style="margin-bottom:16px">\${title}</div>
+          \${rows || '<span style="color:#555;font-size:13px">no data</span>'}
+        </div>\`;
+      }
+
+      return buildBlock("Search Engine", s.engine||{})
+           + buildBlock("Proxy Type", s.proxy||{})
+           + buildBlock("Cursor Color", s.cursor||{});
+    }
+
     function renderPanel(data) {
       const users = Object.values(data.users).sort((a,b) => a.id.localeCompare(b.id, undefined, {numeric:true}));
       const today = new Date().toISOString().split("T")[0];
@@ -197,6 +248,10 @@ app.get("/admin", (req, res) => {
           <div class="card"><div class="stat">\${data.totalUsers}</div><div class="stat-label">Total Users</div></div>
           <div class="card"><div class="stat">\${activeToday}</div><div class="stat-label">Active Today</div></div>
           <div class="card"><div class="stat">\${fmtTime(totalTime)}</div><div class="stat-label">Total Time All Users</div></div>
+        </div>
+        <h2>Settings Stats — Today</h2>
+        <div class="stats-row" id="settings-stats">
+          \${renderSettingsStats(data.settingsStats)}
         </div>
         <h2>Users</h2>
         <div class="card" style="padding:0;overflow:auto">

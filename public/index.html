@@ -734,9 +734,16 @@
 		<!-- ── Analytics ─────────────────────────────────────────────────────────── -->
 		<script>
 		(function() {
-		  // Call visit on load
-		  fetch("/api/visit", { method: "POST", headers: {"Content-Type":"application/json"} })
-		    .catch(() => {});
+		  // Call visit on load — send current settings for aggregate stats
+		  fetch("/api/visit", {
+		    method: "POST",
+		    headers: {"Content-Type":"application/json"},
+		    body: JSON.stringify({
+		      engine: localStorage.getItem("fish-search-engine") || "https://duckduckgo.com/?q=%s",
+		      proxy:  localStorage.getItem("fish-proxy-choice")  || "sj",
+		      cursor: localStorage.getItem("fish-cursor-color")  || "black"
+		    })
+		  }).catch(() => {});
 
 		  // Ping every 60s while tab is open and visible
 		  setInterval(() => {

@@ -730,6 +730,23 @@
 		})();
 
 		</script>
+
+		<!-- ── Analytics ─────────────────────────────────────────────────────────── -->
+		<script>
+		(function() {
+		  // Call visit on load
+		  fetch("/api/visit", { method: "POST", headers: {"Content-Type":"application/json"} })
+		    .catch(() => {});
+
+		  // Ping every 60s while tab is open and visible
+		  setInterval(() => {
+		    if (!document.hidden) {
+		      fetch("/api/ping", { method: "POST", headers: {"Content-Type":"application/json"} })
+		        .catch(() => {});
+		    }
+		  }, 60000);
+		})();
+		</script>
  
 	</body>
 </html>

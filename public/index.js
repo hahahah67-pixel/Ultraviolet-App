@@ -62,14 +62,24 @@ form.addEventListener("submit", async (event) => {
 	const url = search(address.value, engineUrl);
 	const wispUrl = getWispUrl();
 
-	// Send domain to analytics (aggregate only — no user identity)
+	// Send domain to analytics — only track direct site visits, not search queries
 	try {
-		const _domain = new URL(url).hostname;
-		fetch("/api/domain", {
-			method: "POST",
-			headers: {"Content-Type":"application/json"},
-			body: JSON.stringify({ domain: _domain })
-		}).catch(() => {});
+		const _rawInput = address.value.trim();
+		// Only track if user typed a URL directly (not a search term)
+		// search() returns a search engine URL for plain text queries
+		// We detect direct URLs by checking if the raw input parses as a URL
+		let _trackDomain = null;
+		try {
+			const _parsed = new URL(_rawInput.startsWith("http") ? _rawInput : "https://" + _rawInput);
+			if (_parsed.hostname.includes(".")) _trackDomain = _parsed.hostname.replace(/^www\./, "");
+		} catch(e) {}
+		if (_trackDomain) {
+			fetch("/api/domain", {
+				method: "POST",
+				headers: {"Content-Type":"application/json"},
+				body: JSON.stringify({ domain: _trackDomain })
+			}).catch(() => {});
+		}
 	} catch(e) {}
 
 	if (activeProxy === "uv") {

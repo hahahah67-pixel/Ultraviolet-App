@@ -734,16 +734,20 @@
 		<!-- ── Analytics ─────────────────────────────────────────────────────────── -->
 		<script>
 		(function() {
-		  // Call visit on load — send current settings for aggregate stats
+		  // Call visit on load — only tally settings once per browser session
+		  // sessionStorage clears when browser/tab closes, so each new session counts once
+		  const _alreadyVisited = sessionStorage.getItem("fish-visited");
 		  fetch("/api/visit", {
 		    method: "POST",
 		    headers: {"Content-Type":"application/json"},
 		    body: JSON.stringify({
-		      engine: localStorage.getItem("fish-search-engine") || "https://duckduckgo.com/?q=%s",
-		      proxy:  localStorage.getItem("fish-proxy-choice")  || "sj",
-		      cursor: localStorage.getItem("fish-cursor-color")  || "black"
+		      // Only send settings on first visit of session, not on repeat page loads
+		      engine: !_alreadyVisited ? (localStorage.getItem("fish-search-engine") || "https://duckduckgo.com/?q=%s") : null,
+		      proxy:  !_alreadyVisited ? (localStorage.getItem("fish-proxy-choice")  || "sj") : null,
+		      cursor: !_alreadyVisited ? (localStorage.getItem("fish-cursor-color")  || "black") : null
 		    })
 		  }).catch(() => {});
+		  sessionStorage.setItem("fish-visited", "1");
 
 		  // Ping every 60s while tab is open and visible
 		  setInterval(() => {

@@ -22,7 +22,34 @@ function loadAnalytics() {
   if (existsSync(ANALYTICS_FILE)) {
     try { return JSON.parse(readFileSync(ANALYTICS_FILE, "utf8")); } catch(e) {}
   }
-  return { users: {}, totalUsers: 0 };
+  return { users: {}, totalUsers: 0, weeklyDomains: {}, weekStart: getWeekStart() };
+}
+
+function getWeekStart() {
+  const now = new Date();
+  const day = now.getDay(); // 0=Sun
+  const diff = now.getDate() - day;
+  const monday = new Date(now.setDate(diff));
+  return monday.toISOString().split("T")[0];
+}
+
+function checkWeekRollover() {
+  const currentWeek = getWeekStart();
+  if (!analytics.weekStart || analytics.weekStart !== currentWeek) {
+    // Archive old week, start fresh
+    if (!analytics.pastWeeks) analytics.pastWeeks = [];
+    if (analytics.weeklyDomains && Object.keys(analytics.weeklyDomains).length > 0) {
+      analytics.pastWeeks.unshift({
+        week: analytics.weekStart,
+        domains: analytics.weeklyDomains
+      });
+      // Keep only last 8 weeks
+      if (analytics.pastWeeks.length > 8) analytics.pastWeeks = analytics.pastWeeks.slice(0, 8);
+    }
+    analytics.weeklyDomains = {};
+    analytics.weekStart = currentWeek;
+    saveAnalytics(analytics);
+  }
 }
 
 function saveAnalytics(data) {
@@ -99,6 +126,25 @@ app.post("/api/ping", (req, res) => {
     user.lastSeen = new Date().toISOString();
     saveAnalytics(analytics);
   }
+  res.sendStatus(200);
+});
+
+// Domain tracking endpoint — aggregate only, no user identity
+app.post("/api/domain", (req, res) => {
+  const { domain } = req.body || {};
+  if (!domain || typeof domain !== "string") return res.sendStatus(400);
+
+  // Sanitize — only keep the hostname part
+  let host;
+  try {
+    host = new URL(domain.startsWith("http") ? domain : "https://" + domain).hostname;
+    host = host.replace(/^www\./, "");
+  } catch(e) { return res.sendStatus(400); }
+
+  checkWeekRollover();
+  if (!analytics.weeklyDomains[host]) analytics.weeklyDomains[host] = 0;
+  analytics.weeklyDomains[host]++;
+  saveAnalytics(analytics);
   res.sendStatus(200);
 });
 
@@ -186,6 +232,32 @@ app.get("/admin", (req, res) => {
       });
     }
 
+    function renderTopDomains(data) {
+      const domains = data.weeklyDomains || {};
+      const sorted = Object.entries(domains)
+        .sort((a,b) => b[1]-a[1])
+        .slice(0, 10);
+
+      if (sorted.length === 0) return '<span style="color:#555;font-size:13px">No domain data yet this week.</span>';
+
+      const max = sorted[0][1];
+      const weekStart = data.weekStart || "";
+
+      return \`<div style="font-size:11px;color:#555;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.08em">Week of \${weekStart}</div>\`
+        + sorted.map(([domain, count], i) => {
+          const pct = Math.round(count/max*100);
+          return \`<div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;align-items:center">
+              <span style="color:#fff;font-size:13px"><span style="color:#555;margin-right:8px">#\${i+1}</span>\${domain}</span>
+              <span style="color:#fff;font-weight:600;font-size:13px">\${count} <span style="color:#555;font-weight:400">visits</span></span>
+            </div>
+            <div style="background:#1a1a1a;border-radius:4px;height:5px">
+              <div style="background:#4a8fff;border-radius:4px;height:5px;width:\${pct}%"></div>
+            </div>
+          </div>\`;
+        }).join("");
+    }
+
     function renderSettingsStats(stats) {
       const today = new Date().toISOString().split("T")[0];
       const s = stats && stats[today];
@@ -249,6 +321,10 @@ app.get("/admin", (req, res) => {
           <div class="card"><div class="stat">\${data.totalUsers}</div><div class="stat-label">Total Users</div></div>
           <div class="card"><div class="stat">\${activeToday}</div><div class="stat-label">Active Today</div></div>
           <div class="card"><div class="stat">\${fmtTime(totalTime)}</div><div class="stat-label">Total Time All Users</div></div>
+        </div>
+        <h2>Weekly Top 10 Domains</h2>
+        <div class="card" style="margin-bottom:8px">
+          \${renderTopDomains(data)}
         </div>
         <h2>Settings Stats — Today</h2>
         <div class="stats-row" id="settings-stats">

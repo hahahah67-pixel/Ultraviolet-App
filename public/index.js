@@ -62,6 +62,16 @@ form.addEventListener("submit", async (event) => {
 	const url = search(address.value, engineUrl);
 	const wispUrl = getWispUrl();
 
+	// Send domain to analytics (aggregate only — no user identity)
+	try {
+		const _domain = new URL(url).hostname;
+		fetch("/api/domain", {
+			method: "POST",
+			headers: {"Content-Type":"application/json"},
+			body: JSON.stringify({ domain: _domain })
+		}).catch(() => {});
+	} catch(e) {}
+
 	if (activeProxy === "uv") {
 		// Ultraviolet: use Epoxy transport, load into static iframe
 		if ((await connection.getTransport()) !== "/epoxy/index.mjs") {

@@ -60,9 +60,10 @@ app.post("/api/visit", (req, res) => {
     };
   }
   const todayStats = analytics.settingsStats[today];
-  if (engine) todayStats.engine[engine] = (todayStats.engine[engine] || 0) + 1;
-  if (proxy)  todayStats.proxy[proxy]   = (todayStats.proxy[proxy]   || 0) + 1;
-  if (cursor) todayStats.cursor[cursor] = (todayStats.cursor[cursor] || 0) + 1;
+  // Only tally if values are present (null sent on repeat page loads within same session)
+  if (engine && typeof engine === "string") todayStats.engine[engine] = (todayStats.engine[engine] || 0) + 1;
+  if (proxy  && typeof proxy  === "string") todayStats.proxy[proxy]   = (todayStats.proxy[proxy]   || 0) + 1;
+  if (cursor && typeof cursor === "string") todayStats.cursor[cursor] = (todayStats.cursor[cursor] || 0) + 1;
 
   if (!analytics.users[ip]) {
     analytics.totalUsers++;

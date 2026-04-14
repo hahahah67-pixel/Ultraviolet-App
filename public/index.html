@@ -33,6 +33,15 @@
 	</head>
 
 	<body>
+		<!-- ── Loading screen ───────────────────────────────────────────────────── -->
+		<div id="fish-loader">
+			<canvas id="loader-stars"></canvas>
+			<div id="loader-content">
+				<div id="loader-msg"></div>
+				<div id="loader-bar-wrap"><div id="loader-bar"></div></div>
+			</div>
+		</div>
+
 		<!-- Starfield sits behind everything -->
 		<canvas id="starfield"></canvas>
 		<!-- Custom background layer — sits behind everything -->
@@ -144,6 +153,70 @@
 		</div>
 
 		<style>
+		/* ── Loading screen ─────────────────────────────────────────────────────── */
+		@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@500&display=swap");
+
+		#fish-loader {
+		  position: fixed;
+		  top: 0; left: 0;
+		  width: 100%; height: 100%;
+		  background: #000;
+		  z-index: 999999;
+		  display: flex;
+		  align-items: center;
+		  justify-content: center;
+		  transition: opacity 0.3s ease;
+		}
+		#fish-loader.hide {
+		  opacity: 0;
+		  pointer-events: none;
+		}
+		#loader-stars {
+		  position: absolute;
+		  top: 0; left: 0;
+		  width: 100%; height: 100%;
+		  pointer-events: none;
+		}
+		#loader-content {
+		  position: relative;
+		  z-index: 1;
+		  display: flex;
+		  flex-direction: column;
+		  align-items: center;
+		  gap: 22px;
+		}
+		#loader-msg {
+		  font-family: "Caveat", "Comic Sans MS", cursive;
+		  font-size: 26px;
+		  font-weight: 500;
+		  color: rgba(255,255,255,0.9);
+		  text-align: center;
+		  max-width: 340px;
+		  line-height: 1.4;
+		  letter-spacing: 0.02em;
+		  opacity: 0;
+		  transform: translateY(6px);
+		  transition: opacity 0.5s ease, transform 0.5s ease;
+		}
+		#loader-msg.show {
+		  opacity: 1;
+		  transform: translateY(0);
+		}
+		#loader-bar-wrap {
+		  width: 220px;
+		  height: 6px;
+		  background: rgba(255,255,255,0.1);
+		  border-radius: 999px;
+		  overflow: hidden;
+		}
+		#loader-bar {
+		  height: 100%;
+		  width: 0%;
+		  background: #4a8fff;
+		  border-radius: 999px;
+		  transition: width 2.2s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
 		/* Starfield */
 		#starfield {
 		  position: fixed;
@@ -453,6 +526,66 @@
 		</style>
 
 		<script>
+		// ── Loading screen ────────────────────────────────────────────────────────
+		(function() {
+		  const loader  = document.getElementById("fish-loader");
+		  const msgEl   = document.getElementById("loader-msg");
+		  const bar     = document.getElementById("loader-bar");
+		  const lCanvas = document.getElementById("loader-stars");
+		  const lCtx    = lCanvas.getContext("2d");
+
+		  // Starfield on loader canvas
+		  lCanvas.width  = window.innerWidth;
+		  lCanvas.height = window.innerHeight;
+		  const lStars = Array.from({length: 160}, () => ({
+		    x: Math.random() * lCanvas.width,
+		    y: Math.random() * lCanvas.height,
+		    r: Math.random() * 1.4 + 0.3,
+		    o: Math.random() * 0.6 + 0.2,
+		    p: Math.random() * Math.PI * 2,
+		    ps: Math.random() * 0.015 + 0.005
+		  }));
+		  let lRunning = true;
+		  (function lDraw() {
+		    if (!lRunning) return;
+		    lCtx.clearRect(0, 0, lCanvas.width, lCanvas.height);
+		    lStars.forEach(s => {
+		      s.y += 0.25;
+		      if (s.y > lCanvas.height + 2) { s.y = -2; s.x = Math.random() * lCanvas.width; }
+		      s.p += s.ps;
+		      const a = s.o * (0.7 + 0.3 * Math.sin(s.p));
+		      lCtx.beginPath();
+		      lCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+		      lCtx.fillStyle = "rgba(255,255,255," + a + ")";
+		      lCtx.fill();
+		    });
+		    requestAnimationFrame(lDraw);
+		  })();
+
+		  // Fetch random message
+		  fetch("/messages.txt")
+		    .then(r => r.text())
+		    .then(text => {
+		      const lines = text.split("\n").map(l => l.trim()).filter(l => l && !l.startsWith("#"));
+		      msgEl.textContent = lines[Math.floor(Math.random() * lines.length)] || "Loading...";
+		      setTimeout(() => msgEl.classList.add("show"), 80);
+		    })
+		    .catch(() => {
+		      msgEl.textContent = "Loading Fish Proxy... 🐟";
+		      setTimeout(() => msgEl.classList.add("show"), 80);
+		    });
+
+		  // Start progress bar filling — takes 3 seconds
+		  setTimeout(() => { bar.style.width = "100%"; }, 50);
+
+		  // Fade out after 2.2s — quick and natural
+		  setTimeout(() => {
+		    lRunning = false;
+		    loader.classList.add("hide");
+		    setTimeout(() => { loader.style.display = "none"; }, 320);
+		  }, 2200);
+		})();
+
 		// ── Starfield ─────────────────────────────────────────────────────────
 		(function () {
 		  const canvas = document.getElementById("starfield");

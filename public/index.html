@@ -32,7 +32,7 @@
 		<script src="/scram/scramjet.all.js"></script>
 	</head>
 
-	<body>
+	<body style="overflow:hidden">
 		<!-- ── Loading screen ───────────────────────────────────────────────────── -->
 		<div id="fish-loader">
 			<canvas id="loader-stars"></canvas>
@@ -238,6 +238,7 @@
 		  padding: 24px 16px;
 		  box-sizing: border-box;
 		  transition: opacity .15s ease;
+		  will-change: opacity;
 		}
 
 		/* Hide home UI when a proxy frame is active */
@@ -255,6 +256,7 @@
 		  height: auto;
 		  max-height: 170px;
 		  object-fit: contain;
+		  display: block;
 		}
 
 		/* Description */
@@ -519,6 +521,8 @@
 		  letter-spacing: .03em;
 		}
 
+		img { max-width: 100%; }
+
 		@keyframes fadeIn {
 		  from { opacity: 0; transform: translateY(6px); }
 		  to   { opacity: 1; transform: translateY(0); }
@@ -582,7 +586,7 @@
 		  setTimeout(() => {
 		    lRunning = false;
 		    loader.classList.add("hide");
-		    setTimeout(() => { loader.style.display = "none"; }, 320);
+		    setTimeout(() => { loader.style.display = "none"; document.body.style.overflow = ""; }, 320);
 		  }, 2200);
 		})();
 

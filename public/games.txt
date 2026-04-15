@@ -41,4 +41,4 @@ brotato|Brotato|brotato.html|brotato.png|bro|tato|brotato
 friday-night-funkin|Friday Night Funkin|friday.html|friday.png|fri|day|night
 alien-homid|Alien homid|alien.html|alien.png|alien|homid|alien
 mario|Super Mario World|emu games/Mario/mario.html|mario.png|mario|snes|super mario|nintendo
-
+escape-road-3|Escape Road 3|https://gamea.azgame.io/escape-road-3/|escape3.png|escape|road|3

@@ -44,3 +44,5 @@ mario|Super Mario World|emu games/Mario/mario.html|mario.png|mario|snes|super ma
 escape-road-3|Escape Road 3|https://gamea.azgame.io/escape-road-3/|escape3.png|escape|road|3
 hobo 1|Hobo-1|hobo1.html|hobo.png|1|hobo|hobo
 hobo-2|Hobo 2|hobo2.html|hobo2.png|2|hobo|hobo
+hobo-3|Hobo 3|hobo3.html|hobo3.png|3|hobo|hobo
+

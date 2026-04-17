@@ -47,3 +47,4 @@ hobo-2|Hobo 2|hobo2.html|hobo2.png|2|hobo|hobo
 hobo-3|Hobo 3|hobo3.html|hobo3.png|3|hobo|hobo
 hobo-4|Hobo 4|hobo4.html|hobo4.png|4|hobo|hobo
 mario-all-stars|Super Mario All Stars|emu games/Mario all stars/Mario all stars.html|mario all stars.png|mario|snes|all stars|nintendo
+super-monkey-ball-JR|Super Monkey Ball JR|monkey ball.html|monkeyJR.png|monkey|ball|ball|mon

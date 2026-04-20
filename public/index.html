@@ -812,17 +812,6 @@
 
 		// ── Apply settings from localStorage ─────────────────────────────────────
 		(function applySettings() {
-		  // Tab cloak — apply saved title and favicon
-		  const cloakTitle = localStorage.getItem("fish-cloak-title");
-		  const cloakIcon  = localStorage.getItem("fish-cloak-icon");
-		  if (cloakTitle) document.title = cloakTitle;
-		  if (cloakIcon) {
-		    let _link = document.querySelector("link[rel*='icon']");
-		    if (!_link) { _link = document.createElement("link"); _link.rel = "shortcut icon"; document.head.appendChild(_link); }
-		    _link.type = "image/png";
-		    _link.href = cloakIcon;
-		  }
-
 		  // Search engine
 		  const engine = localStorage.getItem("fish-search-engine");
 		  if (engine) {
@@ -909,3 +898,4 @@
  
 	</body>
 </html>
+

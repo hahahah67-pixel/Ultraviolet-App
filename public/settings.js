@@ -63,7 +63,7 @@ document.getElementById("save-btn").addEventListener("click", () => {
     + '<path d="M3,1 L3,24 Q0,31 3,37 Q7,31 10,25 Q14,37 18,37 Q16,30 12,23 L20,20 Z" fill="' + hex + '"/>'
     + '</svg>';
   document.body.appendChild(el);
-  document.body.classList.add("fish-cursor-on");
+  document.body.style.cursor = "none";
 
   document.addEventListener("mousemove", (e) => {
     el.style.left = e.clientX + "px";
@@ -130,68 +130,3 @@ document.getElementById("save-btn").addEventListener("click", () => {
   requestAnimationFrame(draw);
 })();
 
-// ── Tab cloak ─────────────────────────────────────────────────────────────
-(function initCloak() {
-  const KEY_CLOAK_TITLE = "fish-cloak-title";
-  const KEY_CLOAK_ICON  = "fish-cloak-icon";
-
-  const titleInput  = document.getElementById("cloak-title-input");
-  const saveBtn     = document.getElementById("cloak-save-btn");
-  const resetBtn    = document.getElementById("cloak-reset-btn");
-  const iconOptions = document.querySelectorAll(".cloak-icon-option");
-
-  let selectedIcon = localStorage.getItem(KEY_CLOAK_ICON) || null;
-
-  // Pre-fill saved values
-  const savedTitle = localStorage.getItem(KEY_CLOAK_TITLE);
-  if (savedTitle) titleInput.value = savedTitle;
-  if (selectedIcon) {
-    iconOptions.forEach(opt => {
-      if (opt.dataset.icon === selectedIcon) opt.classList.add("selected");
-    });
-  }
-
-  // Icon selection
-  iconOptions.forEach(opt => {
-    opt.addEventListener("click", () => {
-      iconOptions.forEach(o => o.classList.remove("selected"));
-      opt.classList.add("selected");
-      selectedIcon = opt.dataset.icon;
-    });
-  });
-
-  // Save cloak — applies immediately to this tab
-  saveBtn.addEventListener("click", () => {
-    const title = titleInput.value.trim();
-    if (title) {
-      document.title = title;
-      localStorage.setItem(KEY_CLOAK_TITLE, title);
-    }
-    if (selectedIcon) {
-      setFavicon(selectedIcon);
-      localStorage.setItem(KEY_CLOAK_ICON, selectedIcon);
-    }
-  });
-
-  // Reset — back to study.com defaults
-  resetBtn.addEventListener("click", () => {
-    localStorage.removeItem(KEY_CLOAK_TITLE);
-    localStorage.removeItem(KEY_CLOAK_ICON);
-    titleInput.value = "";
-    iconOptions.forEach(o => o.classList.remove("selected"));
-    selectedIcon = null;
-    document.title = "Online Courses for College Credit, Exam Prep & K-12 | Study.com";
-    setFavicon("https://study.com/favicon.ico");
-  });
-
-  function setFavicon(href) {
-    let link = document.querySelector("link[rel*='icon']");
-    if (!link) {
-      link = document.createElement("link");
-      link.rel = "shortcut icon";
-      document.head.appendChild(link);
-    }
-    link.type = "image/png";
-    link.href = href;
-  }
-})();

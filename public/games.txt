@@ -50,4 +50,4 @@ mario-all-stars|Super Mario All Stars|emu games/Mario all stars/Mario all stars.
 super-monkey-ball-JR|Super Monkey Ball JR|monkey ball.html|monkeyJR.png|monkey|ball|ball|mon
 ruffle|Ruffle|ruffle.html|ruffle.png|ruffle|flash|ruff|le
 emulator-js|Emulator-Js|emu-js.html|emu-js.png|emu|emulator|emulate|js
-newgrounds|Newgrounds|newgrounds.com|newgrounds.png|new|grounds|ground|new
+newgrounds|Newgrounds|https://www.newgrounds.com|newgrounds.png|new|grounds|ground|new

@@ -54,3 +54,4 @@ newgrounds|Newgrounds|https://www.newgrounds.com|newgrounds.png|new|grounds|grou
 flash-leacgy|Flash-Leacgy|https://www.flashleagcy.com|flashy-l.png|flash|flash|leacgy|flash
 picos-school|Picos-School|pico.html|pico.png|pico|school|pico|picos
 pokemon-emraled|Pokemon-Emeralad|pok-em.html|pok-em.png|pok|pokemon|emerald|emerald
+celeste|Celeste|celeste.html|celeste.png|celste|celeste|celeste|celeste

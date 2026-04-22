@@ -54,57 +54,9 @@
 						<span class="color-dot" style="background:#2ecc71"></span>
 					</label>
 				</div>
-			</div>
 
-			<!-- Proxy Type box -->
-			<!-- Proxy Type box -->
-			<div class="settings-box" id="box-proxy">
-				<div class="box-label">proxy type</div>
-				<div class="radio-group" id="proxy-group">
-					<label class="radio-row">
-						<input type="radio" name="proxy" value="sj" />
-						<span>Scramjet</span>
-						<span class="badge default-badge">default</span>
-					</label>
-					<label class="radio-row">
-						<input type="radio" name="proxy" value="uv" />
-						<span>Ultraviolet</span>
-					</label>
-				</div>
-			</div>
-
-			<!-- Tab Cloak box -->
-			<!-- Tab Cloak box -->
-			<div class="settings-box" id="box-cloak">
-				<div class="box-label">tab cloak</div>
-
-				<div id="cloak-name-row">
-					<input
-						id="cloak-title-input"
-						type="text"
-						placeholder="Tab name..."
-						autocomplete="off"
-						maxlength="60"
-					/>
-				</div>
-
-				<div id="cloak-icons">
-					<div class="cloak-icon-option" data-icon="images/google.png" title="Google">
-						<img src="images/google.png" alt="Google"/>
-					</div>
-					<div class="cloak-icon-option" data-icon="images/classroom.png" title="Google Classroom">
-						<img src="images/classroom.png" alt="Google Classroom"/>
-					</div>
-					<div class="cloak-icon-option" data-icon="images/i-ready.png" title="i-Ready">
-						<img src="images/i-ready.png" alt="i-Ready"/>
-					</div>
-				</div>
-
-				<div id="cloak-btn-row">
-					<button id="cloak-save-btn">save cloak</button>
-					<button id="cloak-reset-btn">reset</button>
-				</div>
-			</div>
+			<!-- Save button (below cursor) -->
+			<button id="save-btn">save</button>
 
 			<!-- Search Engine box -->
 			<!-- Search Engine box -->
@@ -129,12 +81,40 @@
 						<span>Yahoo Search</span>
 					</label>
 				</div>
-			</div>
+
+			<!-- Proxy Type box -->
+			<!-- Proxy Type box -->
+			<div class="settings-box" id="box-proxy">
+				<div class="box-label">proxy type</div>
+				<div class="radio-group" id="proxy-group">
+					<label class="radio-row">
+						<input type="radio" name="proxy" value="sj" />
+						<span>Scramjet</span>
+						<span class="badge default-badge">default</span>
+					</label>
+					<label class="radio-row">
+						<input type="radio" name="proxy" value="uv" />
+						<span>Ultraviolet</span>
+					</label>
+				</div>
+
+			<!-- Tab Cloak box -->
+			<!-- Tab Cloak box -->
+			<div class="settings-box" id="box-cloak">
+				<div class="box-label">tab cloak</div>
+
+				<div id="cloak-name-row">
+					<input
+						id="cloak-title-input"
+						type="text"
+						placeholder="Tab name..."
+						autocomplete="off"
+						maxlength="60"
+					/>
+				</div>
 
 		</div>
 
-		<!-- Save button -->
-		<button id="save-btn">save</button>
 
 		<script src="settings.js"></script>
 	</body>

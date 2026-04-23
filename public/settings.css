@@ -9,9 +9,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Suppress cursor:pointer when fish cursor active */
-body.fish-cursor-on * { cursor: none !important; }
-
 /* ── Starfield ───────────────────────────────────────────────────────────── */
 #starfield {
   position: fixed;
@@ -33,37 +30,16 @@ body.fish-cursor-on * { cursor: none !important; }
 }
 
 /* ── Title ───────────────────────────────────────────────────────────────── */
-#settings-home-btn {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  margin: 36px 0 0 40px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
-  text-decoration: none;
-}
-#settings-home-btn:hover {
-  background: rgba(255,255,255,0.12);
-  border-color: rgba(255,255,255,0.25);
-}
-
 #settings-title {
   position: relative;
   z-index: 1;
   color: #fff;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  padding: 44px 44px 24px;
-  opacity: 0.7;
+  padding: 44px 44px 32px;
+  opacity: 0.9;
 }
 
 /* ── Settings grid ───────────────────────────────────────────────────────── */
@@ -74,7 +50,7 @@ body.fish-cursor-on * { cursor: none !important; }
   flex-wrap: wrap;
   gap: 14px;
   padding: 0 44px;
-  max-width: 1000px;
+  max-width: 900px;
 }
 
 /* ── Individual box ──────────────────────────────────────────────────────── */
@@ -82,8 +58,8 @@ body.fish-cursor-on * { cursor: none !important; }
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 18px;
-  padding: 32px 36px;
-  min-width: 180px;
+  padding: 28px 32px;
+  min-width: 220px;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   transition: border-color 0.2s ease, background 0.2s ease;
@@ -156,10 +132,10 @@ body.fish-cursor-on * { cursor: none !important; }
   position: relative;
   z-index: 1;
   display: block;
-  margin: 14px 0 0;
+  margin: 32px 44px;
   padding: 12px 44px;
-  background: #4a8fff;
-  color: #fff;
+  background: rgba(255,255,255,0.9);
+  color: #000;
   font-family: inherit;
   font-size: 12px;
   font-weight: 700;
@@ -167,123 +143,16 @@ body.fish-cursor-on * { cursor: none !important; }
   text-transform: uppercase;
   border: none;
   border-radius: 999px;
-  cursor: auto;
+  cursor: pointer;
   transition: background 0.15s ease, transform 0.1s ease;
 }
 
 #save-btn:hover {
-  background: #3a7aee;
+  background: #fff;
   transform: translateY(-1px);
 }
 
 #save-btn:active {
   transform: translateY(0);
-  background: #2a6add;
+  background: rgba(255,255,255,0.8);
 }
-
-/* ── Tab cloak ───────────────────────────────────────────────────────────── */
-#cloak-name-row {
-  margin-bottom: 16px;
-}
-
-#cloak-title-input {
-  width: 100%;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 8px;
-  padding: 10px 14px;
-  color: rgba(255,255,255,0.85);
-  font-family: "Roboto", Arial, sans-serif;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.15s;
-}
-
-#cloak-title-input:focus {
-  border-color: rgba(255,255,255,0.3);
-}
-
-#cloak-title-input::placeholder {
-  color: rgba(255,255,255,0.2);
-}
-
-#cloak-icons {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 18px;
-  flex-wrap: wrap;
-}
-
-.cloak-icon-option {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  border: 2px solid rgba(255,255,255,0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background: rgba(255,255,255,0.04);
-  transition: border-color 0.15s, background 0.15s;
-  padding: 6px;
-}
-
-.cloak-icon-option img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 4px;
-}
-
-.cloak-icon-option:hover {
-  border-color: rgba(255,255,255,0.3);
-  background: rgba(255,255,255,0.08);
-}
-
-.cloak-icon-option.selected {
-  border-color: #4a8fff;
-  background: rgba(74,143,255,0.12);
-}
-
-#cloak-btn-row {
-  display: flex;
-  gap: 10px;
-}
-
-#cloak-save-btn {
-  flex: 1;
-  padding: 10px 0;
-  background: #4a8fff;
-  color: #fff;
-  font-family: "Roboto", Arial, sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-#cloak-save-btn:hover { background: #3a7aee; }
-
-#cloak-reset-btn {
-  padding: 10px 18px;
-  background: rgba(232,51,51,0.1);
-  color: #e83333;
-  font-family: "Roboto", Arial, sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  border: 1px solid rgba(232,51,51,0.25);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-}
-
-#cloak-reset-btn:hover {
-  background: rgba(232,51,51,0.2);
-  border-color: rgba(232,51,51,0.45);
-}
-
-#box-cloak { min-width: 180px; }

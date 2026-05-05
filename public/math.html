@@ -35,7 +35,7 @@
 		<script src="baremux/index.js"></script>
 		<script src="uv/uv.bundle.js"></script>
 		<script src="uv/uv.config.js"></script>
-		<script src="/scram/scramjet.all.js"></script>
+		<script src="/scram/scramjet.js"></script>
 		<script src="register-sw.js"></script>
 	</head>
 
@@ -139,9 +139,8 @@
 		    const { ScramjetController } = $scramjetLoadController();
 		    window.__scramjetController = new ScramjetController({
 		      files: {
-		        wasm: "/scram/scramjet.wasm.wasm",
-		        all:  "/scram/scramjet.all.js",
-		        sync: "/scram/scramjet.sync.js",
+		        wasm: "/scram/scramjet.wasm",
+		        all:  "/scram/scramjet.js",
 		      }
 		    });
 		    window.__scramjetController.init();

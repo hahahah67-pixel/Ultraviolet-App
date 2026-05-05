@@ -15,8 +15,9 @@ const { ScramjetController } = $scramjetLoadController();
 
 const scramjet = new ScramjetController({
 	files: {
-		wasm: "/scram/scramjet.wasm",
-		all: "/scram/scramjet.js",
+		wasm: "/scram/scramjet.wasm.wasm",
+		all: "/scram/scramjet.all.js",
+		sync: "/scram/scramjet.sync.js",
 	},
 });
 

@@ -55,3 +55,4 @@ flash-leacgy|Flash-Leacgy|https://www.flashlegacy.com|flashy-l.png|flash|flash|l
 picos-school|Picos-School|https://flashmuseum.org/picos-school|pico.png|pico|school|pico|picos
 pokemon-emraled|Pokemon-Emeralad|pok-em.html|pok-em.png|pok|pokemon|emerald|emerald
 celeste|Celeste|celeste.html|celeste.png|celste|celeste|celeste|celeste
+age-of-war-2|Age-of-War-2|https://flashmuseum.org/age-of-war-2/|age war 2.png|war|grounds|age of war 2|age

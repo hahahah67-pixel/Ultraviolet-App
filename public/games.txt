@@ -59,3 +59,4 @@ age-of-war-2|Age-of-War-2|https://flashmuseum.org/age-of-war-2/|age war 2.png|wa
 age-of-war|Age-of-War|https://flashmuseum.org/age-of-war/|age war.png|war|age of|age of war|age
 super-mario-63|Super-Mario-63|https://flashmuseum.org/super-mario-63/|Mario 63.png|63|super mario|super|63
 motherload|Motherload|https://flashmuseum.org/motherload/|motherload.png|load|mother|load|mom
+flash-museum|Flash-Museum|https://flashmuseum.org/motherload/|flash.png|flash|games|player|museum

@@ -61,3 +61,4 @@ super-mario-63|Super-Mario-63|https://flashmuseum.org/super-mario-63/|Mario 63.p
 motherload|Motherload|https://flashmuseum.org/motherload/|motherload.png|load|mother|load|mom
 flash-museum|Flash-Museum|https://flashmuseum.org|flash.png|flash|games|player|museum
 red-ball-4|Red-Ball-4|https://playredball4.com/|ball4.png|red|ball|balls|4
+fancy-pants-adventure|Fancy-Pants-Adventure|https://newgrounds.com/portal/view/301341|pants.png|fancy|pants|pants|adv

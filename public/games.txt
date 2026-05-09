@@ -62,3 +62,4 @@ motherload|Motherload|https://flashmuseum.org/motherload/|motherload.png|load|mo
 flash-museum|Flash-Museum|https://flashmuseum.org|flash.png|flash|games|player|museum
 red-ball-4|Red-Ball-4|https://playredball4.com/|ball4.png|red|ball|balls|4
 fancy-pants-adventure|Fancy-Pants-Adventure|https://newgrounds.com/portal/view/301341|pants.png|fancy|pants|pants|adv
+territory-war|Territory War|https://flashmuseum.org/territory-war/|terwar.png|war|territory|ter|war

@@ -95,11 +95,17 @@ body {
 body.devtools-open #uv-frame,
 body.devtools-open #sj-frame {
 	width: 50vw !important;
+	left: 0 !important;
 	z-index: 200000;
 }
 
 body.devtools-open #browser-console {
-	max-width: 50vw;
+	max-width: 48vw;
 	left: 25vw;
 	transform: translateX(-50%);
+}
+
+/* Ensure devtools panel always on top of frames */
+#devtools-panel {
+	z-index: 200003 !important;
 }

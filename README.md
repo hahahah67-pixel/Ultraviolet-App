@@ -46,7 +46,7 @@ Newer engine with WASM-powered JS rewriting. Better at bypassing detection on mo
 
 ## Deployment
 
-Fish Proxy cannot be deployed in github seervices like railway,render etc instead:
+Fish Proxy cannot be deployed in github services like railway,render etc instead:
 
 1. host in a real wbe server with a linux VM (AWS)
 2. fork our repo or make a site to fetch from it to make more unblocked links!

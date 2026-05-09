@@ -129,3 +129,69 @@ document.getElementById("save-btn").addEventListener("click", () => {
   init();
   requestAnimationFrame(draw);
 })();
+
+// ── Tab cloak ─────────────────────────────────────────────────────────────
+(function initCloak() {
+  const KEY_TITLE = "fish-cloak-title";
+  const KEY_ICON  = "fish-cloak-icon";
+
+  const titleInput  = document.getElementById("cloak-title-input");
+  const saveBtn     = document.getElementById("cloak-save-btn");
+  const resetBtn    = document.getElementById("cloak-reset-btn");
+  const iconOptions = document.querySelectorAll(".cloak-icon-option");
+
+  let selectedIcon = localStorage.getItem(KEY_ICON) || null;
+
+  // Pre-fill saved values
+  const savedTitle = localStorage.getItem(KEY_TITLE);
+  if (savedTitle) titleInput.value = savedTitle;
+  if (selectedIcon) {
+    iconOptions.forEach(opt => {
+      if (opt.dataset.icon === selectedIcon) opt.classList.add("selected");
+    });
+  }
+
+  // Icon click selection
+  iconOptions.forEach(opt => {
+    opt.addEventListener("click", () => {
+      iconOptions.forEach(o => o.classList.remove("selected"));
+      opt.classList.add("selected");
+      selectedIcon = opt.dataset.icon;
+    });
+  });
+
+  function setFavicon(href) {
+    let link = document.querySelector("link[rel*='icon']");
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "shortcut icon";
+      document.head.appendChild(link);
+    }
+    link.type = "image/png";
+    link.href = href;
+  }
+
+  // Save cloak — applies immediately and persists
+  saveBtn.addEventListener("click", () => {
+    const title = titleInput.value.trim();
+    if (title) {
+      document.title = title;
+      localStorage.setItem(KEY_TITLE, title);
+    }
+    if (selectedIcon) {
+      setFavicon(selectedIcon);
+      localStorage.setItem(KEY_ICON, selectedIcon);
+    }
+  });
+
+  // Reset — restore Study.com defaults
+  resetBtn.addEventListener("click", () => {
+    localStorage.removeItem(KEY_TITLE);
+    localStorage.removeItem(KEY_ICON);
+    titleInput.value = "";
+    iconOptions.forEach(o => o.classList.remove("selected"));
+    selectedIcon = null;
+    document.title = "Online Courses for College Credit, Exam Prep & K-12 | Study.com";
+    setFavicon("https://study.com/favicon.ico");
+  });
+})();

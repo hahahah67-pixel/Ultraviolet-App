@@ -1,51 +1,29 @@
 <!doctype html>
-<html>
+<html lang="en">
 	<head>
-		<script>
-		(function() {
-		    document.title = "Study.com | free Online Courses, Lessons & Practice";
-		    const iconUrl = "https://study.com/favicon.ico";
-		    let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-		    link.type = 'image/x-icon';
-		    link.rel = 'shortcut icon';
-		    link.href = iconUrl;
-		    document.head.appendChild(link);
-
-		    const metaTags = [
-		        { name: "description", content: "Take online courses on Study.com that are fun and effective. Help your kids with their biology and math homework." },
-		        { name: "keywords", content: "education, flashcards, study, math, help, biology, science lessons" },
-		        { name: "theme-color", content: "#ffffff" }
-		    ];
-
-		    metaTags.forEach(tag => {
-		        let element = document.querySelector(`meta[name="${tag.name}"]`) || document.createElement('meta');
-		        element.name = tag.name;
-		        element.content = tag.content;
-		        document.head.appendChild(element);
-		    });
-		})();
-		</script>
 		<meta charset="utf-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-		/>
-		<title>Fish Proxy | Powerful Web Proxy</title>
-		<meta
-			name="description"
-			content="Fish Proxy is a powerful web proxy powered by proxy engines ultraviolet and scramjet, great UI and features."
-		/>
-		<meta
-			name="keywords"
-			content="proxy, web proxy, ultraviolet, scramjet, service workers, unblock websites, unblock chromebook, free web proxy, proxy list, proxy sites, online proxy, proxy server, bypass securly, bypass iboss, bypass lightspeed filter, unblock youtube"
-		/>
-		<meta
-			name="theme-color"
-			media="(prefers-color-scheme: dark)"
-			content="#000000"
-		/>
-		<meta name="googlebot" content="index, follow, snippet" />
-		<link rel="shortcut icon" content="favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+
+		<!-- ── Study.com cloak ──────────────────────────────────────────────── -->
+		<title>Online Courses for College Credit, Exam Prep &amp; K-12 | Study.com</title>
+		<meta name="description" content="Study.com has engaging online courses in math, science, history, English, business, humanities &amp; more. Our self-paced video lessons can help you study for exams, earn college credit, or boost your grades." />
+		<meta name="keywords" content="online courses, study help, college credit, exam prep, K-12, tutoring, math help, science help, study.com" />
+		<meta name="author" content="Study.com" />
+		<meta name="robots" content="index, follow" />
+		<meta name="theme-color" content="#ffffff" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+		<meta name="apple-mobile-web-app-title" content="Study.com" />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Study.com" />
+		<meta property="og:title" content="Online Courses for College Credit, Exam Prep &amp; K-12 | Study.com" />
+		<meta property="og:description" content="Study.com has engaging online courses in math, science, history, English, business, humanities &amp; more." />
+		<meta property="og:url" content="https://study.com" />
+		<meta property="og:image" content="https://study.com/images/study-logo.png" />
+		<link rel="canonical" href="https://study.com" />
+		<link rel="icon" type="image/x-icon" href="https://study.com/favicon.ico" />
+		<!-- ── End cloak ────────────────────────────────────────────────────── -->
+
 		<link rel="stylesheet" href="index.css" />
 
 		<script src="baremux/index.js"></script>
@@ -54,17 +32,25 @@
 		<script src="/scram/scramjet.all.js"></script>
 	</head>
 
-	<body>
+	<body style="overflow:hidden">
+		<!-- ── Loading screen ───────────────────────────────────────────────────── -->
+		<div id="fish-loader">
+			<canvas id="loader-stars"></canvas>
+			<div id="loader-content">
+				<div id="loader-msg"></div>
+				<div id="loader-bar-wrap"><div id="loader-bar"></div></div>
+			</div>
+		</div>
+
 		<!-- Starfield sits behind everything -->
 		<canvas id="starfield"></canvas>
-
-		<!-- Custom background image layer — behind starfield, behind everything -->
+		<!-- Custom background layer — sits behind everything -->
 		<div id="custom-bg"></div>
 
 		<!-- Main homepage content -->
 		<div class="home-center" id="home-center">
 			<div class="flex-center logo-wrapper">
-				<img class="logo" src="images/Fish%20Proxy%20logo.png" alt="Fish Proxy" />
+				<img class="logo" src="images/ffish%20Proxy%20logo.png" alt="Fish Proxy" />
 			</div>
 
 			<div class="flex-center desc">
@@ -80,8 +66,41 @@
 					value="https://duckduckgo.com/?q=%s"
 					type="hidden"
 				/>
-				<input id="uv-address" type="text" placeholder="Search the web freely" />
+				<input id="uv-address" type="text" placeholder="Search the web freely" autocomplete="off" />
 			</form>
+
+
+			<!-- ── Quick links ───────────────────────────────────────────────────────── -->
+			<div id="quick-links">
+				<div id="quick-links-label">quick links</div>
+				<div class="quick-links-row">
+					<div class="quick-link" id="ql-roblox">
+						<div class="quick-link-icon">
+							<img src="images/roblox.png" alt="Roblox" />
+						</div>
+						<span>Roblox</span>
+					</div>
+					<div class="quick-link" id="ql-games">
+						<div class="quick-link-icon">
+							<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+								<line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/>
+								<line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/>
+								<path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/>
+							</svg>
+						</div>
+						<span>Games</span>
+					</div>
+					<div class="quick-link" id="ql-settings">
+						<div class="quick-link-icon">
+							<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+								<circle cx="12" cy="12" r="3"/>
+								<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+							</svg>
+						</div>
+						<span>Settings</span>
+					</div>
+				</div>
+			</div>
 
 			<div class="desc">
 				<p id="uv-error" style="color:#ff6666;white-space:pre-wrap;"></p>
@@ -94,48 +113,27 @@
 		<script src="search.js"></script>
 		<script src="index.js"></script>
 
-		<!-- Change background button — above proxy picker, home only -->
+		<!-- ── Change background button ─────────────────────────────────────────── -->
 		<div id="bg-btn">
-			<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-				<path d="M12 20h9"/>
-				<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
-			</svg>
+			<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
 			change background
 		</div>
 
-		<!-- Popup — hidden by default via CSS opacity/pointer-events -->
-		<div id="bg-popup">
+		<!-- Popup -->
+		<div id="bg-popup" class="bg-hidden">
 			<div id="bg-popup-inner">
-				<div id="bg-pick-area">
-					<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-						<rect x="3" y="3" width="18" height="18" rx="2"/>
-						<circle cx="8.5" cy="8.5" r="1.5"/>
-						<polyline points="21 15 16 10 5 21"/>
-					</svg>
+				<div id="bg-pick-area" onclick="document.getElementById('bg-file-input').click()">
+					<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
 					<span>change background</span>
 				</div>
-				<div id="bg-restore-btn">
-					<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<polyline points="1 4 1 10 7 10"/>
-						<path d="M3.51 15a9 9 0 1 0 .49-4"/>
-					</svg>
+				<div id="bg-restore-area">
+					<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4"/></svg>
 					restore default
 				</div>
 			</div>
 		</div>
+		<input type="file" id="bg-file-input" accept="image/*" style="display:none"/>
 
-		<!-- Hidden file input triggered by clicking bg-pick-area -->
-		<input type="file" id="bg-file-input" accept="image/*" style="display:none" />
-
-		<!-- Proxy selector: bottom-right corner, home page only -->
-		<div id="proxy-picker">
-			<span class="proxy-option" id="pick-uv">
-				ultraviolet <span class="proxy-dot" id="dot-uv"></span>
-			</span>
-			<span class="proxy-option" id="pick-sj">
-				scramjet <span class="proxy-dot" id="dot-sj"></span>
-			</span>
-		</div>
 
 		<!-- Browser console -->
 		<div id="browser-console" class="browser-console">
@@ -143,7 +141,7 @@
 		  <div class="console-controls">
 		    <button id="nav-back" title="Back">◀</button>
 		    <button id="nav-forward" title="Forward">▶</button>
-		    <input id="console-url" type="text" placeholder="URL">
+		    <input id="console-url" type="text" placeholder="URL" autocomplete="off">
 		    <button id="console-go" title="Go">Go</button>
 		    <button id="console-home" title="Home">
 		      <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
@@ -151,11 +149,85 @@
 		      </svg>
 		    </button>
 		    <button id="console-reload" title="Reload">⟳</button>
+		    <button id="console-devtools" title="Dev Tools" style="font-family:monospace;letter-spacing:-0.05em">&lt;&gt;</button>
 		  </div>
 		</div>
 
+		<!-- ── Dev Tools panel ──────────────────────────────────────────────── -->
+		<div id="devtools-panel">
+			<div id="devtools-header">
+				<span id="devtools-title">&lt;&gt; Dev Tools</span>
+				<button id="devtools-close">✕</button>
+			</div>
+			<iframe id="devtools-frame" sandbox="allow-scripts allow-same-origin"></iframe>
+		</div>
+
 		<style>
-		/* ── Starfield ────────────────────────────────────────────────────────── */
+		/* ── Loading screen ─────────────────────────────────────────────────────── */
+		@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@500&display=swap");
+
+		#fish-loader {
+		  position: fixed;
+		  top: 0; left: 0;
+		  width: 100%; height: 100%;
+		  background: #000;
+		  z-index: 999999;
+		  display: flex;
+		  align-items: center;
+		  justify-content: center;
+		  transition: opacity 0.3s ease;
+		}
+		#fish-loader.hide {
+		  opacity: 0;
+		  pointer-events: none;
+		}
+		#loader-stars {
+		  position: absolute;
+		  top: 0; left: 0;
+		  width: 100%; height: 100%;
+		  pointer-events: none;
+		}
+		#loader-content {
+		  position: relative;
+		  z-index: 1;
+		  display: flex;
+		  flex-direction: column;
+		  align-items: center;
+		  gap: 22px;
+		}
+		#loader-msg {
+		  font-family: "Caveat", "Comic Sans MS", cursive;
+		  font-size: 26px;
+		  font-weight: 500;
+		  color: rgba(255,255,255,0.9);
+		  text-align: center;
+		  max-width: 340px;
+		  line-height: 1.4;
+		  letter-spacing: 0.02em;
+		  opacity: 0;
+		  transform: translateY(6px);
+		  transition: opacity 0.5s ease, transform 0.5s ease;
+		}
+		#loader-msg.show {
+		  opacity: 1;
+		  transform: translateY(0);
+		}
+		#loader-bar-wrap {
+		  width: 220px;
+		  height: 6px;
+		  background: rgba(255,255,255,0.1);
+		  border-radius: 999px;
+		  overflow: hidden;
+		}
+		#loader-bar {
+		  height: 100%;
+		  width: 0%;
+		  background: #4a8fff;
+		  border-radius: 999px;
+		  transition: width 2.2s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		/* Starfield */
 		#starfield {
 		  position: fixed;
 		  top: 0; left: 0;
@@ -164,20 +236,7 @@
 		  pointer-events: none;
 		}
 
-		/* ── Custom background ────────────────────────────────────────────────── */
-		/* Sits BEHIND the starfield — z-index -1 */
-		#custom-bg {
-		  position: fixed;
-		  top: 0; left: 0;
-		  width: 100%; height: 100%;
-		  z-index: -1;
-		  background-size: cover;
-		  background-position: center;
-		  background-repeat: no-repeat;
-		  pointer-events: none;
-		}
-
-		/* ── Home center ──────────────────────────────────────────────────────── */
+		/* Home center */
 		.home-center {
 		  position: relative;
 		  z-index: 1;
@@ -189,14 +248,16 @@
 		  padding: 24px 16px;
 		  box-sizing: border-box;
 		  transition: opacity .15s ease;
+		  will-change: opacity;
 		}
 
+		/* Hide home UI when a proxy frame is active */
 		.home-center.hidden {
 		  opacity: 0;
 		  pointer-events: none;
 		}
 
-		/* ── Logo ─────────────────────────────────────────────────────────────── */
+		/* Logo */
 		.logo-wrapper { margin-bottom: 20px; }
 
 		.logo {
@@ -205,9 +266,10 @@
 		  height: auto;
 		  max-height: 170px;
 		  object-fit: contain;
+		  display: block;
 		}
 
-		/* ── Description ──────────────────────────────────────────────────────── */
+		/* Description */
 		.desc { display: flex; justify-content: center; }
 
 		.desc p {
@@ -219,177 +281,11 @@
 		  margin: 0 0 4px;
 		}
 
-		/* ── Search form ──────────────────────────────────────────────────────── */
+		/* Search form */
 		#uv-form { margin-top: 14px; margin-bottom: 6px; }
 
-		/* ── Change background button ─────────────────────────────────────────── */
-		#bg-btn {
-		  position: fixed;
-		  bottom: 60px;
-		  right: 20px;
-		  display: flex;
-		  align-items: center;
-		  gap: 7px;
-		  background: rgba(0,0,0,0.72);
-		  backdrop-filter: blur(10px);
-		  -webkit-backdrop-filter: blur(10px);
-		  border: 1px solid rgba(255,255,255,0.1);
-		  border-radius: 999px;
-		  padding: 8px 18px;
-		  z-index: 9997;
-		  color: rgba(255,255,255,0.5);
-		  font-size: 11px;
-		  font-family: "Roboto", Arial, sans-serif;
-		  letter-spacing: .05em;
-		  cursor: pointer;
-		  user-select: none;
-		  white-space: nowrap;
-		  opacity: 1;
-		  transition: color .15s, border-color .15s, opacity .3s ease, transform .3s ease;
-		}
 
-		#bg-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
-
-		/* .gone hides the button — used when proxy is active */
-		#bg-btn.gone {
-		  opacity: 0;
-		  transform: translateY(6px);
-		  pointer-events: none;
-		}
-
-		/* ── Popup ────────────────────────────────────────────────────────────── */
-		#bg-popup {
-		  position: fixed;
-		  bottom: 112px;
-		  right: 20px;
-		  z-index: 9999;
-		  opacity: 0;
-		  transform: translateY(8px);
-		  pointer-events: none;
-		  transition: opacity .2s ease, transform .2s ease;
-		}
-
-		/* .open shows the popup */
-		#bg-popup.open {
-		  opacity: 1;
-		  transform: translateY(0);
-		  pointer-events: auto;
-		}
-
-		#bg-popup-inner {
-		  background: rgba(10,10,10,0.93);
-		  backdrop-filter: blur(14px);
-		  -webkit-backdrop-filter: blur(14px);
-		  border: 1px solid rgba(255,255,255,0.1);
-		  border-radius: 16px;
-		  padding: 14px;
-		  display: flex;
-		  flex-direction: column;
-		  align-items: center;
-		  gap: 10px;
-		  width: 160px;
-		}
-
-		#bg-pick-area {
-		  width: 100%;
-		  aspect-ratio: 16/9;
-		  border: 1.5px dashed rgba(255,255,255,0.2);
-		  border-radius: 10px;
-		  display: flex;
-		  flex-direction: column;
-		  align-items: center;
-		  justify-content: center;
-		  gap: 6px;
-		  cursor: pointer;
-		  background: rgba(255,255,255,0.03);
-		  transition: border-color .15s, background .15s;
-		}
-
-		#bg-pick-area:hover {
-		  border-color: rgba(255,255,255,0.45);
-		  background: rgba(255,255,255,0.07);
-		}
-
-		#bg-pick-area span {
-		  color: rgba(255,255,255,0.4);
-		  font-size: 10px;
-		  font-family: "Roboto", Arial, sans-serif;
-		  letter-spacing: .04em;
-		  text-align: center;
-		}
-
-		#bg-restore-btn {
-		  display: flex;
-		  align-items: center;
-		  gap: 5px;
-		  color: rgba(255,255,255,0.3);
-		  font-size: 10px;
-		  font-family: "Roboto", Arial, sans-serif;
-		  cursor: pointer;
-		  letter-spacing: .04em;
-		  transition: color .15s;
-		}
-
-		#bg-restore-btn:hover { color: rgba(255,255,255,0.75); }
-
-		/* ── Proxy picker ─────────────────────────────────────────────────────── */
-		#proxy-picker {
-		  position: fixed;
-		  bottom: 18px; right: 20px;
-		  display: flex;
-		  align-items: center;
-		  gap: 16px;
-		  background: rgba(0,0,0,0.72);
-		  backdrop-filter: blur(10px);
-		  -webkit-backdrop-filter: blur(10px);
-		  border: 1px solid rgba(255,255,255,0.1);
-		  border-radius: 999px;
-		  padding: 8px 18px;
-		  z-index: 9998;
-		  opacity: 1;
-		  transition: opacity .3s ease, transform .3s ease;
-		}
-
-		#proxy-picker.hidden {
-		  opacity: 0;
-		  transform: translateY(6px);
-		  pointer-events: none;
-		}
-
-		.proxy-option {
-		  display: flex;
-		  align-items: center;
-		  gap: 7px;
-		  font-family: "Roboto", Arial, sans-serif;
-		  font-size: 11px;
-		  letter-spacing: .05em;
-		  color: rgba(255,255,255,0.45);
-		  cursor: pointer;
-		  user-select: none;
-		  transition: color .15s ease;
-		  white-space: nowrap;
-		}
-
-		.proxy-option:hover { color: rgba(255,255,255,0.8); }
-		.proxy-option.active { color: #fff; }
-
-		.proxy-dot {
-		  width: 10px; height: 10px;
-		  border-radius: 50%;
-		  border: 1.5px solid rgba(255,255,255,0.3);
-		  background: transparent;
-		  display: inline-block;
-		  flex-shrink: 0;
-		  transition: background .2s ease, border-color .2s ease, box-shadow .2s ease;
-		}
-
-		.proxy-dot.active {
-		  background: #4a8fff;
-		  border-color: #4a8fff;
-		  box-shadow: 0 0 6px rgba(74,143,255,0.6);
-		}
-
-		/* ── Browser console ──────────────────────────────────────────────────── */
+		/* Browser console */
 		.browser-console {
 		  position: fixed;
 		  bottom: 8px; left: 50%;
@@ -398,7 +294,7 @@
 		  backdrop-filter: blur(6px);
 		  border-radius: 999px;
 		  display: none;
-		  z-index: 9999;
+		  z-index: 200001;
 		  overflow: hidden;
 		  box-shadow: 0 4px 18px rgba(0,0,0,0.4);
 		  transition: all .25s ease;
@@ -450,6 +346,245 @@
 
 		.browser-console.active input { width: 180px; }
 
+
+		/* ── Custom background ───────────────────────────────────────────────────── */
+		#custom-bg {
+		  position: fixed;
+		  top: 0; left: 0;
+		  width: 100%; height: 100%;
+		  z-index: -1;
+		  background-size: cover;
+		  background-position: center;
+		  background-repeat: no-repeat;
+		  pointer-events: none;
+		  opacity: 0;
+		  transition: opacity .4s ease;
+		}
+		#custom-bg.active { opacity: 1; }
+
+		/* ── Change background button ────────────────────────────────────────────── */
+		/* ── Dev Tools panel ─────────────────────────────────────────────────── */
+		#devtools-panel {
+		  position: fixed;
+		  top: 0; right: 0;
+		  width: 0;
+		  height: 100vh;
+		  background: #0e0e14;
+		  border-left: 1px solid rgba(255,255,255,0.1);
+		  z-index: 199999;
+		  display: flex;
+		  flex-direction: column;
+		  transition: width 0.25s ease;
+		  overflow: hidden;
+		}
+		#devtools-panel.open { width: 50vw; }
+		#devtools-header {
+		  display: flex;
+		  align-items: center;
+		  justify-content: space-between;
+		  padding: 10px 16px;
+		  background: #111118;
+		  border-bottom: 1px solid rgba(255,255,255,0.08);
+		  flex-shrink: 0;
+		}
+		#devtools-title {
+		  font-family: monospace;
+		  font-size: 13px;
+		  color: #4a8fff;
+		  font-weight: 600;
+		}
+		#devtools-close {
+		  background: none;
+		  border: none;
+		  color: rgba(255,255,255,0.5);
+		  font-size: 16px;
+		  cursor: pointer;
+		  padding: 2px 6px;
+		  border-radius: 4px;
+		  transition: color 0.15s, background 0.15s;
+		}
+		#devtools-close:hover { color: #fff; background: rgba(255,255,255,0.08); }
+		#devtools-frame {
+		  flex: 1;
+		  border: none;
+		  background: #fff;
+		  width: 100%;
+		}
+		body.devtools-open #uv-frame,
+		body.devtools-open #sj-frame {
+		  width: 50vw !important;
+		}
+
+		#bg-btn {
+		  position: fixed;
+		  bottom: 18px;
+		  right: 20px;
+		  display: flex;
+		  align-items: center;
+		  gap: 7px;
+		  background: rgba(0,0,0,0.72);
+		  backdrop-filter: blur(10px);
+		  -webkit-backdrop-filter: blur(10px);
+		  border: 1px solid rgba(255,255,255,0.1);
+		  border-radius: 999px;
+		  padding: 8px 18px;
+		  z-index: 9997;
+		  color: rgba(255,255,255,0.5);
+		  font-size: 11px;
+		  font-family: "Roboto", Arial, sans-serif;
+		  letter-spacing: .05em;
+		  cursor: pointer;
+		  user-select: none;
+		  white-space: nowrap;
+		  transition: color .15s, border-color .15s, opacity .3s ease, transform .3s ease;
+		}
+		#bg-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+		#bg-btn.bg-hidden {
+		  opacity: 0;
+		  transform: translateY(6px);
+		  pointer-events: none;
+		}
+
+		/* ── Popup ───────────────────────────────────────────────────────────────── */
+		#bg-popup {
+		  position: fixed;
+		  bottom: 70px;
+		  right: 20px;
+		  z-index: 9999;
+		  opacity: 1;
+		  transition: opacity .2s ease, transform .2s ease;
+		}
+		#bg-popup.bg-hidden {
+		  opacity: 0;
+		  transform: translateY(8px);
+		  pointer-events: none;
+		}
+		#bg-popup-inner {
+		  background: rgba(10,10,10,0.93);
+		  backdrop-filter: blur(14px);
+		  -webkit-backdrop-filter: blur(14px);
+		  border: 1px solid rgba(255,255,255,0.1);
+		  border-radius: 16px;
+		  padding: 14px;
+		  display: flex;
+		  flex-direction: column;
+		  align-items: center;
+		  gap: 10px;
+		  width: 160px;
+		}
+		#bg-pick-area {
+		  width: 100%;
+		  aspect-ratio: 16/9;
+		  border: 1.5px dashed rgba(255,255,255,0.2);
+		  border-radius: 10px;
+		  display: flex;
+		  flex-direction: column;
+		  align-items: center;
+		  justify-content: center;
+		  gap: 6px;
+		  cursor: pointer;
+		  background: rgba(255,255,255,0.03);
+		  transition: border-color .15s, background .15s;
+		}
+		#bg-pick-area:hover {
+		  border-color: rgba(255,255,255,0.45);
+		  background: rgba(255,255,255,0.07);
+		}
+		#bg-pick-area span {
+		  color: rgba(255,255,255,0.4);
+		  font-size: 10px;
+		  font-family: "Roboto", Arial, sans-serif;
+		  letter-spacing: .04em;
+		  text-align: center;
+		}
+		#bg-restore-area {
+		  display: flex;
+		  align-items: center;
+		  gap: 5px;
+		  color: rgba(255,255,255,0.3);
+		  font-size: 10px;
+		  font-family: "Roboto", Arial, sans-serif;
+		  cursor: pointer;
+		  letter-spacing: .04em;
+		  transition: color .15s;
+		}
+		#bg-restore-area:hover { color: rgba(255,255,255,0.75); }
+
+
+		/* ── Quick links ─────────────────────────────────────────────────────────── */
+		#quick-links {
+		  width: 100%;
+		  max-width: 460px;
+		  margin-top: 12px;
+		}
+
+		#quick-links-label {
+		  font-family: "Roboto", Arial, sans-serif;
+		  font-size: 13px;
+		  font-weight: 600;
+		  color: #111;
+		  letter-spacing: .04em;
+		  margin-bottom: 8px;
+		  text-align: left;
+		  text-shadow: 0 0 8px rgba(255,255,255,0.6);
+		}
+
+		.quick-links-row {
+		  display: flex;
+		  align-items: center;
+		  gap: 16px;
+		}
+
+		.quick-link {
+		  display: flex;
+		  flex-direction: column;
+		  align-items: center;
+		  gap: 5px;
+		  cursor: pointer;
+		  user-select: none;
+		  opacity: 0.7;
+		  transition: transform .15s ease, opacity .15s ease;
+		}
+
+		.quick-link:hover {
+		  transform: translateY(-2px);
+		  opacity: 1;
+		}
+
+		.quick-link-icon {
+		  width: 64px;
+		  height: 64px;
+		  border-radius: 4px;
+		  object-fit: contain;
+		  background: rgba(255,255,255,0.06);
+		  border: 1.5px solid rgba(255,255,255,0.15);
+		  padding: 6px;
+		  box-sizing: border-box;
+		  display: flex;
+		  align-items: center;
+		  justify-content: center;
+		  transition: border-color .15s ease, background .15s ease;
+		}
+		.quick-link:hover .quick-link-icon {
+		  border-color: rgba(255,255,255,0.35);
+		  background: rgba(255,255,255,0.1);
+		}
+
+		.quick-link-icon img {
+		  width: 48px;
+		  height: 48px;
+		  object-fit: contain;
+		}
+
+		.quick-link span {
+		  font-family: "Roboto", Arial, sans-serif;
+		  font-size: 10px;
+		  color: rgba(255,255,255,0.35);
+		  letter-spacing: .03em;
+		}
+
+		img { max-width: 100%; }
+
 		@keyframes fadeIn {
 		  from { opacity: 0; transform: translateY(6px); }
 		  to   { opacity: 1; transform: translateY(0); }
@@ -457,7 +592,67 @@
 		</style>
 
 		<script>
-		// ── Starfield ──────────────────────────────────────────────────────────
+		// ── Loading screen ────────────────────────────────────────────────────────
+		(function() {
+		  const loader  = document.getElementById("fish-loader");
+		  const msgEl   = document.getElementById("loader-msg");
+		  const bar     = document.getElementById("loader-bar");
+		  const lCanvas = document.getElementById("loader-stars");
+		  const lCtx    = lCanvas.getContext("2d");
+
+		  // Starfield on loader canvas
+		  lCanvas.width  = window.innerWidth;
+		  lCanvas.height = window.innerHeight;
+		  const lStars = Array.from({length: 160}, () => ({
+		    x: Math.random() * lCanvas.width,
+		    y: Math.random() * lCanvas.height,
+		    r: Math.random() * 1.4 + 0.3,
+		    o: Math.random() * 0.6 + 0.2,
+		    p: Math.random() * Math.PI * 2,
+		    ps: Math.random() * 0.015 + 0.005
+		  }));
+		  let lRunning = true;
+		  (function lDraw() {
+		    if (!lRunning) return;
+		    lCtx.clearRect(0, 0, lCanvas.width, lCanvas.height);
+		    lStars.forEach(s => {
+		      s.y += 0.25;
+		      if (s.y > lCanvas.height + 2) { s.y = -2; s.x = Math.random() * lCanvas.width; }
+		      s.p += s.ps;
+		      const a = s.o * (0.7 + 0.3 * Math.sin(s.p));
+		      lCtx.beginPath();
+		      lCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+		      lCtx.fillStyle = "rgba(255,255,255," + a + ")";
+		      lCtx.fill();
+		    });
+		    requestAnimationFrame(lDraw);
+		  })();
+
+		  // Fetch random message
+		  fetch("/messages.txt")
+		    .then(r => r.text())
+		    .then(text => {
+		      const lines = text.split("\n").map(l => l.trim()).filter(l => l && !l.startsWith("#"));
+		      msgEl.textContent = lines[Math.floor(Math.random() * lines.length)] || "Loading...";
+		      setTimeout(() => msgEl.classList.add("show"), 80);
+		    })
+		    .catch(() => {
+		      msgEl.textContent = "Loading Fish Proxy... 🐟";
+		      setTimeout(() => msgEl.classList.add("show"), 80);
+		    });
+
+		  // Start progress bar filling — takes 3 seconds
+		  setTimeout(() => { bar.style.width = "100%"; }, 50);
+
+		  // Fade out after 2.2s — quick and natural
+		  setTimeout(() => {
+		    lRunning = false;
+		    loader.classList.add("hide");
+		    setTimeout(() => { loader.style.display = "none"; document.body.style.overflow = ""; }, 320);
+		  }, 2200);
+		})();
+
+		// ── Starfield ─────────────────────────────────────────────────────────
 		(function () {
 		  const canvas = document.getElementById("starfield");
 		  const ctx    = canvas.getContext("2d");
@@ -465,9 +660,19 @@
 		  const SPEED  = 0.25;
 		  let stars    = [];
 
+		  let resizeTimer = null;
+
 		  function resize() {
-		    canvas.width  = window.innerWidth;
-		    canvas.height = window.innerHeight;
+		    // Debounce: wait until resizing stops to avoid mid-frame tears
+		    clearTimeout(resizeTimer);
+		    resizeTimer = setTimeout(function() {
+		      canvas.width  = window.innerWidth;
+		      canvas.height = window.innerHeight;
+		      // Explicit clear after dimension change to kill the dirty left-edge line
+		      ctx.clearRect(0, 0, canvas.width, canvas.height);
+		      // Re-scatter stars to new bounds so none are stuck off-screen
+		      stars = Array.from({ length: COUNT }, mkStar);
+		    }, 80);
 		  }
 
 		  function mkStar() {
@@ -481,7 +686,11 @@
 		    };
 		  }
 
-		  function init() { resize(); stars = Array.from({ length: COUNT }, mkStar); }
+		  function init() {
+		    canvas.width  = window.innerWidth;
+		    canvas.height = window.innerHeight;
+		    stars = Array.from({ length: COUNT }, mkStar);
+		  }
 
 		  function draw() {
 		    ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -503,146 +712,53 @@
 		  requestAnimationFrame(draw);
 		})();
 
-		// ── Background changer ─────────────────────────────────────────────────
-		// All logic in one place, no function overriding needed.
-		// bg-btn uses .gone to hide/show (distinct from proxy picker's .hidden)
-		// bg-popup uses .open to show (default CSS is hidden via opacity:0)
-
-		const bgBtnEl    = document.getElementById("bg-btn");
-		const bgPopupEl  = document.getElementById("bg-popup");
-		const bgPickArea = document.getElementById("bg-pick-area");
-		const bgRestBtn  = document.getElementById("bg-restore-btn");
-		const bgFileInp  = document.getElementById("bg-file-input");
-		const customBgEl = document.getElementById("custom-bg");
-
-		function applyBg(dataUrl) {
-		  customBgEl.style.backgroundImage = "url(" + dataUrl + ")";
-		  try { localStorage.setItem("fish-custom-bg", dataUrl); } catch(e) {}
-		}
-
-		function restoreBg() {
-		  customBgEl.style.backgroundImage = "";
-		  try { localStorage.removeItem("fish-custom-bg"); } catch(e) {}
-		  bgPopupEl.classList.remove("open");
-		}
-
-		// Toggle popup
-		bgBtnEl.addEventListener("click", () => {
-		  bgPopupEl.classList.toggle("open");
-		});
-
-		// Close popup when clicking outside
-		document.addEventListener("click", (e) => {
-		  if (!bgPopupEl.contains(e.target) && e.target !== bgBtnEl) {
-		    bgPopupEl.classList.remove("open");
-		  }
-		});
-
-		// Clicking the image area opens file picker
-		bgPickArea.addEventListener("click", () => {
-		  bgFileInp.click();
-		});
-
-		// Restore default
-		bgRestBtn.addEventListener("click", restoreBg);
-
-		// File selected
-		bgFileInp.addEventListener("change", () => {
-		  const file = bgFileInp.files[0];
-		  if (!file) return;
-		  if (file.size > 4 * 1024 * 1024) {
-		    alert("Image too large (max ~4MB). Please pick a smaller image.");
-		    bgFileInp.value = "";
-		    return;
-		  }
-		  const reader = new FileReader();
-		  reader.onload = (ev) => {
-		    applyBg(ev.target.result);
-		    bgPopupEl.classList.remove("open");
-		    bgFileInp.value = "";
-		  };
-		  reader.readAsDataURL(file);
-		});
-
-		// Restore saved bg on page load
-		try {
-		  const saved = localStorage.getItem("fish-custom-bg");
-		  if (saved) applyBg(saved);
-		} catch(e) {}
-
-		// ── Home center show/hide ──────────────────────────────────────────────
+		// ── Home center show/hide helpers ─────────────────────────────────────
 		const homeCenter = document.getElementById("home-center");
 
 		function hideHome() {
 		  homeCenter.classList.add("hidden");
-		  // Also hide bg button and close popup when browsing a site
-		  bgBtnEl.classList.add("gone");
-		  bgPopupEl.classList.remove("open");
+		  // Hide bg button when inside a proxied site
+		  const _bgBtn = document.getElementById("bg-btn");
+		  const _bgPop = document.getElementById("bg-popup");
+		  if (_bgBtn) _bgBtn.classList.add("bg-hidden");
+		  if (_bgPop) _bgPop.classList.add("bg-hidden");
 		}
 
 		function showHome() {
 		  homeCenter.classList.remove("hidden");
-		  // Show bg button again when back on homepage
-		  bgBtnEl.classList.remove("gone");
+		  // Show bg button when back on homepage
+		  const _bgBtn = document.getElementById("bg-btn");
+		  if (_bgBtn) _bgBtn.classList.remove("bg-hidden");
 		}
 
-		// ── Proxy picker ───────────────────────────────────────────────────────
-		const proxyPicker = document.getElementById("proxy-picker");
-		const pickUV = document.getElementById("pick-uv");
-		const pickSJ = document.getElementById("pick-sj");
-		const dotUV  = document.getElementById("dot-uv");
-		const dotSJ  = document.getElementById("dot-sj");
-
-		function updatePickerUI(name) {
-		  const isUV = name === "uv";
-		  pickUV.classList.toggle("active", isUV);
-		  pickSJ.classList.toggle("active", !isUV);
-		  dotUV.classList.toggle("active", isUV);
-		  dotSJ.classList.toggle("active", !isUV);
-		}
-
-		pickUV.addEventListener("click", () => {
-		  if (typeof setProxy === "function") setProxy("uv");
-		  updatePickerUI("uv");
-		});
-
-		pickSJ.addEventListener("click", () => {
-		  if (typeof setProxy === "function") setProxy("sj");
-		  updatePickerUI("sj");
-		});
-
-		updatePickerUI(localStorage.getItem("proxy-choice") || "sj");
-
-		// ── Hide home + picker when UV frame becomes active ────────────────────
+		// ── UV frame show/hide ───────────────────────────────────────────────────
 		const uvFrame = document.getElementById("uv-frame");
 
 		if (uvFrame) {
 		  uvFrame.addEventListener("load", () => {
-		    // Only react when UV is active — SJ's resetUVFrame() sets src to
-		    // about:blank which fires this and wrongly shows picker over SJ.
-		    if ((localStorage.getItem("proxy-choice") || "sj") !== "uv") return;
+		    if ((localStorage.getItem("fish-proxy-choice") || "sj") !== "uv") return;
 		    const isHome = !uvFrame.src || uvFrame.src === "about:blank";
-		    proxyPicker.classList.toggle("hidden", !isHome);
 		    if (isHome) showHome(); else hideHome();
 		  });
 		}
 
 		// SJ hide/show is handled directly in index.js submit handler
 
-		// ── Browser console ────────────────────────────────────────────────────
+// ── Browser console ───────────────────────────────────────────────────
 		const consoleBar   = document.getElementById("browser-console");
 		const consoleIdle  = document.querySelector(".console-idle");
 		const consoleInput = document.getElementById("console-url");
-
+ 
 		if (uvFrame) {
 		  uvFrame.addEventListener("load", () => {
-		    if ((localStorage.getItem("proxy-choice") || "sj") !== "uv") return;
+		    // Only react when UV is active
+		    if ((localStorage.getItem("fish-proxy-choice") || "sj") !== "uv") return;
 		    const isHome = !uvFrame.src || uvFrame.src === "about:blank";
 		    consoleBar.style.display = isHome ? "none" : "block";
 		    consoleBar.classList.remove("active");
 		  });
 		}
-
+ 
 		let consoleLeaveTimer;
 		consoleBar.addEventListener("mouseenter", () => {
 		  clearTimeout(consoleLeaveTimer);
@@ -652,9 +768,218 @@
 		  consoleLeaveTimer = setTimeout(() => consoleBar.classList.remove("active"), 400);
 		});
 		consoleIdle.addEventListener("click", () => consoleBar.classList.add("active"));
-
+ 
 		function getActiveFrame() {
 		  return document.getElementById("sj-frame") || uvFrame;
 		}
+ 
+		document.getElementById("nav-back").onclick       = () => { try { getActiveFrame().contentWindow.history.back();    } catch(e) {} };
+		document.getElementById("nav-forward").onclick    = () => { try { getActiveFrame().contentWindow.history.forward(); } catch(e) {} };
+		document.getElementById("console-reload").onclick = () => { try { getActiveFrame().contentWindow.location.reload(); } catch(e) {} };
+ 
+		function consoleNavigate() {
+		  const url = consoleInput.value.trim();
+		  if (!url) return;
+		  const addressBar = document.querySelector("#uv-address");
+		  const form = document.getElementById("uv-form");
+		  if (!addressBar || !form) return;
+		  // Briefly allow pointer events so requestSubmit works even when home-center is hidden
+		  const prev = homeCenter.style.pointerEvents;
+		  homeCenter.style.pointerEvents = "auto";
+		  addressBar.value = url;
+		  form.requestSubmit();
+		  homeCenter.style.pointerEvents = prev;
+		}
+ 
+		document.getElementById("console-go").onclick = consoleNavigate;
+ 
+		consoleInput.addEventListener("keydown", (e) => {
+		  if (e.key === "Enter") consoleNavigate();
+		});
+ 
+		document.getElementById("console-home").onclick = () => {
+		  if (uvFrame) { uvFrame.src = "about:blank"; uvFrame.style.display = "none"; }
+		  consoleBar.style.display = "none";
+		  const sjFrame = document.getElementById("sj-frame");
+		  if (sjFrame) sjFrame.style.display = "none";
+		  showHome();
+		};
 
-		document.getElementById("nav-b
+		// ── Background changer ───────────────────────────────────────────────────
+		(function () {
+		  const bgBtn       = document.getElementById("bg-btn");
+		  const bgPopup     = document.getElementById("bg-popup");
+		  const bgFileInput = document.getElementById("bg-file-input");
+		  const bgRestoreArea = document.getElementById("bg-restore-area");
+		  const customBgEl  = document.getElementById("custom-bg");
+
+		  // Toggle popup open/close
+		  bgBtn.addEventListener("click", (e) => {
+		    e.stopPropagation();
+		    bgPopup.classList.toggle("bg-hidden");
+		  });
+
+		  // Close popup when clicking anywhere outside it
+		  document.addEventListener("click", (e) => {
+		    if (!bgPopup.contains(e.target) && e.target !== bgBtn) {
+		      bgPopup.classList.add("bg-hidden");
+		    }
+		  });
+
+		  // Apply a bg image — sets body class so home UI stays above it
+		  function applyBg(dataUrl) {
+		    customBgEl.style.backgroundImage = "url(" + dataUrl + ")";
+		    customBgEl.classList.add("active");
+		    document.body.classList.add("has-custom-bg");
+		    try { localStorage.setItem("fish-custom-bg", dataUrl); } catch(e) {}
+		  }
+
+		  // Restore default starfield
+		  function restoreBg() {
+		    customBgEl.style.backgroundImage = "";
+		    customBgEl.classList.remove("active");
+		    document.body.classList.remove("has-custom-bg");
+		    try { localStorage.removeItem("fish-custom-bg"); } catch(e) {}
+		    bgPopup.classList.add("bg-hidden");
+		  }
+
+		  bgRestoreArea.addEventListener("click", restoreBg);
+
+		  // File picker — once image selected, apply and close popup
+		  bgFileInput.addEventListener("change", () => {
+		    const file = bgFileInput.files[0];
+		    if (!file) return;
+		    if (file.size > 4 * 1024 * 1024) {
+		      alert("Image too large (max ~4MB). Please choose a smaller image.");
+		      bgFileInput.value = "";
+		      return;
+		    }
+		    const reader = new FileReader();
+		    reader.onload = (ev) => {
+		      applyBg(ev.target.result);
+		      bgPopup.classList.add("bg-hidden");
+		      bgFileInput.value = "";
+		    };
+		    reader.readAsDataURL(file);
+		  });
+
+		  // Restore saved bg on page load
+		  try {
+		    const saved = localStorage.getItem("fish-custom-bg");
+		    if (saved) applyBg(saved);
+		  } catch(e) {}
+		})();
+
+
+
+		// ── Dev Tools ────────────────────────────────────────────────────────────
+		(function initDevTools() {
+		  const panel    = document.getElementById("devtools-panel");
+		  const frame    = document.getElementById("devtools-frame");
+		  const closeBtn = document.getElementById("devtools-close");
+		  const dtBtn    = document.getElementById("console-devtools");
+		  const uvFrame  = document.getElementById("uv-frame");
+
+		  function getCurrentUrl() {
+		    const src = uvFrame && uvFrame.src;
+		    if (!src || src === "about:blank" || src === "") return null;
+		    try {
+		      if (src.includes(__uv$config.prefix)) {
+		        return __uv$config.decodeUrl(src.replace(location.origin + __uv$config.prefix, ""));
+		      }
+		    } catch(e) {}
+		    return src;
+		  }
+
+		  function openDevTools() {
+		    const url = getCurrentUrl();
+		    if (url) {
+		      frame.src = "view-source:" + url;
+		    } else {
+		      frame.srcdoc = "<html><body style=\"background:#0e0e14;color:#4a8fff;font-family:monospace;padding:32px;font-size:14px\"><p>&lt;&gt; Dev Tools</p><br><p style=\"color:#555\">Navigate to a site first then open Dev Tools to view its source.</p></body></html>";
+		    }
+		    panel.classList.add("open");
+		    document.body.classList.add("devtools-open");
+		  }
+
+		  function closeDevTools() {
+		    panel.classList.remove("open");
+		    document.body.classList.remove("devtools-open");
+		    setTimeout(() => { frame.src = ""; }, 260);
+		  }
+
+		  if (dtBtn)    dtBtn.addEventListener("click", openDevTools);
+		  if (closeBtn) closeBtn.addEventListener("click", closeDevTools);
+		})();
+
+		// ── Apply settings from localStorage ─────────────────────────────────────
+		(function applySettings() {
+		  // Tab cloak
+		  const cloakTitle = localStorage.getItem("fish-cloak-title");
+		  const cloakIcon  = localStorage.getItem("fish-cloak-icon");
+		  if (cloakTitle) document.title = cloakTitle;
+		  if (cloakIcon) {
+		    let _link = document.querySelector("link[rel*='icon']");
+		    if (!_link) { _link = document.createElement("link"); _link.rel = "shortcut icon"; document.head.appendChild(_link); }
+		    _link.type = "image/png"; _link.href = cloakIcon;
+		  }
+
+		  // Search engine
+		  const engine = localStorage.getItem("fish-search-engine");
+		  if (engine) {
+		    const seInput = document.getElementById("uv-search-engine");
+		    if (seInput) seInput.value = engine;
+		  }
+
+		  // Fish cursor — black = system default cursor, other colors = custom fish
+		  const COLORS = { red:"#e83333", blue:"#4a8fff", green:"#2ecc71" };
+		  const cursorChoice = localStorage.getItem("fish-cursor-color") || "black";
+		  if (cursorChoice !== "black" && COLORS[cursorChoice]) {
+		    const hex = COLORS[cursorChoice];
+		    const el  = document.createElement("div");
+		    el.id = "fish-cursor-home";
+		    el.style.cssText = "position:fixed;pointer-events:none;z-index:99999;width:22px;height:38px;transform:translate(-3px,-1px);display:none;";
+		    el.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='22' height='38' viewBox='0 0 22 38'><path d='M3,1 L3,24 Q0,31 3,37 Q7,31 10,25 Q14,37 18,37 Q16,30 12,23 L20,20 Z' fill='${hex}'/></svg>`;
+		    document.body.appendChild(el);
+		    document.body.style.cursor = "none";
+		    document.addEventListener("mousemove", (e) => {
+		      el.style.left = e.clientX + "px";
+		      el.style.top  = e.clientY + "px";
+		      el.style.display = "block";
+		    });
+		    document.addEventListener("mouseleave", () => { el.style.display = "none"; });
+		  }
+		})();
+
+		// ── Quick links ───────────────────────────────────────────────────────────
+		(function() {
+		  function quickNav(url) {
+		    const addressBar = document.getElementById("uv-address");
+		    const form       = document.getElementById("uv-form");
+		    if (!addressBar || !form) return;
+		    // Temporarily un-hide home center so requestSubmit can fire through CSS
+		    const wasHidden = homeCenter.classList.contains("hidden");
+		    if (wasHidden) homeCenter.classList.remove("hidden");
+		    addressBar.value = url;
+		    form.requestSubmit();
+		    if (wasHidden) homeCenter.classList.add("hidden");
+		  }
+
+		  // Roblox → nowgg.fun via proxy
+		  const qlRoblox = document.getElementById("ql-roblox");
+		  if (qlRoblox) qlRoblox.addEventListener("click", () => quickNav("https://nowgg.fun"));
+
+		  // Games → /math page (direct, no proxy)
+		  const qlGames = document.getElementById("ql-games");
+		  if (qlGames) qlGames.addEventListener("click", () => { window.location.href = "/math"; });
+
+		  // Settings → /settings page
+		  const qlSettings = document.getElementById("ql-settings");
+		  if (qlSettings) qlSettings.addEventListener("click", () => { window.location.href = "/settings"; });
+		})();
+
+		</script>
+
+ 
+	</body>
+</html>

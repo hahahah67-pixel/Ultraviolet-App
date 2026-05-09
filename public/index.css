@@ -90,3 +90,16 @@ body {
 .credit label::after { content: "show license"; cursor: pointer; }
 .credit input:checked + label::after { content: "hide license"; }
 .credit input:checked ~ pre { display: block; }
+
+/* ── Dev Tools overrides ─────────────────────────────────────────────────── */
+body.devtools-open #uv-frame,
+body.devtools-open #sj-frame {
+	width: 50vw !important;
+	z-index: 200000;
+}
+
+body.devtools-open #browser-console {
+	max-width: 50vw;
+	left: 25vw;
+	transform: translateX(-50%);
+}

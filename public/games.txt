@@ -38,7 +38,7 @@ run-2|Run 2|https://www.run3.school/game/run-2/|run 2.png|run|run|2
 rooftop-snippers|Roof Top Snippers|https://pizzaedition.win/assets/allgames/rooftop-snipers/index.html|rooftop.png|roof|top|snippers
 tiny-towers|Tiny Towers|https://pizzaedition.win/assets/allgames/tinytowers/index.html|towertiny.png|tower|tiny|towers
 brotato|Brotato|brotato.html|brotato.png|bro|tato|brotato
-friday-night-funkin|Friday Night Funkin|friday.html|friday.png|fri|day|night
+friday-night-funkin|Friday Night Funkin|https://newgrounds.com/portal/view/770371|friday.png|fri|day|night
 alien-homid|Alien homid|alien.html|alien.png|alien|homid|alien
 mario|Super Mario World|emu games/Mario/mario.html|mario.png|mario|snes|super mario|nintendo
 escape-road-3|Escape Road 3|https://gamea.azgame.io/escape-road-3/|escape3.png|escape|road|3

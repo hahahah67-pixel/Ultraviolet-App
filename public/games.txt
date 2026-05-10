@@ -67,4 +67,5 @@ dad-n-me|Dad N Me|https://flashmuseum.org/Dad-n-me/|dad.png|dad|dad n me|me|dad
 maddnes-project-nexus|Madness Project Nexus|https://flashmuseum.org/madness-project-nexus/|nexus.png|maddnes|project|mad|nexus
 fami-dash|Fami Dash|famdash.html|famdash.png|fami|dash|fami|dash
 friday-night-funkin-gumballs|Friday Night Funkin Gumballs|gumballs.html|gumballs.png|gum|balls|friday|FNF
-soundcloud|Soundcloud|https:/soundcloud.com|sound.png|sound|cloud|soundcloud|cloud
+soundcloud|Soundcloud|https://soundcloud.com|sound.png|sound|cloud|soundcloud|cloud
+tiktok|TikTok|https://TikTok.com|tiktok.png|tik|tok|tiktok|tik

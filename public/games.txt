@@ -65,3 +65,5 @@ fancy-pants-adventure|Fancy-Pants-Adventure|https://newgrounds.com/portal/view/3
 territory-war|Territory War|https://flashmuseum.org/territory-war/|terwar.png|war|territory|ter|war
 dad-n-me|Dad N Me|https://flashmuseum.org/Dad-n-me/|dad.png|dad|dad n me|me|dad
 maddnes-project-nexus|Madness Project Nexus|https://flashmuseum.org/madness-project-nexus/|nexus.png|maddnes|project|mad|nexus
+fami-dash|Fami Dash|famdash.html|famdash.png|fami|dash|fami|dash
+friday-night-funkin-gumballs|Friday Night Funkin Gumballs|gumballs.html|gumballs.png|gum|balls|friday|FNF

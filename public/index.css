@@ -22,7 +22,7 @@ body {
 	width: 100vw;
 	height: 100vh;
 	background-color: #000;
-	z-index: 200000;
+	z-index: 9998;
 }
 
 #uv-register-sw {
@@ -90,11 +90,3 @@ body {
 .credit label::after { content: "show license"; cursor: pointer; }
 .credit input:checked + label::after { content: "hide license"; }
 .credit input:checked ~ pre { display: block; }
-
-/* ── Dev Tools overrides ─────────────────────────────────────────────────── */
-/* Devtools slides OVER the screen — proxy iframe stays full width untouched */
-body.devtools-open #browser-console {
-	max-width: 50vw;
-	left: 25vw;
-	transform: translateX(-50%);
-}

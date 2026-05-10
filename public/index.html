@@ -148,6 +148,7 @@
 		        <path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3z"/>
 		      </svg>
 		    </button>
+		    <button id="console-devtools" title="Dev Tools" style="font-family:monospace;font-size:12px;font-weight:700;white-space:nowrap;letter-spacing:0.05em;padding:0 8px;">&lt;&nbsp;&gt;</button>
 		    <button id="console-reload" title="Reload">⟳</button>
 		  </div>
 		</div>
@@ -879,5 +880,125 @@
 		</script>
 
  
+
+		<!-- ── Dev Tools panel ──────────────────────────────────────────────── -->
+		<div id="devtools-panel" style="position:fixed;top:0;right:0;width:0;height:100vh;background:#0d0d14;border-left:1px solid rgba(255,255,255,0.1);z-index:999999;display:flex;flex-direction:column;transition:width 0.25s ease;overflow:hidden;">
+			<div id="devtools-header" style="display:flex;align-items:center;padding:8px 12px;background:#111118;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0;gap:4px;">
+				<span style="font-family:monospace;font-size:13px;color:#4a8fff;font-weight:700;">&lt; &gt; Dev Tools</span>
+				<button id="devtools-close" style="margin-left:auto;background:none;border:none;color:rgba(255,255,255,0.4);font-size:16px;cursor:pointer;padding:0 4px;">✕</button>
+			</div>
+			<iframe id="devtools-frame" style="flex:1;border:none;width:100%;background:#0d0d14;"></iframe>
+		</div>
+
+		<style>
+		#devtools-panel.open { width: 50vw; }
+		</style>
+
+		<script>
+		(function initDevTools() {
+		  const panel    = document.getElementById("devtools-panel");
+		  const dtFrame  = document.getElementById("devtools-frame");
+		  const closeBtn = document.getElementById("devtools-close");
+		  const dtBtn    = document.getElementById("console-devtools");
+		  const uvFrame  = document.getElementById("uv-frame");
+
+		  // Build tab buttons
+		  const header = document.getElementById("devtools-header");
+		  const tabBar = document.createElement("div");
+		  tabBar.style.cssText = "display:flex;margin-left:12px;";
+		  ["source","console","network"].forEach(function(t) {
+		    var b = document.createElement("button");
+		    b.className = "dt-tab-btn";
+		    b.dataset.tab = t;
+		    b.textContent = t;
+		    b.style.cssText = "background:none;border:none;border-bottom:2px solid transparent;color:rgba(255,255,255,0.4);padding:4px 10px;font-size:11px;font-family:monospace;cursor:pointer;";
+		    b.addEventListener("click", function() { loadTab(t); });
+		    tabBar.appendChild(b);
+		  });
+		  header.insertBefore(tabBar, document.getElementById("devtools-close"));
+
+		  function setTab(tab) {
+		    document.querySelectorAll(".dt-tab-btn").forEach(function(b) {
+		      var on = b.dataset.tab === tab;
+		      b.style.borderBottom = on ? "2px solid #4a8fff" : "2px solid transparent";
+		      b.style.color = on ? "#4a8fff" : "rgba(255,255,255,0.4)";
+		    });
+		  }
+
+		  function escHtml(s) {
+		    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+		  }
+
+		  function loadTab(tab) {
+		    setTab(tab);
+		    var proxy = localStorage.getItem("fish-proxy-choice") || "sj";
+		    var url = null;
+		    var src = uvFrame ? uvFrame.src : "";
+
+		    // Get current URL for display
+		    if (proxy === "uv" && src && src !== "about:blank" && src !== location.href) {
+		      try {
+		        if (typeof __uv$config !== "undefined" && src.includes(__uv$config.prefix)) {
+		          url = __uv$config.decodeUrl(src.replace(location.origin + __uv$config.prefix, ""));
+		        }
+		      } catch(e) {}
+		    } else if (proxy === "sj") {
+		      var sj = document.getElementById("sj-frame");
+		      if (sj) { try { url = sj.contentDocument.location.href; } catch(e) {} }
+		    }
+
+		    var domain = url ? (function(){ try { return new URL(url).hostname; } catch(e) { return url; } })() : null;
+		    var bg = "background:#0d0d14;color:#abb2bf;font-family:\'Courier New\',monospace;font-size:12px;line-height:1.7;margin:0;padding:16px;height:100%;overflow:auto;box-sizing:border-box;";
+
+		    if (!url) {
+		      dtFrame.srcdoc = "<html><body style=\"" + bg + "\"><b style=\"color:#4a8fff;\">&lt; &gt; Dev Tools</b><br><br><span style=\"color:#555;\">Navigate to a site first, then open Dev Tools.</span></body></html>";
+		      return;
+		    }
+
+		    if (tab === "source") {
+		      // For UV: fetch the rewritten source
+		      if (proxy === "uv" && src && src !== "about:blank") {
+		        dtFrame.srcdoc = "<html><body style=\"" + bg + "\"><span style=\"color:#555;\">Loading source...</span></body></html>";
+		        fetch(src, {credentials:"include"})
+		          .then(function(r) { return r.text(); })
+		          .then(function(html) {
+		            dtFrame.srcdoc = "<html><body style=\"" + bg + "padding:0;\"><div style=\"background:#111118;padding:8px 16px;border-bottom:1px solid rgba(255,255,255,0.08);position:sticky;top:0;display:flex;justify-content:space-between;\"><span style=\"color:#4a8fff;font-weight:700;\">source — " + domain + "</span><a href=\"" + url + "\" target=\"_blank\" style=\"color:#555;font-size:11px;text-decoration:none;\">open ↗</a></div><pre style=\"margin:0;padding:16px;white-space:pre-wrap;word-break:break-all;font-size:11px;\">" + escHtml(html) + "</pre></body></html>";
+		          })
+		          .catch(function() {
+		            dtFrame.srcdoc = "<html><body style=\"" + bg + "\"><span style=\"color:#e06c75;\">Could not fetch source for this page.</span></body></html>";
+		          });
+		      } else if (proxy === "sj") {
+		        var sj = document.getElementById("sj-frame");
+		        var html = "";
+		        try { html = sj.contentDocument.documentElement.outerHTML; } catch(e) {}
+		        if (html) {
+		          dtFrame.srcdoc = "<html><body style=\"" + bg + "padding:0;\"><div style=\"background:#111118;padding:8px 16px;border-bottom:1px solid rgba(255,255,255,0.08);position:sticky;top:0;\"><span style=\"color:#4a8fff;font-weight:700;\">source — " + domain + "</span></div><pre style=\"margin:0;padding:16px;white-space:pre-wrap;word-break:break-all;font-size:11px;\">" + escHtml(html) + "</pre></body></html>";
+		        } else {
+		          dtFrame.srcdoc = "<html><body style=\"" + bg + "\"><span style=\"color:#e06c75;\">Could not read SJ frame source.</span></body></html>";
+		        }
+		      }
+
+		    } else if (tab === "console") {
+		      dtFrame.srcdoc = "<html><body style=\"" + bg + "\"><div style=\"color:#555;font-size:11px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:10px;\">console — " + domain + "<br><span style=\"color:#444;font-size:10px;\">Runs in devtools context, not inside the proxied site.</span></div><div id=\"lg\" style=\"margin-bottom:50px;\"></div><div style=\"position:fixed;bottom:0;left:0;right:0;background:#0d0d14;padding:8px 16px;border-top:1px solid rgba(255,255,255,0.07);display:flex;gap:8px;align-items:center;\"><span style=\"color:#4a8fff;\">▶</span><input id=\"ci\" type=\"text\" autocomplete=\"off\" placeholder=\"JS expression...\" style=\"flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:4px 8px;color:#e8e8f0;font-family:monospace;font-size:12px;outline:none;\"/></div><script>var lg=document.getElementById(\"lg\");function al(t,c){var d=document.createElement(\"div\");d.style.cssText=\"color:\"+c+\";padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.04);word-break:break-all;\";d.textContent=t;lg.appendChild(d);d.scrollIntoView();}al(\"▶ Fish Proxy Dev Console\",\"#4a8fff\");document.getElementById(\"ci\").addEventListener(\"keydown\",function(e){if(e.key===\"Enter\"&&this.value.trim()){var v=this.value;al(\"▶ \"+v,\"#98c379\");try{al(\"← \"+eval(v),\"#d19a66\");}catch(err){al(\"✖ \"+err.message,\"#e06c75\");}this.value=\"\";}})<\/script></body></html>";
+
+		    } else if (tab === "network") {
+		      dtFrame.srcdoc = "<html><body style=\"" + bg + "padding:0;\"><div style=\"background:#111118;padding:8px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:#4a8fff;font-weight:700;font-size:12px;position:sticky;top:0;\">network — " + domain + "</div><div style=\"padding:16px;color:#555;font-size:11px;\">Live network capture is not available in proxy context.<br><br>Use the source tab to inspect loaded resources.</div></body></html>";
+		    }
+		  }
+
+		  function openDevTools() {
+		    panel.classList.add("open");
+		    loadTab("source");
+		  }
+
+		  function closeDevTools() {
+		    panel.classList.remove("open");
+		    setTimeout(function() { dtFrame.srcdoc = ""; }, 260);
+		  }
+
+		  if (dtBtn)    dtBtn.addEventListener("click", openDevTools);
+		  if (closeBtn) closeBtn.addEventListener("click", closeDevTools);
+		})();
+		</script>
 	</body>
 </html>

@@ -69,3 +69,4 @@ fami-dash|Fami Dash|famdash.html|famdash.png|fami|dash|fami|dash
 friday-night-funkin-gumballs|Friday Night Funkin Gumballs|gumballs.html|gumballs.png|gum|balls|friday|FNF
 soundcloud|Soundcloud|https://soundcloud.com|sound.png|sound|cloud|soundcloud|cloud
 tiktok|TikTok|https://TikTok.com|tiktok.png|tik|tok|tiktok|tik
+retro-bowl-26|Retro Bowl 26|https://www.retrobowl26.pro|bowl26.png|retro|bowl|retrobowl|26

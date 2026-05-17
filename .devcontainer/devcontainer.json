@@ -1,0 +1,11 @@
+{
+  "name": "Fish Proxy",
+  "postStartCommand": "bash .devcontainer/postStartCommand.sh",
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": {
+      "label": "Fish Proxy",
+      "onAutoForward": "silent"
+    }
+  }
+}

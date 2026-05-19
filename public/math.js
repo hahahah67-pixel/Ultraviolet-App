@@ -11,6 +11,13 @@ const gameBack         = document.getElementById("game-back");
 const btnFullscreen    = document.getElementById("btn-fullscreen");
 const btnReload        = document.getElementById("btn-reload");
 const gameFrameWrapper = document.getElementById("game-frame-wrapper");
+const gamesCount       = document.getElementById("games-count");
+const gamesDiceBtn     = document.getElementById("games-dice-btn");
+
+// ── Dice state ────────────────────────────────────────────────────────────────
+// Cycles: all games → random pick → all games → random pick ...
+let diceMode = "all"; // "all" or "random"
+let randomGame = null;
 
 // ── Game registry — loaded entirely from games.txt ────────────────────────────
 // Format: id|Display Name|URL|logo filename|search term|search term|...
@@ -93,9 +100,20 @@ async function proxyUrl(rawUrl) {
 }
 
 // ── Render grid ───────────────────────────────────────────────────────────────
+function updateCount(shown) {
+	const total = games.length;
+	const q = gameSearch.value.trim();
+	if (!q && shown === total) {
+		gamesCount.textContent = "All Games: " + total;
+	} else {
+		gamesCount.textContent = "Games " + shown + " out of " + total;
+	}
+}
+
 function renderGrid(list) {
 	gameGrid.innerHTML = "";
 	noResults.style.display = list.length === 0 ? "block" : "none";
+	updateCount(list.length);
 
 	list.forEach(g => {
 		const card = document.createElement("div");
@@ -119,6 +137,7 @@ function renderGrid(list) {
 // ── Search ────────────────────────────────────────────────────────────────────
 function doSearch(query) {
 	const q = query.trim().toLowerCase();
+	diceMode = "all"; // reset dice when searching
 	if (!q) { renderGrid(games); return; }
 	renderGrid(games.filter(g => g.terms.some(t => t.includes(q))));
 }
@@ -173,6 +192,40 @@ btnReload.addEventListener("click", () => {
 async function checkUrlParam() {
 	const id = new URLSearchParams(location.search).get("game");
 	if (id) await openGame(id);
+}
+
+// ── Dice button ───────────────────────────────────────────────────────────────
+if (gamesDiceBtn) {
+	gamesDiceBtn.addEventListener("click", () => {
+		if (games.length === 0) return;
+
+		// Animate the button
+		gamesDiceBtn.style.transition = "transform 0.15s ease";
+		gamesDiceBtn.style.transform = "scale(1.3) rotate(20deg)";
+		setTimeout(() => {
+			gamesDiceBtn.style.transform = "scale(1) rotate(0deg)";
+		}, 200);
+		setTimeout(() => {
+			gamesDiceBtn.style.transform = "scale(1.15)";
+		}, 200);
+		setTimeout(() => {
+			gamesDiceBtn.style.transform = "scale(1)";
+		}, 350);
+
+		if (diceMode === "all") {
+			// Pick a random game and show only it
+			const idx = Math.floor(Math.random() * games.length);
+			randomGame = games[idx];
+			gameSearch.value = ""; // clear search
+			renderGrid([randomGame]);
+			gamesCount.textContent = "🎲 Random: " + randomGame.display;
+			diceMode = "random";
+		} else {
+			// Show all games again
+			renderGrid(games);
+			diceMode = "all";
+		}
+	});
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>Credit — Fish Proxy</title>
+	<link rel="stylesheet" href="index.css"/>
+	<style>
+		@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500&display=swap");
+
+		* { box-sizing: border-box; margin: 0; padding: 0; }
+
+		body {
+			background: #000;
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			overflow: hidden;
+		}
+
+		canvas#starfield {
+			position: fixed;
+			top: 0; left: 0;
+			width: 100%; height: 100%;
+			z-index: 0;
+			pointer-events: none;
+		}
+
+		.credits-wrap {
+			position: relative;
+			z-index: 1;
+			max-width: 560px;
+			width: 90%;
+			text-align: center;
+			padding: 40px 20px;
+		}
+
+		.credits-text {
+			font-family: "Raleway", sans-serif;
+			font-size: 20px;
+			font-weight: 400;
+			color: #ffffff;
+			line-height: 1.8;
+			white-space: pre-wrap;
+			word-break: break-word;
+		}
+
+		.back-btn {
+			position: fixed;
+			top: 16px;
+			left: 16px;
+			z-index: 100;
+			width: 38px;
+			height: 38px;
+			border-radius: 50%;
+			background: rgba(0,0,0,0.6);
+			backdrop-filter: blur(8px);
+			border: 1px solid rgba(100,160,255,0.25);
+			color: rgba(255,255,255,0.8);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			text-decoration: none;
+			transition: background 0.15s, border-color 0.15s, transform 0.15s;
+		}
+
+		.back-btn:hover {
+			background: rgba(30,30,60,0.9);
+			border-color: rgba(100,160,255,0.6);
+			transform: scale(1.1);
+		}
+	</style>
+</head>
+<body>
+	<canvas id="starfield"></canvas>
+
+	<a href="/" class="back-btn" title="Back">
+		<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+			<polyline points="15 18 9 12 15 6"></polyline>
+		</svg>
+	</a>
+
+	<div class="credits-wrap">
+		<div class="credits-text" id="credits-text"></div>
+	</div>
+
+	<script>
+		// ── Starfield ─────────────────────────────────────────────────────────
+		const canvas = document.getElementById("starfield");
+		const ctx = canvas.getContext("2d");
+		let stars = [];
+
+		function resizeCanvas() {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+		}
+
+		function initStars() {
+			stars = [];
+			for (let i = 0; i < 160; i++) {
+				stars.push({
+					x: Math.random() * canvas.width,
+					y: Math.random() * canvas.height,
+					r: Math.random() * 1.4 + 0.3,
+					o: Math.random() * 0.6 + 0.2,
+					speed: Math.random() * 0.3 + 0.05
+				});
+			}
+		}
+
+		function drawStars() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			stars.forEach(s => {
+				ctx.beginPath();
+				ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+				ctx.fillStyle = `rgba(255,255,255,${s.o})`;
+				ctx.fill();
+				s.y += s.speed;
+				if (s.y > canvas.height) {
+					s.y = 0;
+					s.x = Math.random() * canvas.width;
+				}
+			});
+			requestAnimationFrame(drawStars);
+		}
+
+		resizeCanvas();
+		initStars();
+		drawStars();
+		window.addEventListener("resize", () => { resizeCanvas(); initStars(); });
+
+		// ── Load credits.txt ──────────────────────────────────────────────────
+		fetch("/credits.txt")
+			.then(r => r.text())
+			.then(text => {
+				document.getElementById("credits-text").textContent = text.trim();
+			})
+			.catch(() => {
+				document.getElementById("credits-text").textContent = "Could not load credits.";
+			});
+	</script>
+</body>
+</html>

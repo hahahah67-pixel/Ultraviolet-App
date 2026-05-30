@@ -4,30 +4,30 @@
 
                                                       CREDITS:
 
-                Powered by Ultravilot (UV) and Scramjet (SJ), 2 incredible open-source proxy engines, 
+                Powered by Ultraviolet (UV) and Scramjet (SJ), 2 incredible open-source proxy engines, 
 
                                          Ultraviolet- by Titanium Network
                                           Scramjet- by Mercury Workshop
                                           Bare Server- by Titanium Network
                                           BareMux- by Titanium Network
-                      Other open-source technoliges include, Libucurl transport- by mecuryworkshop
-                  And Expoy transport by Mecuryworkshop. Other open-source lisenced technoglies include:
+                      Other open-source technologies include, Libcurl transport- by MercuryWorkshop
+                  And Epoxy transport by MercuryWorkshop. Other open-source licensed technologies include:
                   Ruffle flash player engine- used to add flash games to Fish Proxy game page, BUILT IN!
-                  Emulator JS- used to quickly add emuator games (nes,snes,ps1) quickly and BUILT IN!
+                  Emulator JS- used to quickly add emulator games (nes,snes,ps1) quickly and BUILT IN!
 
-                                                    CONTRIBUTERS:
-                          Emu.js- made possible by the Emu.js team and public contributers on github
+                                                    CONTRIBUTORS:
+                          Emu.js- made possible by the Emu.js team and public contributors on github
 
                     Ruffle flash Player- Made possible by Ruffle.rs/Ruffle Co. devs and fans on github
 
-                    Fish Proxy CONTRIBUTER(S): hahahah67-pixel- head of Fish Proxy & maneger + dev.
+                    Fish Proxy CONTRIBUTOR(S): hahahah67-pixel- head of Fish Proxy & manager + dev.
 
-                                    Mecuryworkshop and or Tituam network own the following:
+                                    MercuryWorkshop and or Titanium Network own the following:
 
-          anuraOS, dreamlandjs, wisp-protocol, wispcraft, wisp-server-node, scramjet, Scramjet-App, anura-browserjs, wisp-server-python, epoxy-tls, CurlTransport, wisp-js, ziptie, sh1mmer, Woeful, v86, wispmark, wisp2socks, bare-mux, chromeos-releases-data, chromeos-releases, chromeos-versions, chromeos-ppd, dreamland-website, dreamland2-playground, m3-dreamland, celeste-wasm, hg-website, FNA-Android-Build, Adrift, Fakemurk, E-Halcyon, Pollen, Lilac, Ultraviolet, Ultraviolet-App, Ultraviolet-Static, Ultraviolet-Node-Archive, Ultraviolet-Core, Ultraviolet-Static-Archive, UV-OLD, Oxide, Oxide-Docs, Definitely-Science, Proxy-Dispenser, Superintendent, serverguard, Pyrus, nano, masqr-middleware, MasqrProject, Ludicrous, php-proxy, b0ardwalk-old, Vanadium, Corrosion, Incognito-old, Reborn, alloy, TitaniumLite, Aurora-old, Holy-Unblocker, Terbium, Incognito, Radon-Games, Nebula, Kazwire, Rammerhead, Womginx, .github, assets
+anuraOS, dreamlandjs, wisp-protocol, wispcraft, wisp-server-node, scramjet, Scramjet-App, anura-browserjs, wisp-server-python, epoxy-tls, CurlTransport, wisp-js, ziptie, sh1mmer, Woeful, v86, wispmark, wisp2socks, bare-mux, chromeos-releases-data, chromeos-releases, chromeos-versions, chromeos-ppd, dreamland-website, dreamland2-playground, m3-dreamland, celeste-wasm, hg-website, FNA-Android-Build, Adrift, Fakemurk, E-Halcyon, Pollen, Lilac, Ultraviolet, Ultraviolet-App, Ultraviolet-Static, Ultraviolet-Node-Archive, Ultraviolet-Core, Ultraviolet-Static-Archive, UV-OLD, Oxide, Oxide-Docs, Definitely-Science, Proxy-Dispenser, Superintendent, serverguard, Pyrus, nano, masqr-middleware, MasqrProject, Ludicrous, php-proxy, b0ardwalk-old, Vanadium, Corrosion, Incognito-old, Reborn, alloy, TitaniumLite, Aurora-old, Holy-Unblocker, Terbium, Incognito, Radon-Games, Nebula, Kazwire, Rammerhead, Womginx, .github, assets
 
- All open source services have liscenses granted and Programs consented for usage in Fish Proxy services, all above stated open-source tools are lisenced under public lisence APGL 2.0-3.0 or have been archived, more more Lisencing information add /LISENCE.txt                                             in the URL bar to check Lisences. 
+  All open source services have licenses granted and Programs consented for usage in Fish Proxy services, all above stated open-source tools           are licensed under public license AGPL 2.0-3.0 or have been archived, for more Licensing information add /LICENSE.txt                                                              in the URL bar to check Licenses. 
 
 
 
-Copyright, Fish Proxy Company, 2026 all rights reserved. Fish Proxy has beeen regsitred under APGL 3.0 public Lisencing agreement.
+Copyright, Fish Proxy Company, 2026 all rights reserved. Fish Proxy has been registered under AGPL 3.0 public Licensing agreement.

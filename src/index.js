@@ -82,7 +82,7 @@ function sendError(res, code, file) {
   res.sendFile(`./public/${file}`, { root: "." });
 }
 
-app.use((req, res) => { sendError(res, 404, "404.html"); });
+
 
 const server = createServer();
 

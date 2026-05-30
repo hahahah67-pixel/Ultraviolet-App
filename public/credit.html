@@ -17,7 +17,7 @@
 			flex-direction: column;
 			align-items: center;
 			justify-content: center;
-			overflow: hidden;
+			overflow-y: auto;
 		}
 
 		canvas#starfield {
@@ -43,8 +43,7 @@
 			font-weight: 400;
 			color: #ffffff;
 			line-height: 1.8;
-			white-space: pre-wrap;
-			word-break: break-word;
+						word-break: break-word;
 		}
 
 		.back-btn {
@@ -135,7 +134,11 @@
 		fetch("/credits.txt")
 			.then(r => r.text())
 			.then(text => {
-				document.getElementById("credits-text").textContent = text.trim();
+				// Strip leading/trailing spaces per line so centering works in HTML
+				const cleaned = text.trim().split("\n")
+					.map(line => line.trim())
+					.join("\n");
+				document.getElementById("credits-text").textContent = cleaned;
 			})
 			.catch(() => {
 				document.getElementById("credits-text").textContent = "Could not load credits.";

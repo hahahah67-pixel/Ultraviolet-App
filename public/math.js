@@ -11,6 +11,11 @@ const gameBack         = document.getElementById("game-back");
 const btnFullscreen    = document.getElementById("btn-fullscreen");
 const btnReload        = document.getElementById("btn-reload");
 const gameFrameWrapper = document.getElementById("game-frame-wrapper");
+const gameLoader   = document.getElementById("game-loader");
+const glBg         = document.getElementById("gl-bg");
+const glIcon       = document.getElementById("gl-icon");
+const glTitle      = document.getElementById("gl-title");
+const glEngine     = document.getElementById("gl-engine");
 const gamesCount       = document.getElementById("games-count");
 const gamesDiceBtn     = document.getElementById("games-dice-btn");
 
@@ -154,17 +159,50 @@ async function openGame(id) {
 
 	let frameSrc;
 	if (g.url.startsWith("http")) {
-		// Remote URL — proxy it normally through UV or SJ
 		frameSrc = await proxyUrl(g.url);
+	} else if (g.url.startsWith("emu:")) {
+		// Format in games.txt: emu:core:romfilename.ext
+		// ROM file goes in: public/game files/emu games/
+		const parts = g.url.split(":");
+		const core  = parts[1];
+		const rom   = parts.slice(2).join(":"); // safe in case filename ever has a colon
+		frameSrc = `/game%20files/emulator.html?core=${encodeURIComponent(core)}&rom=/game%20files/emu%20games/${encodeURIComponent(rom)}`;
+	} else if (g.url.startsWith("flash:")) {
+		// Format in games.txt: flash:filename.swf
+		// SWF file goes in: public/game files/swf/
+		const swf = g.url.slice(6);
+		frameSrc = `/game%20files/ruffle-player.html?swf=/game%20files/swf/${encodeURIComponent(swf)}`;
 	} else {
-		// Local file — serve directly from public/game files/
-		// Encode each path segment separately to preserve slashes
 		frameSrc = "/game%20files/" + g.url.split("/").map(encodeURIComponent).join("/");
 	}
 
+	// Show game page
 	gamesPage.style.display = "none";
 	gamePage.classList.add("active");
-	gameFrame.src = frameSrc;
+
+	// ── Show loader ───────────────────────────────────────────────────────────
+	const iconSrc = g.logo || "";
+	const proxy   = localStorage.getItem("fish-proxy-choice") || "sj";
+	const engineLabel = proxy === "uv" ? "Ultraviolet" : "Scramjet";
+
+	// Set loader content
+	glBg.style.backgroundImage   = iconSrc ? `url(${iconSrc})` : "none";
+	glIcon.src                   = iconSrc;
+	glIcon.style.display         = iconSrc ? "block" : "none";
+	glTitle.textContent          = g.display || g.id;
+	glEngine.textContent         = engineLabel;
+
+	// Show loader, hide frame
+	gameLoader.classList.add("active");
+	gameFrameWrapper.classList.add("loading");
+	gameFrame.src = "about:blank";
+
+	// After 4 seconds — hide loader, load game
+	setTimeout(() => {
+		gameLoader.classList.remove("active");
+		gameFrameWrapper.classList.remove("loading");
+		gameFrame.src = frameSrc;
+	}, 4000);
 
 	history.pushState({ game: id }, "", `/math?game=${id}`);
 }
@@ -172,6 +210,8 @@ async function openGame(id) {
 // ── Back ──────────────────────────────────────────────────────────────────────
 gameBack.addEventListener("click", () => {
 	gameFrame.src = "about:blank";
+	gameLoader.classList.remove("active");
+	gameFrameWrapper.classList.remove("loading");
 	gamePage.classList.remove("active");
 	gamesPage.style.display = "flex";
 	history.pushState({}, "", "/math");

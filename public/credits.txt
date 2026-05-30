@@ -20,6 +20,8 @@
 
                     Ruffle flash Player- Made possible by Ruffle.rs/Ruffle Co. devs and fans on github
 
+                    Fish Proxy CONTRIBUTER(S): hahahah67-pixel- head of Fish Proxy & maneger + dev.
+
                                     Mecuryworkshop and or Tituam network own the following:
 
           anuraOS, dreamlandjs, wisp-protocol, wispcraft, wisp-server-node, scramjet, Scramjet-App, anura-browserjs, wisp-server-python, epoxy-tls, CurlTransport, wisp-js, ziptie, sh1mmer, Woeful, v86, wispmark, wisp2socks, bare-mux, chromeos-releases-data, chromeos-releases, chromeos-versions, chromeos-ppd, dreamland-website, dreamland2-playground, m3-dreamland, celeste-wasm, hg-website, FNA-Android-Build, Adrift, Fakemurk, E-Halcyon, Pollen, Lilac, Ultraviolet, Ultraviolet-App, Ultraviolet-Static, Ultraviolet-Node-Archive, Ultraviolet-Core, Ultraviolet-Static-Archive, UV-OLD, Oxide, Oxide-Docs, Definitely-Science, Proxy-Dispenser, Superintendent, serverguard, Pyrus, nano, masqr-middleware, MasqrProject, Ludicrous, php-proxy, b0ardwalk-old, Vanadium, Corrosion, Incognito-old, Reborn, alloy, TitaniumLite, Aurora-old, Holy-Unblocker, Terbium, Incognito, Radon-Games, Nebula, Kazwire, Rammerhead, Womginx, .github, assets

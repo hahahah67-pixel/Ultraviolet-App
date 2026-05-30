@@ -1,0 +1,23 @@
+Fish Proxy
+
+Built with love by the Fish Proxy team.
+
+Powered by Ultraviolet and Scramjet —
+two incredible open source proxy engines.
+
+Ultraviolet by Titanium Network
+Scramjet by Mercury Workshop
+Bare Server by Titanium Network
+BareMux by Titanium Network
+
+Games sourced from the web and EmulatorJS.
+
+EmulatorJS by EmulatorJS contributors.
+
+Special thanks to the open source community
+for making the free and open web possible.
+
+Fish Proxy is free, open source,
+and always will be.
+
+🐟

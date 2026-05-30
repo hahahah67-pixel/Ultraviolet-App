@@ -134,6 +134,10 @@
 		</div>
 		<input type="file" id="bg-file-input" accept="image/*" style="display:none"/>
 
+		<!-- ── Credits button ───────────────────────────────────────────────────── -->
+		<a href="/credit.html" id="credit-btn">credits</a>
+
+
 
 		<!-- Browser console -->
 		<div id="browser-console" class="browser-console">
@@ -523,6 +527,26 @@
 
 		img { max-width: 100%; }
 
+		/* ── Credits button ─────────────────────────────────────────────────── */
+		#credit-btn {
+		  position: fixed;
+		  bottom: 12px;
+		  left: 14px;
+		  z-index: 9998;
+		  font-size: 11px;
+		  font-family: "Caveat", cursive;
+		  font-weight: 500;
+		  letter-spacing: 0.04em;
+		  text-decoration: none;
+		  color: #fff;
+		  opacity: 0.55;
+		  transition: opacity 0.2s;
+		  pointer-events: all;
+		}
+		#credit-btn:hover { opacity: 1; }
+
+
+
 		@keyframes fadeIn {
 		  from { opacity: 0; transform: translateY(6px); }
 		  to   { opacity: 1; transform: translateY(0); }
@@ -874,6 +898,17 @@
 		  // Settings → /settings page
 		  const qlSettings = document.getElementById("ql-settings");
 		  if (qlSettings) qlSettings.addEventListener("click", () => { window.location.href = "/settings"; });
+		})();
+
+
+		// ── Credit button color based on background ─────────────────────────────
+		(function updateCreditColor() {
+		  const btn = document.getElementById("credit-btn");
+		  if (!btn) return;
+		  btn.style.color = "#fff";
+		  window.addEventListener("fish-bg-changed", function(e) {
+		    btn.style.color = e.detail && e.detail.light ? "#000" : "#fff";
+		  });
 		})();
 
 		</script>

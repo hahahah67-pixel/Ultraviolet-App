@@ -33,17 +33,18 @@
 			z-index: 1;
 			max-width: 560px;
 			width: 90%;
-			text-align: center;
+			text-align: left;
 			padding: 40px 20px;
 		}
 
 		.credits-text {
+			padding: 0 10px;
 			font-family: "Raleway", sans-serif;
 			font-size: 20px;
 			font-weight: 400;
 			color: #ffffff;
 			line-height: 1.8;
-						word-break: break-word;
+			word-break: break-word;
 		}
 
 		.back-btn {
@@ -134,7 +135,7 @@
 		fetch("/credits.txt")
 			.then(r => r.text())
 			.then(text => {
-				// Strip leading/trailing spaces per line so centering works in HTML
+				// Trim leading/trailing whitespace per line (credits.txt uses spaces for terminal centering)
 				const cleaned = text.trim().split("\n")
 					.map(line => line.trim())
 					.join("\n");

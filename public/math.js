@@ -155,6 +155,28 @@ async function openGame(id) {
 	const g = games.find(g => g.id === id);
 	if (!g) return;
 
+	// ── Show game page + loader IMMEDIATELY on click ──────────────────────────
+	// Must happen before any awaits so user sees the loader straight away.
+	// URL resolution (which can take seconds for SJ controller) runs after.
+	const proxy       = localStorage.getItem("fish-proxy-choice") || "sj";
+	const engineLabel = proxy === "uv" ? "Ultraviolet" : "Scramjet";
+	const iconSrc     = g.logo || "";
+
+	glBg.style.backgroundImage = iconSrc ? `url(${iconSrc})` : "none";
+	glIcon.src                 = iconSrc;
+	glIcon.style.display       = iconSrc ? "block" : "none";
+	glTitle.textContent        = g.display || g.id;
+	glEngine.textContent       = engineLabel;
+
+	gamesPage.style.display = "none";
+	gamePage.classList.add("active");
+	gameLoader.classList.add("active");
+	gameFrame.style.opacity = "0";
+	gameFrame.src = "about:blank";
+
+	const loaderShownAt = Date.now();
+
+	// ── Register SW and resolve proxy URL while loader is already visible ─────
 	try { await registerSW(); } catch(e) { console.warn("SW reg:", e); }
 
 	let frameSrc;
@@ -165,7 +187,7 @@ async function openGame(id) {
 		// ROM file goes in: public/game files/emu games/
 		const parts = g.url.split(":");
 		const core  = parts[1];
-		const rom   = parts.slice(2).join(":"); // safe in case filename ever has a colon
+		const rom   = parts.slice(2).join(":");
 		frameSrc = `/game%20files/emulator.html?core=${encodeURIComponent(core)}&rom=/game%20files/emu%20games/${encodeURIComponent(rom)}`;
 	} else if (g.url.startsWith("flash:")) {
 		// Format in games.txt: flash:filename.swf
@@ -176,33 +198,15 @@ async function openGame(id) {
 		frameSrc = "/game%20files/" + g.url.split("/").map(encodeURIComponent).join("/");
 	}
 
-	// Show game page
-	gamesPage.style.display = "none";
-	gamePage.classList.add("active");
-
-	// ── Show loader ───────────────────────────────────────────────────────────
-	const iconSrc = g.logo || "";
-	const proxy   = localStorage.getItem("fish-proxy-choice") || "sj";
-	const engineLabel = proxy === "uv" ? "Ultraviolet" : "Scramjet";
-
-	// Set loader content
-	glBg.style.backgroundImage   = iconSrc ? `url(${iconSrc})` : "none";
-	glIcon.src                   = iconSrc;
-	glIcon.style.display         = iconSrc ? "block" : "none";
-	glTitle.textContent          = g.display || g.id;
-	glEngine.textContent         = engineLabel;
-
-	// Show loader, hide frame
-	gameLoader.classList.add("active");
-	gameFrame.style.opacity = "0"; // hide iframe directly, not the wrapper (loader is inside wrapper)
-	gameFrame.src = "about:blank";
-
-	// After 4 seconds — hide loader, load game
+	// ── Show loader for at least 1.5s, then load game ─────────────────────────
+	// If resolution already took longer than 1.5s, load immediately.
+	const elapsed   = Date.now() - loaderShownAt;
+	const remaining = Math.max(0, 1500 - elapsed);
 	setTimeout(() => {
 		gameLoader.classList.remove("active");
 		gameFrame.style.opacity = "";
 		gameFrame.src = frameSrc;
-	}, 4000);
+	}, remaining);
 
 	history.pushState({ game: id }, "", `/math?game=${id}`);
 }

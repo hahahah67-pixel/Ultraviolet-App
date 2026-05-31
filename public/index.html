@@ -372,7 +372,7 @@
 		  padding: 8px 18px;
 		  z-index: 9997;
 		  color: rgba(255,255,255,0.5);
-		  font-size: 15px;
+		  font-size: 11px;
 		  font-family: "Roboto", Arial, sans-serif;
 		  letter-spacing: .05em;
 		  cursor: pointer;
@@ -527,30 +527,29 @@
 
 		img { max-width: 100%; }
 
+		@keyframes fadeIn {
+		  from { opacity: 0; transform: translateY(6px); }
+		  to   { opacity: 1; transform: translateY(0); }
+		}
+
 		/* ── Credits button ─────────────────────────────────────────────────── */
 		#credit-btn {
 		  position: fixed;
-		  bottom: 12px;
-		  left: 14px;
-		  z-index: 9998;
-		  font-size: 15px;
+		  bottom: 14px;
+		  left: 18px;
+		  z-index: 9999;
+		  font-size: 19px;
 		  font-family: "Caveat", cursive;
-		  font-weight: 500;
+		  font-weight: 600;
 		  letter-spacing: 0.04em;
 		  text-decoration: none;
 		  color: #fff;
-		  opacity: 0.55;
+		  opacity: 0.6;
 		  transition: opacity 0.2s;
 		  pointer-events: all;
 		}
 		#credit-btn:hover { opacity: 1; }
 
-
-
-		@keyframes fadeIn {
-		  from { opacity: 0; transform: translateY(6px); }
-		  to   { opacity: 1; transform: translateY(0); }
-		}
 		</style>
 
 		<script>

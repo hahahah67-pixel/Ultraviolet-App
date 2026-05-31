@@ -34,7 +34,7 @@ app.use((req, res, next) => {
   if (req.path === "/health") return next();
   if (req.path === "/messages.txt") return next();
   if (SW_ASSET_PREFIXES.some(p => req.path.startsWith(p))) return next();
-  return sendError(res, 404, "404.html");
+  return res.status(404).end();
 });
 
 app.get("/health", (req, res) => { res.sendStatus(200); });
@@ -82,7 +82,7 @@ function sendError(res, code, file) {
   res.sendFile(`./public/${file}`, { root: "." });
 }
 
-
+app.use((req, res) => { res.status(404).end(); });
 
 const server = createServer();
 

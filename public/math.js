@@ -194,13 +194,13 @@ async function openGame(id) {
 
 	// Show loader, hide frame
 	gameLoader.classList.add("active");
-	gameFrameWrapper.classList.add("loading");
+	gameFrame.style.opacity = "0"; // hide iframe directly, not the wrapper (loader is inside wrapper)
 	gameFrame.src = "about:blank";
 
 	// After 4 seconds — hide loader, load game
 	setTimeout(() => {
 		gameLoader.classList.remove("active");
-		gameFrameWrapper.classList.remove("loading");
+		gameFrame.style.opacity = "";
 		gameFrame.src = frameSrc;
 	}, 4000);
 
@@ -210,8 +210,8 @@ async function openGame(id) {
 // ── Back ──────────────────────────────────────────────────────────────────────
 gameBack.addEventListener("click", () => {
 	gameFrame.src = "about:blank";
+	gameFrame.style.opacity = "";
 	gameLoader.classList.remove("active");
-	gameFrameWrapper.classList.remove("loading");
 	gamePage.classList.remove("active");
 	gamesPage.style.display = "flex";
 	history.pushState({}, "", "/math");

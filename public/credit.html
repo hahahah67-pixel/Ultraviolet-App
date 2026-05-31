@@ -38,9 +38,8 @@
 		}
 
 		.credits-text {
-			padding: 0 10px;
 			font-family: "Raleway", sans-serif;
-			font-size: 20px;
+			font-size: 24px;
 			font-weight: 400;
 			color: #ffffff;
 			line-height: 1.8;
@@ -135,7 +134,6 @@
 		fetch("/credits.txt")
 			.then(r => r.text())
 			.then(text => {
-				// Trim leading/trailing whitespace per line (credits.txt uses spaces for terminal centering)
 				const cleaned = text.trim().split("\n")
 					.map(line => line.trim())
 					.join("\n");

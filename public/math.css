@@ -433,8 +433,4 @@ body {
   font-size: 11px;
 }
 
-/* game-frame-wrapper hidden during load */
-#game-frame-wrapper.loading {
-  opacity: 0;
-  pointer-events: none;
-}
+/* .loading class removed — iframe opacity handled via JS */

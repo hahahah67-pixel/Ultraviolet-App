@@ -900,11 +900,25 @@
 		})();
 
 
-		// ── Credit button color based on background ─────────────────────────────
-		(function updateCreditColor() {
+		// ── Credit button: hide when proxy active, show on homepage ──────────────
+		(function() {
 		  const btn = document.getElementById("credit-btn");
 		  if (!btn) return;
-		  btn.style.color = "#fff";
+
+		  function updateVisibility() {
+		    const uvFrame = document.getElementById("uv-frame");
+		    const sjFrame = document.getElementById("sj-frame");
+		    const uvActive = uvFrame &&
+		      uvFrame.style.display !== "none" &&
+		      uvFrame.src && uvFrame.src !== "" && uvFrame.src !== "about:blank";
+		    const sjActive = !!sjFrame && sjFrame.style.display !== "none";
+		    btn.style.display = (uvActive || sjActive) ? "none" : "";
+		  }
+
+		  // Poll every 400ms — lightweight, catches both UV and dynamically added SJ frame
+		  setInterval(updateVisibility, 400);
+
+		  // Also update on bg change
 		  window.addEventListener("fish-bg-changed", function(e) {
 		    btn.style.color = e.detail && e.detail.light ? "#000" : "#fff";
 		  });

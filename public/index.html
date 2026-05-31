@@ -905,20 +905,32 @@
 		  const btn = document.getElementById("credit-btn");
 		  if (!btn) return;
 
-		  function updateVisibility() {
+		  function update() {
 		    const uvFrame = document.getElementById("uv-frame");
 		    const sjFrame = document.getElementById("sj-frame");
-		    const uvActive = uvFrame &&
-		      uvFrame.style.display !== "none" &&
-		      uvFrame.src && uvFrame.src !== "" && uvFrame.src !== "about:blank";
-		    const sjActive = !!sjFrame && sjFrame.style.display !== "none";
+		    // UV active: index.js sets display="block" inline when navigating
+		    const uvActive = !!(uvFrame && uvFrame.style.display === "block");
+		    // SJ active: scramjet.createFrame() appends #sj-frame to body
+		    const sjActive = !!sjFrame;
 		    btn.style.display = (uvActive || sjActive) ? "none" : "";
 		  }
 
-		  // Poll every 400ms — lightweight, catches both UV and dynamically added SJ frame
-		  setInterval(updateVisibility, 400);
+		  // Watch body childList — catches sj-frame being added/removed dynamically
+		  new MutationObserver(update).observe(document.body, { childList: true });
 
-		  // Also update on bg change
+		  // Watch uv-frame style attribute — catches display:block being set
+		  const uvEl = document.getElementById("uv-frame");
+		  if (uvEl) {
+		    new MutationObserver(update).observe(uvEl, {
+		      attributes: true,
+		      attributeFilter: ["style"]
+		    });
+		  }
+
+		  // Initial state check
+		  update();
+
+		  // Also update color if background changes
 		  window.addEventListener("fish-bg-changed", function(e) {
 		    btn.style.color = e.detail && e.detail.light ? "#000" : "#fff";
 		  });

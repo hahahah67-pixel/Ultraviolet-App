@@ -176,6 +176,7 @@ body {
 
 /* Game frame — floating window, stars visible around it */
 #game-frame-wrapper {
+  position: relative;
   width: 68vw;
   height: 60vh;
   border-radius: 12px;
@@ -317,9 +318,9 @@ body {
 
 /* ── Game loader ─────────────────────────────────────────────────────────── */
 #game-loader {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: 9996;
+  z-index: 10;
   display: none;
   flex-direction: column;
   align-items: center;

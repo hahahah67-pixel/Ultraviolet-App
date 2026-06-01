@@ -72,6 +72,12 @@ app.use((req, res, next) => {
   next();
 });
 
+// Force browsers to always fetch fresh sw.js — ensures new SW deploys instantly
+app.get("/sw.js", (req, res, next) => {
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+  next();
+});
+
 app.use(express.static("./public"));
 app.use("/uv/", express.static(uvPath));
 app.use("/epoxy/", express.static(epoxyPath));

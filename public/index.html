@@ -29,7 +29,8 @@
 		<script src="baremux/index.js"></script>
 		<script src="uv/uv.bundle.js"></script>
 		<script src="uv/uv.config.js"></script>
-		<script src="/scram/scramjet.all.js"></script>
+		<script src="/scram/scramjet.js"></script>
+		<script src="/scram/controller.api.js"></script>
 	</head>
 
 	<body style="overflow:hidden">
@@ -910,27 +911,24 @@
 		    const sjFrame = document.getElementById("sj-frame");
 		    // UV active: index.js sets display="block" inline when navigating
 		    const uvActive = !!(uvFrame && uvFrame.style.display === "block");
-		    // SJ active: scramjet.createFrame() appends #sj-frame to body
+		    // SJ active: new Controller appends #sj-frame to body dynamically
 		    const sjActive = !!sjFrame;
 		    btn.style.display = (uvActive || sjActive) ? "none" : "";
 		  }
 
-		  // Watch body childList — catches sj-frame being added/removed dynamically
+		  // Watch body childList — catches sj-frame being added/removed
 		  new MutationObserver(update).observe(document.body, { childList: true });
 
 		  // Watch uv-frame style attribute — catches display:block being set
 		  const uvEl = document.getElementById("uv-frame");
 		  if (uvEl) {
 		    new MutationObserver(update).observe(uvEl, {
-		      attributes: true,
-		      attributeFilter: ["style"]
+		      attributes: true, attributeFilter: ["style"]
 		    });
 		  }
 
-		  // Initial state check
-		  update();
+		  update(); // initial state
 
-		  // Also update color if background changes
 		  window.addEventListener("fish-bg-changed", function(e) {
 		    btn.style.color = e.detail && e.detail.light ? "#000" : "#fff";
 		  });

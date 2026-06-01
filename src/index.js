@@ -15,6 +15,7 @@ app.use(cookieParser());
 
 // ===== Private beta gate =====
 const ENTRY_PATHS = ["/index.html", "/math", "/math.html", "/settings"];
+const ALLOWED_HOSTS = ["100.52.135.225"];
 const ACCESS_COOKIE = "beta_access";
 
 const SW_ASSET_PREFIXES = [
@@ -28,11 +29,12 @@ const SW_ASSET_PREFIXES = [
 
 app.use((req, res, next) => {
   const hasAccessCookie = req.cookies?.[ACCESS_COOKIE] === "true";
-  if (ENTRY_PATHS.includes(req.path) || hasAccessCookie) return next();
+  const host = req.headers.host?.split(":")[0];
+  if (ENTRY_PATHS.includes(req.path) || hasAccessCookie || ALLOWED_HOSTS.includes(host)) return next();
   if (req.path === "/health") return next();
   if (req.path === "/messages.txt") return next();
   if (SW_ASSET_PREFIXES.some(p => req.path.startsWith(p))) return next();
-  return sendError(res, 404, "404.html");
+  return res.status(404).end();
 });
 
 app.get("/health", (req, res) => { res.sendStatus(200); });
@@ -80,7 +82,7 @@ function sendError(res, code, file) {
   res.sendFile(`./public/${file}`, { root: "." });
 }
 
-app.use((req, res) => { sendError(res, 404, "404.html"); });
+app.use((req, res) => { res.status(404).end(); });
 
 const server = createServer();
 

@@ -1,4 +1,3 @@
-importScripts("/scram/scramjet.js");
 importScripts("/scram/controller.sw.js");
 
 // Headers that reveal proxy/bot identity — strip from outgoing requests
@@ -41,7 +40,7 @@ function scrubRequest(request) {
 	}
 }
 
-// controller.sw.js already handles install, activate, and message listeners.
+// controller.sw.js handles install, activate, and message listeners internally.
 // We only need the fetch handler here.
 self.addEventListener("fetch", (event) => {
 	event.respondWith(

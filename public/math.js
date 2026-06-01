@@ -52,21 +52,10 @@ async function loadGames() {
 	}
 }
 
-// ── Wait for scramjet controller to be ready ─────────────────────────────────
-// math.html inits the controller async — we must wait before encoding URLs.
-async function waitForSJController(timeoutMs = 8000) {
-	const start = Date.now();
-	while (!window.__scramjetController) {
-		if (Date.now() - start > timeoutMs) {
-			console.warn("SJ controller timed out, proceeding without it");
-			return false;
-		}
-		await new Promise(r => setTimeout(r, 50));
-	}
-	return true;
-}
+// SJ is now handled via Controller API (controller.api.js) — see getSJGameFrame() below.
 
 // ── Proxy helpers ─────────────────────────────────────────────────────────────
+// bare-mux connection — UV only. SJ no longer uses bare-mux in new architecture.
 const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 
 function getWispUrl() {
@@ -74,34 +63,54 @@ function getWispUrl() {
 		"://" + location.host + "/wisp/";
 }
 
-async function proxyUrl(rawUrl) {
-	const proxy   = localStorage.getItem("fish-proxy-choice") || "sj";
+// UV-only URL encoder
+async function proxyUrlUV(rawUrl) {
 	const wispUrl = getWispUrl();
-
-	if (proxy === "uv") {
-		// Make sure UV transport is set
-		const current = await connection.getTransport();
-		if (current !== "/epoxy/index.mjs") {
-			await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
-		}
-		// __uv$config is set synchronously by uv.config.js so always available
-		return __uv$config.prefix + __uv$config.encodeUrl(rawUrl);
-
-	} else {
-		// Make sure SJ transport is set
-		const current = await connection.getTransport();
-		if (current !== "/libcurl/index.mjs") {
-			await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
-		}
-		// Wait for controller to be ready before encoding
-		const ready = await waitForSJController();
-		if (ready && window.__scramjetController) {
-			return window.__scramjetController.encodeUrl(rawUrl);
-		}
-		// Fallback — load raw (won't be proxied but won't crash)
-		console.warn("SJ controller not ready, loading raw URL");
-		return rawUrl;
+	const current = await connection.getTransport();
+	if (current !== "/epoxy/index.mjs") {
+		await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
 	}
+	return __uv$config.prefix + __uv$config.encodeUrl(rawUrl);
+}
+
+// ── SJ Game Frame ─────────────────────────────────────────────────────────────
+// Singleton Controller + Frame wrapping #game-frame for SJ-proxied games.
+// $scramjetController is set globally by controller.api.js in math.html.
+let _sjCtrl      = null;
+let _sjGameFrame = null;
+
+async function getSJGameFrame() {
+	if (_sjGameFrame) return _sjGameFrame;
+
+	// Find the Scramjet SW specifically (not the UV one at /uv/sw.js)
+	const regs  = await navigator.serviceWorker.getRegistrations();
+	const sjReg = regs.find(r =>
+		r.active && new URL(r.active.scriptURL).pathname === "/sw.js"
+	);
+	const sw = sjReg?.active;
+	if (!sw) throw new Error("[Fish/SJ] Scramjet SW not active — registerSW() first");
+
+	// LibcurlClient imported from the existing /libcurl/index.mjs
+	const { default: LibcurlClient } = await import("/libcurl/index.mjs");
+	const transport = new LibcurlClient({ wisp: getWispUrl() });
+	await transport.init();
+
+	// Controller config points to new split files in /scram/
+	_sjCtrl = new $scramjetController.Controller({
+		serviceworker: sw,
+		transport,
+		config: {
+			scramjetPath: "/scram/scramjet.js",
+			injectPath:   "/scram/controller.inject.js",
+			wasmPath:     "/scram/scramjet.wasm",
+		},
+	});
+
+	await _sjCtrl.wait();
+
+	// Wrap the existing #game-frame element — frame.go() will set its src directly
+	_sjGameFrame = _sjCtrl.createFrame(gameFrame);
+	return _sjGameFrame;
 }
 
 // ── Render grid ───────────────────────────────────────────────────────────────
@@ -180,8 +189,27 @@ async function openGame(id) {
 	try { await registerSW(); } catch(e) { console.warn("SW reg:", e); }
 
 	let frameSrc;
-	if (g.url.startsWith("http")) {
-		frameSrc = await proxyUrl(g.url);
+	if (g.url.startsWith("http") && proxy !== "uv") {
+		// ── Scramjet: Controller frame handles encoding + navigation ─────────────
+		try {
+			const sjf = await getSJGameFrame();
+			const elapsed   = Date.now() - loaderShownAt;
+			const remaining = Math.max(0, 1500 - elapsed);
+			setTimeout(() => {
+				gameLoader.classList.remove("active");
+				gameFrame.style.opacity = "";
+				sjf.go(g.url); // encodes URL and sets gameFrame.src internally
+			}, remaining);
+		} catch(e) {
+			console.error("[Fish/SJ] getSJGameFrame failed:", e);
+			gameLoader.classList.remove("active");
+			gameFrame.style.opacity = "";
+		}
+		history.pushState({ game: id }, "", `/math?game=${id}`);
+		return; // early return — no frameSrc needed for SJ http
+	} else if (g.url.startsWith("http")) {
+		// ── UV: encode URL via bare-mux + epoxy ──────────────────────────────────
+		frameSrc = await proxyUrlUV(g.url);
 	} else if (g.url.startsWith("emu:")) {
 		// Format in games.txt: emu:core:romfilename.ext
 		// ROM file goes in: public/game files/emu games/
@@ -228,8 +256,13 @@ btnFullscreen.addEventListener("click", () => {
 });
 
 btnReload.addEventListener("click", () => {
-	try { gameFrame.contentWindow.location.reload(); }
-	catch(e) { gameFrame.src = gameFrame.src; }
+	const proxy = localStorage.getItem("fish-proxy-choice") || "sj";
+	if (proxy === "sj" && _sjGameFrame) {
+		_sjGameFrame.reload(); // uses Frame.reload() → contentWindow.location.reload()
+	} else {
+		try { gameFrame.contentWindow.location.reload(); }
+		catch(e) { gameFrame.src = gameFrame.src; }
+	}
 });
 
 // ── Handle ?game= on load ─────────────────────────────────────────────────────

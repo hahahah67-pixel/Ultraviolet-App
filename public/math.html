@@ -35,7 +35,8 @@
 		<script src="baremux/index.js"></script>
 		<script src="uv/uv.bundle.js"></script>
 		<script src="uv/uv.config.js"></script>
-		<script src="/scram/scramjet.all.js"></script>
+		<script src="/scram/scramjet.js"></script>
+		<script src="/scram/controller.api.js"></script>
 		<script src="register-sw.js"></script>
 	</head>
 
@@ -170,22 +171,8 @@
 		  requestAnimationFrame(draw);
 		})();
 
-		// ── Wire up Scramjet controller so math.js can use it ─────────────────
-		(function () {
-		  try {
-		    const { ScramjetController } = $scramjetLoadController();
-		    window.__scramjetController = new ScramjetController({
-		      files: {
-		        wasm: "/scram/scramjet.wasm.wasm",
-		        all:  "/scram/scramjet.all.js",
-		        sync: "/scram/scramjet.sync.js",
-		      }
-		    });
-		    window.__scramjetController.init();
-		  } catch(e) {
-		    console.warn("Scramjet controller init failed:", e);
-		  }
-		})();
+		// SJ Controller is initialized lazily by math.js when a game is opened.
+		// $scramjetController global is set by controller.api.js above.
 		</script>
 
 

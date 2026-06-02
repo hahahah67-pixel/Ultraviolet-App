@@ -12,36 +12,26 @@ const STRIP_HEADERS = [
 	"forwarded",
 ];
 
-// Clean request headers to look more like a real browser
 function scrubRequest(request) {
 	try {
 		const headers = new Headers(request.headers);
 		let modified = false;
-
 		for (const h of STRIP_HEADERS) {
-			if (headers.has(h)) {
-				headers.delete(h);
-				modified = true;
-			}
+			if (headers.has(h)) { headers.delete(h); modified = true; }
 		}
-
-		// Missing sec-fetch-* is a strong bot signal YouTube checks for
 		if (!headers.has("sec-fetch-site")) {
 			headers.set("sec-fetch-site", "same-origin");
 			headers.set("sec-fetch-mode", "navigate");
 			headers.set("sec-fetch-dest", "document");
 			modified = true;
 		}
-
 		if (!modified) return request;
 		return new Request(request, { headers });
-	} catch (e) {
-		return request;
-	}
+	} catch (e) { return request; }
 }
 
-// controller.sw.js handles install, activate, and message listeners internally.
-// We only need the fetch handler here.
+// controller.sw.js handles install, activate (skipWaiting + clients.claim), and message.
+// We only add the fetch handler here.
 self.addEventListener("fetch", (event) => {
 	event.respondWith(
 		(async () => {

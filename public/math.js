@@ -79,16 +79,22 @@ async function proxyUrlUV(rawUrl) {
 let _sjCtrl      = null;
 let _sjGameFrame = null;
 
+// ── Get the SW controlling this page — the exact object Controller needs ──────
+async function getActiveSW() {
+	if (navigator.serviceWorker.controller) return navigator.serviceWorker.controller;
+	return new Promise((resolve) => {
+		navigator.serviceWorker.addEventListener("controllerchange", () => {
+			resolve(navigator.serviceWorker.controller);
+		}, { once: true });
+	});
+}
+
 async function getSJGameFrame() {
 	if (_sjGameFrame) return _sjGameFrame;
 
-	// Find the Scramjet SW specifically (not the UV one at /uv/sw.js)
-	const regs  = await navigator.serviceWorker.getRegistrations();
-	const sjReg = regs.find(r =>
-		r.active && new URL(r.active.scriptURL).pathname === "/sw.js"
-	);
-	const sw = sjReg?.active;
-	if (!sw) throw new Error("[Fish/SJ] Scramjet SW not active — registerSW() first");
+	// Get the ServiceWorker controlling this page — what Controller expects
+	const sw = await getActiveSW();
+	if (!sw) throw new Error("[Fish/SJ] No controlling service worker found");
 
 	// LibcurlClient imported from the existing /libcurl/index.mjs
 	const { default: LibcurlClient } = await import("/libcurl/index.mjs");

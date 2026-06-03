@@ -45,7 +45,15 @@ async function initSJController() {
 	// LibcurlClient transport — same file used in old Fish, works with Wisp
 	const { default: LibcurlClient } = await import("/libcurl/index.mjs");
 	const transport = new LibcurlClient({ wisp: getWispUrl() });
-	await transport.init();
+	
+	// Initialize and wait for WASM to load
+	const initResult = transport.init();
+	if (initResult && typeof initResult.then === 'function') {
+		await initResult;
+	}
+	
+	// Give it a moment to ensure WASM is truly ready
+	await new Promise(r => setTimeout(r, 100));
 
 	// Create controller — scramjet.js must be loaded first (set in index.html script tags)
 	_sjController = new $scramjetController.Controller({

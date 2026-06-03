@@ -24,8 +24,13 @@ async function getActiveSW() {
 		return navigator.serviceWorker.controller;
 	}
 	// Wait for controllerchange event — fires when clients.claim() runs
-	return new Promise((resolve) => {
+	// Timeout after 15s to avoid hanging forever if something goes wrong
+	return new Promise((resolve, reject) => {
+		const timeout = setTimeout(() => {
+			reject(new Error("[Fish/SJ] Timed out waiting for service worker controller (15s)"));
+		}, 15000);
 		navigator.serviceWorker.addEventListener("controllerchange", () => {
+			clearTimeout(timeout);
 			resolve(navigator.serviceWorker.controller);
 		}, { once: true });
 	});
@@ -42,18 +47,17 @@ async function initSJController() {
 	const sw = await getActiveSW();
 	if (!sw) throw new Error("[Fish/SJ] No controlling service worker found");
 
-	// Import libcurl and explicitly load WASM first
-	const libcurlModule = await import("/libcurl/index.mjs");
-	const { default: LibcurlClient, load_wasm } = libcurlModule;
-	
-	// Load libcurl WASM before creating transport
-	await load_wasm("/libcurl/index.mjs");
-	
-	// Now create and initialize the transport
+	// Import libcurl transport.
+	// libcurl/index.mjs exports ONLY: LibcurlClient as default
+	// The WASM is embedded as a data URI inside the 2MB bundle and loads
+	// automatically when the module is imported — no manual load_wasm() needed.
+	const { default: LibcurlClient } = await import("/libcurl/index.mjs");
+
+	// init() sets the wisp URL and waits for the embedded WASM to be ready.
 	const transport = new LibcurlClient({ wisp: getWispUrl() });
 	await transport.init();
 
-	// Create controller — scramjet.js must be loaded first (set in index.html script tags)
+	// Create controller — scramjet.js must already be loaded (index.html script tags)
 	_sjController = new $scramjetController.Controller({
 		serviceworker: sw,
 		transport,
@@ -64,7 +68,7 @@ async function initSJController() {
 		},
 	});
 
-	// wait() resolves when SW responds with "ready" + WASM is fetched + cookies loaded
+	// wait() resolves when SW responds with "ready" + scramjet WASM is fetched + cookies loaded
 	await _sjController.wait();
 	return _sjController;
 }

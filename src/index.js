@@ -8,7 +8,7 @@ import cookieParser from "cookie-parser";
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
-import { scramjetPath } from "@mercuryworkshop/scramjet";
+import { scramjetPath } from "@mercuryworkshop/scramjet/path";
 
 const app = express();
 app.use(cookieParser());
@@ -128,4 +128,4 @@ function shutdown() {
   process.exit(0);
 }
 
-server.listen({ port });
+server.listen({ port, host: "0.0.0.0" });

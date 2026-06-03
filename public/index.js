@@ -42,18 +42,16 @@ async function initSJController() {
 	const sw = await getActiveSW();
 	if (!sw) throw new Error("[Fish/SJ] No controlling service worker found");
 
-	// LibcurlClient transport — same file used in old Fish, works with Wisp
-	const { default: LibcurlClient } = await import("/libcurl/index.mjs");
+	// Import libcurl and explicitly load WASM first
+	const libcurlModule = await import("/libcurl/index.mjs");
+	const { default: LibcurlClient, load_wasm } = libcurlModule;
+	
+	// Load libcurl WASM before creating transport
+	await load_wasm("/libcurl/index.mjs");
+	
+	// Now create and initialize the transport
 	const transport = new LibcurlClient({ wisp: getWispUrl() });
-	
-	// Initialize and wait for WASM to load
-	const initResult = transport.init();
-	if (initResult && typeof initResult.then === 'function') {
-		await initResult;
-	}
-	
-	// Give it a moment to ensure WASM is truly ready
-	await new Promise(r => setTimeout(r, 100));
+	await transport.init();
 
 	// Create controller — scramjet.js must be loaded first (set in index.html script tags)
 	_sjController = new $scramjetController.Controller({

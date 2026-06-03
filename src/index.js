@@ -8,7 +8,6 @@ import cookieParser from "cookie-parser";
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
-import { scramjetPath } from "@mercuryworkshop/scramjet/path";
 
 const app = express();
 app.use(cookieParser());
@@ -83,7 +82,7 @@ app.use(express.static("./public"));
 app.use("/uv/", express.static(uvPath));
 app.use("/epoxy/", express.static(epoxyPath));
 app.use("/baremux/", express.static(baremuxPath));
-app.use("/scram/", express.static(scramjetPath));
+app.use("/scram/", express.static("./public/scram"));
 
 function sendError(res, code, file) {
   res.status(code);

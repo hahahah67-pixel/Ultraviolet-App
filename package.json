@@ -25,7 +25,6 @@
 	"dependencies": {
 		"@mercuryworkshop/bare-mux": "^2.1.8",
 		"@mercuryworkshop/epoxy-transport": "2.1.28",
-		"@mercuryworkshop/scramjet": "^1.1.0",
 		"@titaniumnetwork-dev/ultraviolet": "^3.2.10",
 		"cookie-parser": "^1.4.7",
 		"express": "^5.2.1",

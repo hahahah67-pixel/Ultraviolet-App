@@ -34,7 +34,7 @@ app.use((req, res, next) => {
   if (req.path === "/health") return next();
   if (req.path === "/messages.txt") return next();
   if (SW_ASSET_PREFIXES.some(p => req.path.startsWith(p))) return next();
-  return res.status(404).end();
+  return sendError(res, 404, "404.html");
 });
 
 app.get("/health", (req, res) => { res.sendStatus(200); });
@@ -72,24 +72,17 @@ app.use((req, res, next) => {
   next();
 });
 
-// Force browsers to always fetch fresh sw.js — ensures new SW deploys instantly
-app.get("/sw.js", (req, res, next) => {
-  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-  next();
-});
-
 app.use(express.static("./public"));
 app.use("/uv/", express.static(uvPath));
 app.use("/epoxy/", express.static(epoxyPath));
 app.use("/baremux/", express.static(baremuxPath));
-app.use("/scram/", express.static("./public/scram"));
 
 function sendError(res, code, file) {
   res.status(code);
   res.sendFile(`./public/${file}`, { root: "." });
 }
 
-app.use((req, res) => { res.status(404).end(); });
+app.use((req, res) => { sendError(res, 404, "404.html"); });
 
 const server = createServer();
 
@@ -127,4 +120,4 @@ function shutdown() {
   process.exit(0);
 }
 
-server.listen({ port, host: "0.0.0.0" });
+server.listen({ port });

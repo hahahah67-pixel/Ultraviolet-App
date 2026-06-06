@@ -53,23 +53,20 @@ async function initSJController() {
 	// automatically when the module is imported — no manual load_wasm() needed.
 	const { default: LibcurlClient } = await import("/libcurl/index.mjs");
 
-	// init() sets the wisp URL and waits for the embedded WASM to be ready.
-	const transport = new LibcurlClient({ wisp: getWispUrl() });
-	await transport.init();
+const transport = new LibcurlClient({ wisp: getWispUrl() });
+await transport.init();
 
-	// Create controller — scramjet.js must already be loaded (index.html script tags)
-	_sjController = new $scramjetController.Controller({
-		serviceworker: sw,
-		transport,
-		config: {
-			scramjetPath: "/scram/scramjet.js",
-			injectPath:   "/scram/controller.inject.js",
-			wasmPath:     "/scram/scramjet.wasm",
-		},
-	});
+// legacy Scramjet mode (no controller API)
+_sjController = {
+	transport,
+	sync: null
+};
 
-	// wait() resolves when SW responds with "ready" + scramjet WASM is fetched + cookies loaded
-	await _sjController.wait();
+// load legacy engine once
+if (!window.__scramjetLoaded) {
+	await import("/scram/scramjet.sync.js");
+	window.__scramjetLoaded = true;
+}
 	return _sjController;
 }
 

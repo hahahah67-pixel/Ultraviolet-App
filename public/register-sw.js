@@ -12,7 +12,7 @@
  * and continue so Scramjet still works.
  */
 
-const uvSW = "/uv/uv.sw.js";
+const uvSW = "/uv/uv.sw.mjs";
 const sjSW = "/sw.js";
 
 const swAllowedHostnames = ["localhost", "127.0.0.1"];

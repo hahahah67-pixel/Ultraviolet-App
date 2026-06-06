@@ -26,127 +26,140 @@ let randomGame = null;
 
 // ── load games ───────────────────────────────────────────────────────────────
 async function loadGames() {
-	try {
-		const res = await fetch("/games.txt");
-		const text = await res.text();
+    try {
+        const res = await fetch("/games.txt");
+        const text = await res.text();
 
-		games = text.trim().split("\n")
-			.filter(l => l && !l.startsWith("#"))
-			.map(line => {
-				const p = line.split("|");
-				return {
-					id: p[0].trim(),
-					display: p[1].trim(),
-					url: p[2].trim(),
-					logo: "images/game%20icons/" + encodeURIComponent(p[3].trim()),
-					terms: p.slice(1).map(t => t.trim().toLowerCase())
-				};
-			})
-			.filter(g => g.id && g.url);
-	} catch (e) {
-		console.warn("games load failed", e);
-		games = [];
-	}
+        games = text.trim().split("\n")
+            .filter(l => l && !l.startsWith("#"))
+            .map(line => {
+                const p = line.split("|");
+                return {
+                    id: p[0].trim(),
+                    display: p[1].trim(),
+                    url: p[2].trim(),
+                    logo: "images/game%20icons/" + encodeURIComponent(p[3].trim()),
+                    terms: p.slice(1).map(t => t.trim().toLowerCase())
+                };
+            })
+            .filter(g => g.id && g.url);
+    } catch (e) {
+        console.warn("games load failed", e);
+        games = [];
+    }
 }
 
 // ── legacy Scramjet loader ───────────────────────────────────────────────────
 async function loadScramjet() {
-	if (!window.__scramjetLoaded) {
-		await import("/scram/scramjet.sync.js");
-		window.__scramjetLoaded = true;
-	}
+    if (!window.__scramjetLoaded) {
+        await import("/scram/scramjet.sync.js");
+        window.__scramjetLoaded = true;
+    }
 }
 
 // ── render grid ──────────────────────────────────────────────────────────────
 function renderGrid(list) {
-	gameGrid.innerHTML = "";
-	noResults.style.display = list.length ? "none" : "block";
+    gameGrid.innerHTML = "";
+    noResults.style.display = list.length ? "none" : "block";
 
-	gamesCount.textContent = `Games ${list.length} / ${games.length}`;
+    gamesCount.textContent = `Games ${list.length} / ${games.length}`;
 
-	for (const g of list) {
-		const card = document.createElement("div");
-		card.className = "game-card";
+    for (const g of list) {
+        const card = document.createElement("div");
+        card.className = "game-card";
 
-		const img = document.createElement("img");
-		img.src = g.logo;
+        const img = document.createElement("img");
+        img.src = g.logo;
 
-		const name = document.createElement("div");
-		name.textContent = g.display;
+        const name = document.createElement("div");
+        name.textContent = g.display;
 
-		card.appendChild(img);
-		card.appendChild(name);
+        card.appendChild(img);
+        card.appendChild(name);
 
-		card.onclick = () => openGame(g.id);
+        card.onclick = () => openGame(g.id);
 
-		gameGrid.appendChild(card);
-	}
+        gameGrid.appendChild(card);
+    }
 }
 
 // ── search ───────────────────────────────────────────────────────────────────
 gameSearch.addEventListener("input", () => {
-	const q = gameSearch.value.toLowerCase().trim();
-	if (!q) return renderGrid(games);
+    const q = gameSearch.value.toLowerCase().trim();
+    if (!q) return renderGrid(games);
 
-	renderGrid(games.filter(g =>
-		g.terms.some(t => t.includes(q))
-	));
+    renderGrid(games.filter(g =>
+        g.terms.some(t => t.includes(q))
+    ));
 });
 
-// ── legacy scramjet frame wrapper ────────────────────────────────────────────
-function createLegacyFrame() {
-	const frame = document.getElementById("game-frame");
-	return {
-		frame,
-		go: (url) => window.__scramjetNavigate?.(frame, url),
-		reload: () => frame.contentWindow.location.reload()
-	};
+// ── game frame helper ─────────────────────────────────────────────────────────
+function getGameFrame() {
+    return document.getElementById("game-frame");
 }
 
 // ── open game ────────────────────────────────────────────────────────────────
 async function openGame(id) {
-	const g = games.find(x => x.id === id);
-	if (!g) return;
+    const g = games.find(x => x.id === id);
+    if (!g) return;
 
-	await loadScramjet();
+    await loadScramjet();
 
-	glTitle.textContent = g.display;
-	glIcon.src = g.logo;
-	glEngine.textContent = "Scramjet (Legacy)";
+    glTitle.textContent = g.display;
+    glIcon.src = g.logo;
+    glEngine.textContent = "Scramjet (Legacy)";
 
-	gamesPage.style.display = "none";
-	gamePage.classList.add("active");
+    gamesPage.style.display = "none";
+    gamePage.classList.add("active");
 
-	gameLoader.classList.add("active");
-	gameFrame.src = "about:blank";
+    gameLoader.classList.add("active");
 
-	setTimeout(() => {
-		gameLoader.classList.remove("active");
+    const frame = getGameFrame();
+    frame.src = "about:blank";
 
-		const sj = createLegacyFrame();
-		sj.go(g.url);
-	}, 1200);
+    try {
+        if (typeof window.__scramjetNavigate !== "function") {
+            throw new Error("Scramjet runtime not ready");
+        }
 
-	history.pushState({}, "", `/math?game=${id}`);
+        // ensure loader minimum display time
+        setTimeout(() => {
+            gameLoader.classList.remove("active");
+            window.__scramjetNavigate(frame, g.url);
+        }, 1000);
+
+        history.pushState({}, "", `/math?game=${id}`);
+
+    } catch (err) {
+        console.error(err);
+        gameLoader.classList.remove("active");
+    }
 }
 
 // ── back ─────────────────────────────────────────────────────────────────────
 gameBack.onclick = () => {
-	gamePage.classList.remove("active");
-	gamesPage.style.display = "flex";
-	gameFrame.src = "about:blank";
+    gamePage.classList.remove("active");
+    gamesPage.style.display = "flex";
+    getGameFrame().src = "about:blank";
 };
 
 // ── controls ──────────────────────────────────────────────────────────────────
-btnReload.onclick = () => gameFrame.contentWindow.location.reload();
+btnReload.onclick = () => {
+    const frame = getGameFrame();
+    try {
+        frame.contentWindow.location.reload();
+    } catch (e) {
+        console.warn("reload failed", e);
+    }
+};
 
 btnFullscreen.onclick = () => {
-	const el = gameFrameWrapper;
-	if (el.requestFullscreen) el.requestFullscreen();
+    const el = gameFrameWrapper;
+    if (el.requestFullscreen) el.requestFullscreen();
 };
 
 // ── init ─────────────────────────────────────────────────────────────────────
 (async () => {
-	await loadGames();
-	renderGrid(games);
+    await loadGames();
+    renderGrid(games);
 })();

@@ -111,11 +111,13 @@ form.addEventListener("submit", async (event) => {
 		if (oldSjFrame) oldSjFrame.remove();
 
 		try {
-			const ctrl           = await initSJController();
-			const sjFrameWrapper = ctrl.createFrame();       // new iframe element
-			sjFrameWrapper.element.id = "sj-frame";         // CSS applies via index.css
-			document.body.appendChild(sjFrameWrapper.element);
-			sjFrameWrapper.go(url);                          // encodes URL internally
+			await initSJController();
+
+const frame = document.createElement("iframe");
+frame.id = "sj-frame";
+document.body.appendChild(frame);
+
+window.__scramjetNavigate?.(frame, url);
 
 			if (typeof hideHome === "function") hideHome();
 			const _bar = document.getElementById("browser-console");

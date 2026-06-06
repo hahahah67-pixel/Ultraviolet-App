@@ -1,165 +1,107 @@
 "use strict";
 
-// ── DOM refs ────────────────────────────────────────────────────────────────
-const gamesPage        = document.getElementById("games-page");
-const gamePage         = document.getElementById("game-page");
-const gameGrid         = document.getElementById("game-grid");
-const gameSearch       = document.getElementById("game-search");
-const noResults        = document.getElementById("no-results");
-const gameFrame        = document.getElementById("game-frame");
-const gameBack         = document.getElementById("game-back");
-const btnFullscreen    = document.getElementById("btn-fullscreen");
-const btnReload        = document.getElementById("btn-reload");
-const gameFrameWrapper = document.getElementById("game-frame-wrapper");
-const gameLoader       = document.getElementById("game-loader");
-const glBg             = document.getElementById("gl-bg");
-const glIcon           = document.getElementById("gl-icon");
-const glTitle          = document.getElementById("gl-title");
-const glEngine         = document.getElementById("gl-engine");
-const gamesCount       = document.getElementById("games-count");
-const gamesDiceBtn     = document.getElementById("games-dice-btn");
+const gamesPage     = document.getElementById("games-page");
+const gamePage      = document.getElementById("game-page");
+const gameGrid      = document.getElementById("game-grid");
+const gameSearch    = document.getElementById("game-search");
+const gameFrame     = document.getElementById("game-frame");
+const gameLoader    = document.getElementById("game-loader");
+const gameBack      = document.getElementById("game-back");
 
-// ── state ───────────────────────────────────────────────────────────────────
 let games = [];
-let diceMode = "all";
-let randomGame = null;
 
-// ── load games ───────────────────────────────────────────────────────────────
+// ── safe loader ──
 async function loadGames() {
-    try {
-        const res = await fetch("/games.txt");
-        const text = await res.text();
+	try {
+		const res = await fetch("/games.txt");
+		const text = await res.text();
 
-        games = text.trim().split("\n")
-            .filter(l => l && !l.startsWith("#"))
-            .map(line => {
-                const p = line.split("|");
-                return {
-                    id: p[0].trim(),
-                    display: p[1].trim(),
-                    url: p[2].trim(),
-                    logo: "images/game%20icons/" + encodeURIComponent(p[3].trim()),
-                    terms: p.slice(1).map(t => t.trim().toLowerCase())
-                };
-            })
-            .filter(g => g.id && g.url);
-    } catch (e) {
-        console.warn("games load failed", e);
-        games = [];
-    }
+		games = text.split("\n")
+			.filter(l => l && !l.startsWith("#"))
+			.map(line => {
+				const p = line.split("|");
+				return {
+					id: p[0]?.trim(),
+					name: p[1]?.trim(),
+					url: p[2]?.trim(),
+					icon: "images/game%20icons/" + encodeURIComponent(p[3] || "")
+				};
+			})
+			.filter(g => g.id && g.url);
+
+		render(games);
+	} catch (e) {
+		console.warn("games failed", e);
+	}
 }
 
-// ── legacy Scramjet loader ───────────────────────────────────────────────────
+// ── render ──
+function render(list) {
+	if (!gameGrid) return;
+
+	gameGrid.innerHTML = "";
+
+	list.forEach(g => {
+		const el = document.createElement("div");
+		el.textContent = g.name || "game";
+		el.onclick = () => openGame(g);
+		gameGrid.appendChild(el);
+	});
+}
+
+// ── Scramjet legacy only ──
 async function loadScramjet() {
-    if (!window.__scramjetLoaded) {
-        await import("/scram/scramjet.sync.js");
-        window.__scramjetLoaded = true;
-    }
+	if (window.__scramjetLoaded) return;
+	await import("/scram/scramjet.sync.js");
+	window.__scramjetLoaded = true;
 }
 
-// ── render grid ──────────────────────────────────────────────────────────────
-function renderGrid(list) {
-    gameGrid.innerHTML = "";
-    noResults.style.display = list.length ? "none" : "block";
-
-    gamesCount.textContent = `Games ${list.length} / ${games.length}`;
-
-    for (const g of list) {
-        const card = document.createElement("div");
-        card.className = "game-card";
-
-        const img = document.createElement("img");
-        img.src = g.logo;
-
-        const name = document.createElement("div");
-        name.textContent = g.display;
-
-        card.appendChild(img);
-        card.appendChild(name);
-
-        card.onclick = () => openGame(g.id);
-
-        gameGrid.appendChild(card);
-    }
+// ── frame ──
+function getFrame() {
+	let f = document.getElementById("game-frame");
+	if (!f) {
+		f = document.createElement("iframe");
+		f.id = "game-frame";
+		document.body.appendChild(f);
+	}
+	return f;
 }
 
-// ── search ───────────────────────────────────────────────────────────────────
-gameSearch.addEventListener("input", () => {
-    const q = gameSearch.value.toLowerCase().trim();
-    if (!q) return renderGrid(games);
+// ── open game ──
+async function openGame(g) {
+	await loadScramjet();
 
-    renderGrid(games.filter(g =>
-        g.terms.some(t => t.includes(q))
-    ));
-});
+	if (gamesPage) gamesPage.style.display = "none";
+	if (gamePage) gamePage.classList.add("active");
 
-// ── game frame helper ─────────────────────────────────────────────────────────
-function getGameFrame() {
-    return document.getElementById("game-frame");
+	if (gameLoader) gameLoader.classList.add("active");
+
+	const frame = getFrame();
+
+	setTimeout(() => {
+		gameLoader?.classList.remove("active");
+
+		if (window.__scramjetNavigate) {
+			window.__scramjetNavigate(frame, g.url);
+		}
+	}, 800);
 }
 
-// ── open game ────────────────────────────────────────────────────────────────
-async function openGame(id) {
-    const g = games.find(x => x.id === id);
-    if (!g) return;
-
-    await loadScramjet();
-
-    glTitle.textContent = g.display;
-    glIcon.src = g.logo;
-    glEngine.textContent = "Scramjet (Legacy)";
-
-    gamesPage.style.display = "none";
-    gamePage.classList.add("active");
-
-    gameLoader.classList.add("active");
-
-    const frame = getGameFrame();
-    frame.src = "about:blank";
-
-    try {
-        if (typeof window.__scramjetNavigate !== "function") {
-            throw new Error("Scramjet runtime not ready");
-        }
-
-        // ensure loader minimum display time
-        setTimeout(() => {
-            gameLoader.classList.remove("active");
-            window.__scramjetNavigate(frame, g.url);
-        }, 1000);
-
-        history.pushState({}, "", `/math?game=${id}`);
-
-    } catch (err) {
-        console.error(err);
-        gameLoader.classList.remove("active");
-    }
+// ── back ──
+if (gameBack) {
+	gameBack.onclick = () => {
+		if (gamePage) gamePage.classList.remove("active");
+		if (gamesPage) gamesPage.style.display = "flex";
+		if (gameFrame) gameFrame.src = "about:blank";
+	};
 }
 
-// ── back ─────────────────────────────────────────────────────────────────────
-gameBack.onclick = () => {
-    gamePage.classList.remove("active");
-    gamesPage.style.display = "flex";
-    getGameFrame().src = "about:blank";
-};
+// ── search ──
+if (gameSearch) {
+	gameSearch.addEventListener("input", () => {
+		const q = gameSearch.value.toLowerCase();
+		render(games.filter(g => g.name?.toLowerCase().includes(q)));
+	});
+}
 
-// ── controls ──────────────────────────────────────────────────────────────────
-btnReload.onclick = () => {
-    const frame = getGameFrame();
-    try {
-        frame.contentWindow.location.reload();
-    } catch (e) {
-        console.warn("reload failed", e);
-    }
-};
-
-btnFullscreen.onclick = () => {
-    const el = gameFrameWrapper;
-    if (el.requestFullscreen) el.requestFullscreen();
-};
-
-// ── init ─────────────────────────────────────────────────────────────────────
-(async () => {
-    await loadGames();
-    renderGrid(games);
-})();
+loadGames();

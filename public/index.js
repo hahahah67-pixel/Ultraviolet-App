@@ -1,47 +1,26 @@
 "use strict";
 
-// ── DOM refs ─────────────────────────────────────────────
 const form         = document.getElementById("uv-form");
 const address      = document.getElementById("uv-address");
 const searchEngine = document.getElementById("uv-search-engine");
-
+const uvFrame      = document.getElementById("uv-frame");
 const error        = document.getElementById("uv-error");
 const errorCode    = document.getElementById("uv-error-code");
 
-const uvFrame      = document.getElementById("uv-frame");
+function safe(el, fn) {
+	if (el) fn(el);
+}
 
-// ── BareMux (UV only) ─────────────────────────────────────
-const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+// ── BareMux (UV only) ──
+const connection = window.BareMux
+	? new BareMux.BareMuxConnection("/baremux/worker.js")
+	: null;
 
 function getWispUrl() {
 	return (location.protocol === "https:" ? "wss" : "ws") +
 		"://" + location.host + "/wisp/";
 }
 
-// ── Scramjet legacy loader ONLY ───────────────────────────
-async function loadScramjet() {
-	if (window.__scramjetLoaded) return;
-	await import("/scram/scramjet.sync.js");
-	window.__scramjetLoaded = true;
-}
-
-// ── ensure SJ iframe exists ───────────────────────────────
-function getSJFrame() {
-	let frame = document.getElementById("sj-frame");
-	if (!frame) {
-		frame = document.createElement("iframe");
-		frame.id = "sj-frame";
-		frame.style.width = "100%";
-		frame.style.height = "100%";
-		frame.style.border = "none";
-		frame.style.position = "fixed";
-		frame.style.inset = "0";
-		document.body.appendChild(frame);
-	}
-	return frame;
-}
-
-// ── simple URL normalizer ─────────────────────────────────
 function normalize(input, engine) {
 	try {
 		return new URL(input).href;
@@ -50,63 +29,82 @@ function normalize(input, engine) {
 	}
 }
 
-// ── FORM SUBMIT ───────────────────────────────────────────
-form.addEventListener("submit", async (e) => {
-	e.preventDefault();
+// ── Scramjet legacy loader ──
+async function loadScramjet() {
+	if (window.__scramjetLoaded) return;
+	await import("/scram/scramjet.sync.js");
+	window.__scramjetLoaded = true;
+}
 
-	error.textContent = "";
-	errorCode.textContent = "";
+// ── SJ frame getter ──
+function getSJFrame() {
+	let frame = document.getElementById("sj-frame");
+	if (!frame) {
+		frame = document.createElement("iframe");
+		frame.id = "sj-frame";
+		frame.style.cssText = "position:fixed;inset:0;width:100%;height:100%;border:none;";
+		document.body.appendChild(frame);
+	}
+	return frame;
+}
 
-	const engineUrl =
-		localStorage.getItem("fish-search-engine") ||
-		searchEngine.value;
+// ── Submit ──
+if (form) {
+	form.addEventListener("submit", async (e) => {
+		e.preventDefault();
 
-	const url = normalize(address.value, engineUrl);
-	const proxy = localStorage.getItem("fish-proxy-choice") || "sj";
+		safe(error, el => el.textContent = "");
+		safe(errorCode, el => el.textContent = "");
 
-	// ── UV MODE ───────────────────────────────────────────
-	if (proxy === "uv") {
-		try {
-			await registerSW();
+		const engine =
+			localStorage.getItem("fish-search-engine") ||
+			(searchEngine ? searchEngine.value : "https://duckduckgo.com/?q=%s");
 
-			if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
-				await connection.setTransport("/epoxy/index.mjs", [
-					{ wisp: getWispUrl() }
-				]);
+		const url = normalize(address.value, engine);
+		const mode = localStorage.getItem("fish-proxy-choice") || "sj";
+
+		// ── UV MODE ──
+		if (mode === "uv") {
+			try {
+				await registerSW?.();
+
+				if (connection) {
+					if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
+						await connection.setTransport("/epoxy/index.mjs", [
+							{ wisp: getWispUrl() }
+						]);
+					}
+				}
+
+				if (uvFrame) {
+					uvFrame.style.display = "block";
+					uvFrame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+				}
+
+			} catch (err) {
+				safe(error, el => el.textContent = "UV failed");
+				safe(errorCode, el => el.textContent = String(err));
 			}
+			return;
+		}
 
-			uvFrame.style.display = "block";
-			uvFrame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+		// ── SCRAMJET LEGACY ONLY ──
+		try {
+			await loadScramjet();
+
+			const frame = getSJFrame();
+
+			if (uvFrame) uvFrame.style.display = "none";
+
+			requestAnimationFrame(() => {
+				if (window.__scramjetNavigate) {
+					window.__scramjetNavigate(frame, url);
+				}
+			});
 
 		} catch (err) {
-			error.textContent = "UV failed";
-			errorCode.textContent = err.toString();
+			safe(error, el => el.textContent = "Scramjet failed");
+			safe(errorCode, el => el.textContent = String(err));
 		}
-		return;
-	}
-
-	// ── SCRAMJET LEGACY ONLY ───────────────────────────────
-	try {
-		await loadScramjet();
-
-		const frame = getSJFrame();
-
-		// IMPORTANT: hide UV frame if it was used before
-		if (uvFrame) uvFrame.style.display = "none";
-
-		// wait a frame so Scramjet is ready
-		requestAnimationFrame(() => {
-			if (!window.__scramjetNavigate) {
-				error.textContent = "Scramjet not initialized";
-				return;
-			}
-
-			window.__scramjetNavigate(frame, url);
-		});
-
-	} catch (err) {
-		error.textContent = "Scramjet failed";
-		errorCode.textContent = err.toString();
-		console.error(err);
-	}
-});
+	});
+}

@@ -1,13 +1,11 @@
 "use strict";
 
-// ── DOM refs ────────────────────────────────────────────────────────────────
 const form         = document.getElementById("uv-form");
 const address      = document.getElementById("uv-address");
 const searchEngine = document.getElementById("uv-search-engine");
 const error        = document.getElementById("uv-error");
 const errorCode    = document.getElementById("uv-error-code");
 
-// ── bare mux ────────────────────────────────────────────────────────────────
 const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 
 function getWispUrl() {
@@ -15,28 +13,6 @@ function getWispUrl() {
 		"://" + location.host + "/wisp/";
 }
 
-// ── legacy scramjet loader ───────────────────────────────────────────────────
-async function loadScramjet() {
-	if (!window.__scramjetLoaded) {
-		await import("/scram/scramjet.sync.js");
-		window.__scramjetLoaded = true;
-	}
-}
-
-// ── Scramjet frame helper (stable) ───────────────────────────────────────────
-function getOrCreateSJFrame() {
-	let frame = document.getElementById("sj-frame");
-
-	if (!frame) {
-		frame = document.createElement("iframe");
-		frame.id = "sj-frame";
-		document.body.appendChild(frame);
-	}
-
-	return frame;
-}
-
-// ── form submit ──────────────────────────────────────────────────────────────
 form.addEventListener("submit", async (e) => {
 	e.preventDefault();
 
@@ -50,35 +26,47 @@ form.addEventListener("submit", async (e) => {
 
 	const proxy = localStorage.getItem("fish-proxy-choice") || "sj";
 
-	// ── UV MODE ──────────────────────────────────────────────────────────────
+	// ── UV MODE ─────────────────────────────
 	if (proxy === "uv") {
-		if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
-			await connection.setTransport("/epoxy/index.mjs", [
-				{ wisp: getWispUrl() }
-			]);
-		}
+		try {
+			if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
+				await connection.setTransport("/epoxy/index.mjs", [
+					{ wisp: getWispUrl() }
+				]);
+			}
 
-		const frame = document.getElementById("uv-frame");
-		frame.style.display = "block";
-		frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+			const frame = document.getElementById("uv-frame");
+			frame.style.display = "block";
+			frame.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+
+		} catch (err) {
+			error.textContent = "UV transport error";
+			errorCode.textContent = err.toString();
+		}
 
 		return;
 	}
 
-	// ── SCRAMJET LEGACY MODE ────────────────────────────────────────────────
+	// ── PURE LEGACY SCRAMJET MODE (NO API, NO CONTROLLER) ────────────────
 	try {
-		await loadScramjet();
+		let frame = document.getElementById("sj-frame");
 
-		const frame = getOrCreateSJFrame();
-
-		if (typeof window.__scramjetNavigate !== "function") {
-			throw new Error("Scramjet legacy runtime not initialized");
+		if (!frame) {
+			frame = document.createElement("iframe");
+			frame.id = "sj-frame";
+			frame.style.width = "100%";
+			frame.style.height = "100%";
+			frame.style.border = "none";
+			document.body.appendChild(frame);
 		}
 
-		window.__scramjetNavigate(frame, url);
+		frame.style.display = "block";
+
+		// IMPORTANT: legacy Scramjet = direct navigation
+		frame.src = url;
 
 	} catch (err) {
-		error.textContent = "Scramjet failed";
+		error.textContent = "Scramjet failed (legacy)";
 		errorCode.textContent = err.toString();
 		console.error(err);
 	}

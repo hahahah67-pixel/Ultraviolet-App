@@ -102,17 +102,15 @@ async function getSJGameFrame() {
 	await transport.init();
 
 	// Controller config points to new split files in /scram/
-	_sjCtrl = new $scramjetController.Controller({
-		serviceworker: sw,
-		transport,
-		config: {
-			scramjetPath: "/scram/scramjet.js",
-			injectPath:   "/scram/controller.inject.js",
-			wasmPath:     "/scram/scramjet.wasm",
-		},
-	});
+	// legacy scramjet init (no controller API)
+if (!window.__scramjetLoaded) {
+	await import("/scram/scramjet.sync.js");
+	window.__scramjetLoaded = true;
+}
 
-	await _sjCtrl.wait();
+_sjCtrl = {
+	sync: null
+};
 
 	// Wrap the existing #game-frame element — frame.go() will set its src directly
 	_sjGameFrame = _sjCtrl.createFrame(gameFrame);
